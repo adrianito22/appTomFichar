@@ -1,12 +1,19 @@
 package com.google.android.cameraview.demo.Activities;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.demo.R;
 
 import java.text.SimpleDateFormat;
@@ -22,11 +29,64 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    CardView cardViewEntrada;
+    CardView cardViewInicioComida;
+    CardView cardViewFinComida;
+    CardView cardViewSalida;
+    LinearLayout layoutAddEmpleado;
+
+    private static final String TAG = "MainActivity2";
+    private static final int INPUT_SIZE = 500;
+
+
+    private static final int[] FLASH_OPTIONS = {
+            CameraView.FLASH_OFF,
+            CameraView.FLASH_AUTO,
+            CameraView.FLASH_ON,
+    };
+
+
+
+
+    private static final int[] FLASH_ICONS = {
+            R.drawable.ic_flash_off,
+            R.drawable.ic_flash_auto,
+            R.drawable.ic_flash_on,
+    };
+
+
+    private static final int[] FLASH_TITLES = {
+            R.string.flash_off,
+            R.string.flash_auto,
+            R.string.flash_on,
+    };
+
+    String[] permissions = new String[]{
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    };
+
+    long startTimeLocally;
+
+    private int mCurrentFlash;
+    private CameraView mCameraView;
+    private Handler mBackgroundHandler;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_center);
+
+
+        cardViewEntrada=findViewById(R.id.cardViewEntrada);
+        cardViewInicioComida=findViewById(R.id.cardViewInicioComida);
+        cardViewFinComida=findViewById(R.id.cardViewFinComida);
+        cardViewSalida=findViewById(R.id.cardViewSalida);
+        layoutAddEmpleado=findViewById(R.id.layoutAddEmpleado);
+
+        listennersEventos();
+
+
 
         Thread myThread = null;
 
@@ -112,4 +172,66 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-}}
+}
+
+
+
+void listennersEventos(){
+
+
+     cardViewEntrada.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+             startActivity(intent);
+
+
+         }
+     });
+     cardViewInicioComida.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+
+             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+             startActivity(intent);
+
+         }
+     });
+     cardViewFinComida.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+
+             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+             startActivity(intent);
+
+         }
+     });
+
+
+     cardViewSalida.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+
+             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+             startActivity(intent);
+
+         }
+     });
+
+
+    layoutAddEmpleado.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+            Intent intent = new Intent(MainActivity.this, AddPerson.class);
+            startActivity(intent);
+
+
+        }
+    });
+
+
+}
+
+
+}

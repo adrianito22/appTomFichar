@@ -72,7 +72,7 @@ public class AddPerson extends AppCompatActivity {
         setContentView(R.layout.activity_add_person);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarAddPeople);
-        toolbar.setTitle("Add People");
+        toolbar.setTitle("Agregar Persona");
         setSupportActionBar(toolbar);
 
         btn_select_image = (Button)findViewById(R.id.btn_select_image);
@@ -110,13 +110,13 @@ public class AddPerson extends AppCompatActivity {
 
                 if(!et_name.getText().toString().equals(""))
                 {
-                    final CharSequence[] options = {"Take Photo", "Choose From Gallery","Cancel"};
+                    final CharSequence[] options = {"Tomar Foto", "Elegir desde Galeria","Cancelar"};
                     AlertDialog.Builder builder = new AlertDialog.Builder(AddPerson.this);
-                    builder.setTitle("Select Option");
+                    builder.setTitle("Selecione una opcion");
                     builder.setItems(options, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int item) {
-                            if (options[item].equals("Take Photo")) {
+                            if (options[item].equals("Tomar Foto")) {
                                 dialog.dismiss();
 
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -130,14 +130,14 @@ public class AddPerson extends AppCompatActivity {
 
                                 startActivityForResult(intent, PICK_IMAGE_CAMERA);
 
-                            } else if (options[item].equals("Choose From Gallery"))
+                            } else if (options[item].equals("Elegir desde Galeria"))
                             {
                                 dialog.dismiss();
                                 Intent intent = new Intent(AddPerson.this, AlbumSelectActivity.class);
                                 intent.putExtra(ConstantsCustomGallery.INTENT_EXTRA_LIMIT, 5); // set limit for image selection
                                 startActivityForResult(intent, ConstantsCustomGallery.REQUEST_CODE);
 
-                            } else if (options[item].equals("Cancel"))
+                            } else if (options[item].equals("Cancelar"))
                             {
                                 dialog.dismiss();
                             }
@@ -148,14 +148,14 @@ public class AddPerson extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Please specify person name",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Por favor especifique un nombre",Toast.LENGTH_LONG).show();
                 }
 
             }
             else
-                Toast.makeText(this, "Camera Permission error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error en permiso de camara", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Camera Permission error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error en permiso de camara ", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -235,7 +235,7 @@ public class AddPerson extends AppCompatActivity {
                 }
             }
 
-            Toast.makeText(getApplicationContext(),bitmapArrayList.size()+" images selected",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),bitmapArrayList.size()+" imagenes selecionadas",Toast.LENGTH_LONG).show();
 
            new detectAsyncMultipleImages().execute(bitmapArrayList);
 
@@ -273,7 +273,7 @@ public class AddPerson extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Detecting face...");
+            dialog.setMessage("Detectando Rostro...");
             dialog.setCancelable(false);
             dialog.show();
             super.onPreExecute();
@@ -286,9 +286,14 @@ public class AddPerson extends AppCompatActivity {
             String msg = null;
             if (results.size()==0)
             {
-                msg = "No face was detected or face was too small. Please select a different image";
+               // msg = "No face was detected or face was too small. Please select a different image";
+                msg = "Rostro no detectado o muy pequeño. Por favor selecione otra imagen";
+
             } else if (results.size() > 1) {
-                msg = "More than one face was detected. Please select a different image";
+              //  msg = "More than one face was detected. Please select a different image";
+
+                msg = "Se detectó más de un rostro. Seleccione una imagen diferente";
+
             } else {
 
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -329,7 +334,7 @@ public class AddPerson extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Image added successfully",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Imagen agregada exitosamente",Toast.LENGTH_LONG).show();
                     finish();
                 }
 
@@ -349,7 +354,7 @@ public class AddPerson extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Detecting face...");
+            dialog.setMessage("Detectando rostro...");
             dialog.setCancelable(false);
             dialog.show();
             super.onPreExecute();
@@ -369,11 +374,15 @@ public class AddPerson extends AppCompatActivity {
 
                 if(results.size()==0)
                 {
-                    msg = "No face was detected or face was too small. Please select a different image";
+                  //  msg = "No face was detected or face was too small. Please select a different image";
+                    msg = "Rostro no detectado o muy pequeño. Por favor selecione otra imagen";
+
                     Log.e("Face Detector", msg);
                 }
                 else if (results.size() > 1) {
-                    msg = "More than one face was detected. Please select a different image";
+                  //  msg = "More than one face was detected. Please select a different image";
+                    msg = "Se detectó más de un rostro. Seleccione una imagen diferente";
+
                     Log.e("Face Detector", msg);
                 }
 
@@ -441,7 +450,7 @@ public class AddPerson extends AppCompatActivity {
 
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Successfully added all images",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Se agregaron exitosamente las imagenes",Toast.LENGTH_LONG).show();
                     finish();
                 }
 
