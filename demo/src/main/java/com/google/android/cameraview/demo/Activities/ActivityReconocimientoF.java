@@ -338,7 +338,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
 
 
-                    showFichaje(time,"Entrada",R.drawable.ic_flash_on);
+                    showFichaje(time,"Entrada",R.drawable.hora_entrada);
 
 
                   //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
@@ -369,7 +369,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
                     Log.i("fichnadodata","la hora de entrada es cero fichamos ahora");
 
                    // Toast.makeText(this, "fichamos hora de inicio comida", Toast.LENGTH_SHORT).show();
-                 showFichaje(time,"Inicio Comida",R.drawable.ic_flash_on);
+                 showFichaje(time,"Inicio Comida",R.drawable.hora_inicio_comida);
 
 
                 }else{  //el user ya ficho
@@ -394,7 +394,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
                     Log.i("fichnadodata","la hora de FICHAJE_FIN_COMIDA ahora la cambiamos");
 
 
-                    showFichaje(time,"Fin de  Comida",R.drawable.ic_flash_on);
+                    showFichaje(time,"Fin de  Comida",R.drawable.fin_comida);
 
                     //Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
 
@@ -419,7 +419,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
                     Log.i("fichnadodata","la hora de salida la ficahmos ahora");
 
-                    showFichaje(time,"Salida",R.drawable.ic_flash_on);
+                    showFichaje(time,"Salida",R.drawable.hora_salida);
 
 
                     //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
@@ -653,7 +653,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
             ImageView imgView=bottomSheetDialog.findViewById(R.id.imgView);
              bottomSheetDialog.setCancelable(false);
 
-        txtFichajeCurrent.setText("Hora de "+tipoFichaje+" fichada Correctamente");
+        txtFichajeCurrent.setText("Hora de "+tipoFichaje+", fichada Correctamente");
         txtTime.setText(timeFichaje);
         imgView.setImageResource(drawable);
 
@@ -664,9 +664,11 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
                 public void onClick(View view) {
 
 
-
+                     finish();
 
                     bottomSheetDialog.dismiss();
+
+
 
 
                 }
