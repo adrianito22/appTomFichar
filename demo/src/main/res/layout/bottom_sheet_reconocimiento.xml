@@ -52,7 +52,7 @@
         android:layout_marginTop="25dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/backrgound_round_plant"
-        android:text="OK . lo tengo"
+        android:text="OK , lo tengo"
         android:textColor="#FBFBFB" />
 
     <Space
