@@ -31,6 +31,9 @@ import android.widget.Toast;
 import com.developers.imagezipper.ImageZipper;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.FaceRecognizer;
+import com.google.android.cameraview.demo.Utils.SharePref;
+import com.google.android.cameraview.demo.models.Empleado;
+import com.google.android.cameraview.demo.models.Fichar;
 import com.tzutalin.dlib.Constants;
 import com.tzutalin.dlib.VisionDetRet;
 
@@ -74,6 +77,7 @@ public class AddPerson extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarAddPeople);
         toolbar.setTitle("Agregar Persona");
         setSupportActionBar(toolbar);
+
 
         btn_select_image = (Button)findViewById(R.id.btn_select_image);
 
@@ -396,10 +400,24 @@ public class AddPerson extends AppCompatActivity {
 
                     String targetPath = Constants.getDLibImageDirectoryPath() + "/" + et_name.getText().toString()+ts + ".jpg"; //target donde se guardara
                       //el target path es el id unico de cada usuario nuevo.....
+
+                       /**aqui podemos agregar un nuevo empleado */
+
+                         //OBTENEMOS LA LISTA DE EMPLEADOS Y SI ESTA VACIO SIGNIFCA QUE NO TENEMOS NINGUN EMPLEADO....
+                    Fichar.hasMapAllEmpleados = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+
+                     //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
+                    Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
+                    Fichar.hasMapAllEmpleados.put(et_name.getText().toString()+ts+".jpg",empleadoObject);
+
+                     //gaurdamos en preferencias.
+                    SharePref.saveMapEmpleados(Fichar.hasMapAllEmpleados,SharePref.KEY_ALL_EMPLEADOS_Map);
+
+
+
                     //tambien podemos usar esa ruta para obtener la imagenn de cada user y mostrala en el recicler....
                     //eliminar users usando codigo secreto....
                     //...y asi...
-
 
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 

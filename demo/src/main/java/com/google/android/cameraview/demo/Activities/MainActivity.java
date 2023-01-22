@@ -1,7 +1,9 @@
 package com.google.android.cameraview.demo.Activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
@@ -12,19 +14,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.Utils.FaceRecognizer;
+import com.google.android.cameraview.demo.Utils.FileUtils;
+import com.google.android.cameraview.demo.Utils.SharePref;
+import com.google.android.cameraview.demo.models.Fichar;
+import com.tzutalin.dlib.Constants;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +41,10 @@ public class MainActivity extends AppCompatActivity {
     CardView cardViewSalida;
     LinearLayout layoutAddEmpleado;
 
-    private static final String TAG = "MainActivity2";
+    Handler handler = new Handler();
+
+
+    private static final String TAG = "ActivityReconocimientoF";
     private static final int INPUT_SIZE = 500;
 
 
@@ -84,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
         cardViewSalida=findViewById(R.id.cardViewSalida);
         layoutAddEmpleado=findViewById(R.id.layoutAddEmpleado);
 
+        SharePref.init(MainActivity.this);
+
+
         listennersEventos();
 
 
@@ -120,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
        // textView3.setText(date);
 
+        new initRecAsync().execute();
 
 
         Runnable runnable = new CountDownRunner();
@@ -182,7 +195,10 @@ void listennersEventos(){
      cardViewEntrada.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
-             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+
+             Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_ENTRADA;
+
+             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
              startActivity(intent);
 
 
@@ -192,7 +208,9 @@ void listennersEventos(){
          @Override
          public void onClick(View view) {
 
-             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+                Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_INCIO_COMIDA;
+
+             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
              startActivity(intent);
 
          }
@@ -201,7 +219,10 @@ void listennersEventos(){
          @Override
          public void onClick(View view) {
 
-             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+             Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_FIN_COMIDA;
+
+
+             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
              startActivity(intent);
 
          }
@@ -211,8 +232,9 @@ void listennersEventos(){
      cardViewSalida.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
+             Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_SALIDA;
 
-             Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
              startActivity(intent);
 
          }
@@ -232,6 +254,87 @@ void listennersEventos(){
 
 
 }
+
+
+
+
+
+    private class initRecAsync extends AsyncTask<Void, Void, Void>
+    {
+
+        ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("Initializing...");
+            dialog.setCancelable(false);
+            dialog.show();
+            super.onPreExecute();
+        }
+
+        protected Void doInBackground(Void... args) {
+
+            File folder = new File(Constants.getDLibDirectoryPath());
+            boolean success = true;
+            if (!folder.exists()) {
+                success = folder.mkdirs();
+            }
+            if (success) {
+                File image_folder = new File(Constants.getDLibImageDirectoryPath());
+                image_folder.mkdirs();
+                if (!new File(Constants.getFaceShapeModelPath()).exists()) {
+                    FileUtils.copyFileFromRawToOthers(MainActivity.this, R.raw.shape_predictor_5_face_landmarks, Constants.getFaceShapeModelPath());
+                }
+                if (!new File(Constants.getFaceDescriptorModelPath()).exists()) {
+                    FileUtils.copyFileFromRawToOthers(MainActivity.this, R.raw.dlib_face_recognition_resnet_model_v1, Constants.getFaceDescriptorModelPath());
+                }
+            }
+
+
+
+            final long startTime = System.currentTimeMillis();
+
+            changeProgressDialogMessage(dialog, "Cargando Ui...");
+            FaceRecognizer.getInstance().train();
+
+            final long endTime = System.currentTimeMillis();
+
+            Log.d("TimeCost", "Time cost: " + (endTime - startTime) / 1000f + " sec");
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                  //  Toast.makeText(getApplicationContext(),"Time cost: "+ (endTime - startTime) / 1000f + " sec",Toast.LENGTH_LONG).show();
+                }
+            });
+
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }
+    }
+
+    private void changeProgressDialogMessage(final ProgressDialog pd, final String msg) {
+        Runnable changeMessage = new Runnable() {
+            @Override
+            public void run() {
+                pd.setMessage(msg);
+            }
+        };
+        runOnUiThread(changeMessage);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FaceRecognizer.getInstance().release();
+    }
+
 
 
 }

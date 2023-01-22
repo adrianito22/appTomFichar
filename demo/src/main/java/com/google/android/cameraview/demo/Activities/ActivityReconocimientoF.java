@@ -12,10 +12,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -29,24 +31,35 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.FaceRecognizer;
+import com.google.android.cameraview.demo.Utils.SharePref;
+import com.google.android.cameraview.demo.models.Fichar;
 import com.tzutalin.dlib.VisionDetRet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class MainActivity2 extends AppCompatActivity implements
+public class ActivityReconocimientoF extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private static final String TAG = "MainActivity2";
+    private static final String TAG = "ActivityReconocimientoF";
     private static final int INPUT_SIZE = 500;
 
+
+     String idEncontrado="";
 
     private static final int[] FLASH_OPTIONS = {
             CameraView.FLASH_OFF,
@@ -265,10 +278,174 @@ public class MainActivity2 extends AppCompatActivity implements
                 if (i != names.size() - 1) msg += ", ";
             }
             msg += " found!";
+
+            //encontramos alguna careta..///vamos a c
+
+
+                marcamosFichaje(idEncontrado);
+
+
         }
+
+
+
+
+
+
+
         return msg;
     }
 
+
+
+    void marcamosFichaje(String keyCurrentUser){
+
+      //  Fichar fichar= Fichar.hashMapAllFicharRegistros
+
+        //obtenomos el hasmap de fichaje de este empleado ,usando el id como key de prefrences...
+
+
+        Fichar ficharObjec=null;
+
+        HashMap<String, Fichar>hashMapFichajeRegistros=SharePref.loadMapPreferencesFichaje(keyCurrentUser);
+
+        if(hashMapFichajeRegistros.size()>0){ //hay data...chekeamos si tenemos el registro del dia de hoy usando un la fecha actual como key..
+            if(hashMapFichajeRegistros.containsKey(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()))){
+                //SI EXISTE OBTENEMOS EL OBJETO FICHAR  usando la fecha como key
+                 ficharObjec= hashMapFichajeRegistros.get(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+
+
+            }
+
+        }
+
+
+
+        if(ficharObjec==null){ //si fichar objet es nulo cremoa sun nirvo
+
+            ficharObjec= new Fichar();
+
+        }
+        String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+
+
+        if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_ENTRADA){
+                if(ficharObjec.getEntradaMilliseconds()==0){
+
+                    ficharObjec.setEntradaMilliseconds(new Date().getTime());
+
+                    Log.i("fichnadodata","la hora de entrada es cero fichamos ahora");
+
+
+
+                    showFichaje(time,"Entrada",R.drawable.ic_flash_on);
+
+
+                  //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
+
+
+                }else{  //el user ya ficho
+
+                    Log.i("fichnadodata","la hora de entrada es difrente de cero, ya hemos fichado antes ");
+
+
+                    Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+
+
+
+
+        }
+
+        else if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_INCIO_COMIDA){
+             if(ficharObjec.getHoraInicioComidaMilliseconds()==0){
+
+                    ficharObjec.setHoraInicioComidaMilliseconds(new Date().getTime());
+
+                    Log.i("fichnadodata","la hora de entrada es cero fichamos ahora");
+
+                   // Toast.makeText(this, "fichamos hora de inicio comida", Toast.LENGTH_SHORT).show();
+                 showFichaje(time,"Inicio Comida",R.drawable.ic_flash_on);
+
+
+                }else{  //el user ya ficho
+
+                    Log.i("fichnadodata","ya estaba fichada FICHAJE_INCIO_COMIDA");
+
+
+                    Toast.makeText(this, "Ya marcaste la hora incio comida", Toast.LENGTH_SHORT).show();
+
+
+                }
+
+
+        }
+
+        else if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_FIN_COMIDA){
+
+                if(ficharObjec.getHoraFinComidaMilliseconds()==0){
+
+                    ficharObjec.setHoraFinComidaMilliseconds(new Date().getTime());
+
+                    Log.i("fichnadodata","la hora de FICHAJE_FIN_COMIDA ahora la cambiamos");
+
+
+                    showFichaje(time,"Fin de  Comida",R.drawable.ic_flash_on);
+
+                    //Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
+
+
+                }else{  //el user ya ficho
+
+                    Log.i("fichnadodata","ya fichamos fin comida ");
+
+
+                    Toast.makeText(this, "Ya marcaste fin de comida", Toast.LENGTH_SHORT).show();
+
+
+
+
+            }
+        }
+
+        else if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_SALIDA){
+                if(ficharObjec.getHoraSalidaMilliseconds()==0){
+
+                    ficharObjec.setHoraSalidaMilliseconds(new Date().getTime());
+
+                    Log.i("fichnadodata","la hora de salida la ficahmos ahora");
+
+                    showFichaje(time,"Salida",R.drawable.ic_flash_on);
+
+
+                    //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
+
+                }
+
+                else{  //el user ya ficho
+
+                    Log.i("fichnadodata","la hora de salida ya estaba agregada..");
+
+                    Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
+
+
+            }
+
+        }
+
+
+        //guardamos o remplzamos
+        hashMapFichajeRegistros.put(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()),ficharObjec);
+
+
+        SharePref.saveMapFichaje(hashMapFichajeRegistros,keyCurrentUser);
+
+
+    }
 
 
 
@@ -313,7 +490,7 @@ public class MainActivity2 extends AppCompatActivity implements
     }
 
     private class detectAsync extends AsyncTask<Bitmap, Void, String> {
-        ProgressDialog dialog = new ProgressDialog(MainActivity2.this);
+        ProgressDialog dialog = new ProgressDialog(ActivityReconocimientoF.this);
 
         Bitmap sourceBitmap;
 
@@ -350,7 +527,7 @@ public class MainActivity2 extends AppCompatActivity implements
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
                 if (result != null) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity2.this);
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(ActivityReconocimientoF.this);
                     builder1.setMessage(result);
                     builder1.setCancelable(true);
                     AlertDialog alert11 = builder1.create();
@@ -370,13 +547,13 @@ public class MainActivity2 extends AppCompatActivity implements
     }
 
     private class recognizeAsync extends AsyncTask<Bitmap, Void, ArrayList<String>> {
-        ProgressDialog dialog = new ProgressDialog(MainActivity2.this);
+        ProgressDialog dialog = new ProgressDialog(ActivityReconocimientoF.this);
         Handler handler = new Handler();
         private int mScreenRotation = 0;
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Recognizing...");
+            dialog.setMessage("Reconociendo...");
             dialog.setCancelable(false);
             dialog.show();
             super.onPreExecute();
@@ -412,9 +589,17 @@ public class MainActivity2 extends AppCompatActivity implements
 
                     String getLabelStr = n.getLabel();
                     Log.i("solapina","el getLabelStr es : "+getLabelStr);
+                    idEncontrado=getLabelStr;
+                    //aqui buscamos este empleado id....
 
                     getLabelStr = getLabelStr.replaceAll("[0-9]", "");
                     names.add(getLabelStr);
+
+                     if(!idEncontrado.equals("")){ //asi obtenemos solo la primera coincidencia
+                         break;
+                     }
+
+
                 }
 
                 HashSet<String> hashSet = new HashSet<String>();
@@ -439,7 +624,7 @@ public class MainActivity2 extends AppCompatActivity implements
             if (names != null) {
                 if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(MainActivity2.this);
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(ActivityReconocimientoF.this);
                     builder1.setMessage(getResultMessage(names));
                     builder1.setCancelable(true);
                     AlertDialog alert11 = builder1.create();
@@ -451,6 +636,52 @@ public class MainActivity2 extends AppCompatActivity implements
 
 
         }
+
+    }
+
+
+    private void showFichaje(String timeFichaje, String tipoFichaje, int drawable){
+
+
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ActivityReconocimientoF.this);
+
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_reconocimiento);
+
+            Button btnOk=bottomSheetDialog.findViewById(R.id.btnOk);
+            TextView txtFichajeCurrent =bottomSheetDialog.findViewById(R.id.txtFichajeCurrent);
+            TextView txtTime =bottomSheetDialog.findViewById(R.id.txtTime);
+            ImageView imgView=bottomSheetDialog.findViewById(R.id.imgView);
+             bottomSheetDialog.setCancelable(false);
+
+        txtFichajeCurrent.setText("Hora de "+tipoFichaje+" fichada Correctamente");
+        txtTime.setText(timeFichaje);
+        imgView.setImageResource(drawable);
+
+
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+
+
+                    bottomSheetDialog.dismiss();
+
+
+                }
+            });
+
+
+
+
+
+
+            bottomSheetDialog.show();
+
+
+
+
 
     }
 

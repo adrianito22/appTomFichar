@@ -16,7 +16,7 @@
             android:name=".Activities.MainActivity"
             android:exported="true" />
         <activity
-            android:name=".Activities.MainActivity2"
+            android:name=".Activities.ActivityReconocimientoF"
             android:theme="@style/Theme.Demo" />
         <activity
             android:name=".Activities.ChooserActivity"
