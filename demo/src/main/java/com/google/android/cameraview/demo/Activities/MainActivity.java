@@ -132,7 +132,14 @@ public class MainActivity extends AppCompatActivity {
 
        // textView3.setText(date);
 
-        new initRecAsync().execute();
+
+        try {
+
+            new initRecAsync().execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         Runnable runnable = new CountDownRunner();
@@ -292,14 +299,14 @@ void listennersEventos(){
 
 
 
-            final long startTime = System.currentTimeMillis();
+        //    final long startTime = System.currentTimeMillis();
 
             changeProgressDialogMessage(dialog, "Cargando Ui...");
             FaceRecognizer.getInstance().train();
 
-            final long endTime = System.currentTimeMillis();
+          //  final long endTime = System.currentTimeMillis();
 
-            Log.d("TimeCost", "Time cost: " + (endTime - startTime) / 1000f + " sec");
+           // Log.d("TimeCost", "Time cost: " + (endTime - startTime) / 1000f + " sec");
 
             handler.post(new Runnable() {
                 @Override
