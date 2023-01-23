@@ -282,7 +282,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
                 msg += names.get(i).split(Pattern.quote("."))[0];
                 if (i != names.size() - 1) msg += ", ";
             }
-            msg += " found!";
+            msg += " encontrado!";
 
             //encontramos alguna careta..///vamos a c
 
