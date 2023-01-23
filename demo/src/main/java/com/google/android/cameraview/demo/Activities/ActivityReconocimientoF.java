@@ -184,10 +184,15 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
                 listPermissionsNeeded.add(p);
             }
         }
+
         if (!listPermissionsNeeded.isEmpty()) {
+
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 100);
             return false;
+
         }
+
+
         return true;
     }
 

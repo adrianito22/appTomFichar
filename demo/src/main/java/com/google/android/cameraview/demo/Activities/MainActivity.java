@@ -16,11 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.FaceRecognizer;
 import com.google.android.cameraview.demo.Utils.FileUtils;
 import com.google.android.cameraview.demo.Utils.SharePref;
+import com.google.android.cameraview.demo.Utils.Utils;
+import com.google.android.cameraview.demo.models.Empleado;
 import com.google.android.cameraview.demo.models.Fichar;
 import com.tzutalin.dlib.Constants;
 
@@ -31,6 +34,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,9 +44,12 @@ public class MainActivity extends AppCompatActivity {
     CardView cardViewFinComida;
     CardView cardViewSalida;
     LinearLayout layoutAddEmpleado;
+   LinearLayout layoutAllEmployers;
 
     Handler handler = new Handler();
 
+
+    private boolean isFirstUsage=true;
 
     private static final String TAG = "ActivityReconocimientoF";
     private static final int INPUT_SIZE = 500;
@@ -86,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_center);
 
-
+        layoutAllEmployers=findViewById(R.id.layoutAllEmployers);
         cardViewEntrada=findViewById(R.id.cardViewEntrada);
         cardViewInicioComida=findViewById(R.id.cardViewInicioComida);
         cardViewFinComida=findViewById(R.id.cardViewFinComida);
@@ -133,22 +140,45 @@ public class MainActivity extends AppCompatActivity {
        // textView3.setText(date);
 
 
-        try {
 
-            new initRecAsync().execute();
+        Runnable runnable = new CountDownRunner();
+        myThread= new Thread(runnable);
+        myThread.start();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        try {
+            HashMap<String, Empleado> mhasMap = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+
+         //  new initRecAsync().execute();
+
+            if(isFirstUsage || Utils.existeNewUserAdd){
+
+                if(mhasMap.size()>0){
+
+                    new initRecAsync().execute();
+
+
+                }
+
+                Utils.existeNewUserAdd=false;
+
+            }
+
+
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        Runnable runnable = new CountDownRunner();
-        myThread= new Thread(runnable);
-        myThread.start();
-
+        isFirstUsage=false;
     }
-
-
 
     public void doWork() {
         runOnUiThread(new Runnable() {
@@ -260,14 +290,25 @@ void listennersEventos(){
     });
 
 
+    layoutAllEmployers.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+
+            startActivity(new Intent(MainActivity.this, ActivityEmpleadosAll.class));
+
+            //aqui vamos a activit all employes
+        }
+    });
+
+
 }
 
 
 
 
 
-    private class initRecAsync extends AsyncTask<Void, Void, Void>
-    {
+    private class initRecAsync extends AsyncTask<Void, Void, Void> {
 
         ProgressDialog dialog = new ProgressDialog(MainActivity.this);
 
@@ -278,6 +319,8 @@ void listennersEventos(){
             dialog.show();
             super.onPreExecute();
         }
+
+
 
         protected Void doInBackground(Void... args) {
 
@@ -299,19 +342,22 @@ void listennersEventos(){
 
 
 
-        //    final long startTime = System.currentTimeMillis();
+           final long startTime = System.currentTimeMillis();
 
-            changeProgressDialogMessage(dialog, "Cargando Ui...");
+            changeProgressDialogMessage(dialog, "Entrenando Imagenes...");
             FaceRecognizer.getInstance().train();
 
-          //  final long endTime = System.currentTimeMillis();
-
-           // Log.d("TimeCost", "Time cost: " + (endTime - startTime) / 1000f + " sec");
+            final long endTime = System.currentTimeMillis();
+            Log.d("TimeCost", "Time cost: " + (endTime - startTime) / 1000f + " sec");
 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                  //  Toast.makeText(getApplicationContext(),"Time cost: "+ (endTime - startTime) / 1000f + " sec",Toast.LENGTH_LONG).show();
+
+
+                    Toast.makeText(getApplicationContext(),"Tiempo: "+ (endTime - startTime) / 1000f + " sec",Toast.LENGTH_LONG).show();
+
+
                 }
             });
 
@@ -325,6 +371,9 @@ void listennersEventos(){
         }
     }
 
+
+
+
     private void changeProgressDialogMessage(final ProgressDialog pd, final String msg) {
         Runnable changeMessage = new Runnable() {
             @Override
@@ -333,6 +382,7 @@ void listennersEventos(){
             }
         };
         runOnUiThread(changeMessage);
+
     }
 
 

@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import com.developers.imagezipper.ImageZipper;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.FaceRecognizer;
 import com.google.android.cameraview.demo.Utils.SharePref;
+import com.google.android.cameraview.demo.Utils.Utils;
 import com.google.android.cameraview.demo.models.Empleado;
 import com.google.android.cameraview.demo.models.Fichar;
 import com.tzutalin.dlib.Constants;
@@ -63,6 +66,10 @@ public class AddPerson extends AppCompatActivity {
     private String imgPath = null;
     private final int PICK_IMAGE_CAMERA = 1, PICK_IMAGE_GALLERY = 2;
 
+    String[] permissions = new String[]{
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    };
 
     ArrayList<File> fileArrayList = new ArrayList<>();
     ArrayList<Bitmap> bitmapArrayList = new ArrayList<>();
@@ -85,6 +92,9 @@ public class AddPerson extends AppCompatActivity {
         et_image = (TextView) findViewById(R.id.et_image);
 
         btn_select_image.setOnClickListener(mOnClickListener);
+
+        checkPermissions();
+
 
     }
 
@@ -130,11 +140,13 @@ public class AddPerson extends AppCompatActivity {
                                         "com.google.android.cameraview.demo", //(use your app signature + ".provider" )
                                         capturedFile);
 
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutfileUri);
+                                intent.putExtra  (MediaStore.EXTRA_OUTPUT, outPutfileUri) ;
+                                startActivityForResult (intent, PICK_IMAGE_CAMERA) ;
 
-                                startActivityForResult(intent, PICK_IMAGE_CAMERA);
 
-                            } else if (options[item].equals("Elegir desde Galeria"))
+
+                            }
+                            else if (options[item].equals("Elegir desde Galeria"))
                             {
                                 dialog.dismiss();
                                 Intent intent = new Intent(AddPerson.this, AlbumSelectActivity.class);
@@ -336,14 +348,42 @@ public class AddPerson extends AppCompatActivity {
                     et_image.setText("");
 
                 }
+
                 else
+
                 {
-                    Toast.makeText(getApplicationContext(),"Imagen agregada exitosamente",Toast.LENGTH_LONG).show();
+                    Log.i("simplerr", "se eejcuto else onpostexcejcute "+imgPath);
+
+                    String [] array=imgPath.split("/");
+
+                    String idunique=array[array.length-1];
+
+                    Log.i("simplerr", "el id unico es "+idunique);
+
+                    //OBTENEMOS LA LISTA DE EMPLEADOS Y SI ESTA VACIO SIGNIFCA QUE NO TENEMOS NINGUN EMPLEADO....
+                    Fichar.hasMapAllEmpleados = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+
+                    //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
+                  //  Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
+                    Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique);
+
+                    Fichar.hasMapAllEmpleados.put(idunique,empleadoObject);
+
+                    //gaurdamos en preferencias.
+                    SharePref.saveMapEmpleados(Fichar.hasMapAllEmpleados,SharePref.KEY_ALL_EMPLEADOS_Map);
+
+                    Toast.makeText(getApplicationContext(),"Usuario agregado exitosamente",Toast.LENGTH_LONG).show();
+
+                    Utils.existeNewUserAdd=true;
+
                     finish();
+
+
                 }
 
 
               //  enableSubmitIfReady();
+
             }
 
         }
@@ -371,6 +411,9 @@ public class AddPerson extends AppCompatActivity {
             List<VisionDetRet> results;
             String msg = null;
            ArrayList<Bitmap> bitmapArr = bp[0];
+
+            Log.i("simplerr", "se eejcuto doinbackgroudn ");
+
 
             for(int i=0;i<bitmapArr.size();i++)
             {
@@ -403,15 +446,8 @@ public class AddPerson extends AppCompatActivity {
 
                        /**aqui podemos agregar un nuevo empleado */
 
-                         //OBTENEMOS LA LISTA DE EMPLEADOS Y SI ESTA VACIO SIGNIFCA QUE NO TENEMOS NINGUN EMPLEADO....
-                    Fichar.hasMapAllEmpleados = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+                    Log.i("simplerr", "se eejcuto este ");
 
-                     //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
-                    Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
-                    Fichar.hasMapAllEmpleados.put(et_name.getText().toString()+ts+".jpg",empleadoObject);
-
-                     //gaurdamos en preferencias.
-                    SharePref.saveMapEmpleados(Fichar.hasMapAllEmpleados,SharePref.KEY_ALL_EMPLEADOS_Map);
 
 
 
@@ -468,13 +504,47 @@ public class AddPerson extends AppCompatActivity {
 
                 else
                 {
+
+
+                   // Log.i("simplerr","se ejecuto else here "+);
+
                     Toast.makeText(getApplicationContext(),"Se agregaron exitosamente las imagenes",Toast.LENGTH_LONG).show();
+
+
+
+
+
+
                     finish();
+
                 }
 
             }
             finish();
         }
+    }
+
+
+
+    private boolean checkPermissions() {
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p : permissions) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+
+        if (!listPermissionsNeeded.isEmpty()) {
+
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 100);
+            return false;
+
+        }
+
+
+        return true;
     }
 
 }

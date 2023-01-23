@@ -94,9 +94,10 @@
         app:layout_constraintGuide_percent="0.77" />
 
     <LinearLayout
+        android:id="@+id/layoutAllEmployers"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#1E1E1E"
+        android:background="#E91E63"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
@@ -109,7 +110,19 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="20dp"
-            android:src="@drawable/ic_baseline_exit_to_app_24" />
+            android:src="@drawable/ic_baseline_people_24" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:text="Lista de Colaboradores"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
 
     <android.support.constraint.Guideline
@@ -305,11 +318,23 @@
         app:layout_constraintTop_toTopOf="@+id/guideline14">
 
         <ImageView
+            android:id="@+id/jghjg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="20dp"
             android:src="@drawable/ic_baseline_person_add_alt_1_24" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:text="Agregar Colaborador"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
 
     </LinearLayout>
 

@@ -5,6 +5,9 @@ import java.util.Locale;
 
 public class Utils {
 
+    public static boolean existeNewUserAdd=false;
+
+
     public static void formatTime(Date time, Locale locale){
 
     }

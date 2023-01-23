@@ -21,7 +21,7 @@ public class SharePref {
 
 
  public static  final String KEY_FICHAR_MAP="KEY_FICHAR_MAP";
-    public static  final String KEY_ALL_EMPLEADOS_Map ="KEYALLEMPLEADOS";
+    public static  final String KEY_ALL_EMPLEADOS_Map ="KEYALLEMPLEADOSxxx";
 
     private static SharedPreferences mSharedPrefUniqueObjc;
 
@@ -119,7 +119,7 @@ public class SharePref {
         Gson   gson = new Gson();
         String response=mSharedPrefUniqueObjc.getString(keyShare , "");
 
-        Type type = new TypeToken<HashMap<String,Fichar>>(){}.getType();
+        Type type = new TypeToken<HashMap<String,Empleado>>(){}.getType();
         HashMap<String,Empleado> map;
         map = gson.fromJson(response, type);
 

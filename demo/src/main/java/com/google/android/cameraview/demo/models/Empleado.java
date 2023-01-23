@@ -6,19 +6,55 @@ import java.util.Locale;
 
 public class Empleado {
 
+    public long getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(long fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public String getFechaRegistroString() {
+        return fechaRegistroString;
+    }
+
+    public void setFechaRegistroString(String fechaRegistroString) {
+        this.fechaRegistroString = fechaRegistroString;
+    }
+
+    public String getNombreYapellidoEmpleado() {
+        return nombreYapellidoEmpleado;
+    }
+
+    public void setNombreYapellidoEmpleado(String nombreYapellidoEmpleado) {
+        this.nombreYapellidoEmpleado = nombreYapellidoEmpleado;
+    }
+
+    public String getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(String idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
     private long   fechaRegistro;
     private String    fechaRegistroString;
     private String  nombreYapellidoEmpleado;
     private String  idEmpleado;
 
 
-    public Empleado( String nombreYapellidoEmpleado, String idEmpleado) {
+    public Empleado(){
 
+    }
+
+    public Empleado( String nombreYapellidoEmpleado, String idEmpleado) {
 
         fechaRegistro = new Date().getTime();
         fechaRegistroString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(fechaRegistro);
         this.nombreYapellidoEmpleado = nombreYapellidoEmpleado;
         this.idEmpleado = idEmpleado;
+
     }
 
 
