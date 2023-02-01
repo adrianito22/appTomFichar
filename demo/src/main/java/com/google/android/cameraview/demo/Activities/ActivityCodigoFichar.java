@@ -262,7 +262,7 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ActivityCodigoFichar.this);
 
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_option_fichar);
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_incorrect);
 
 
         //ImageView imgClose=bottomSheetDialog.findViewById(R.id.imgClose);

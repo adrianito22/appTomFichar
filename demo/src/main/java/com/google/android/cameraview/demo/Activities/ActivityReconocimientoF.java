@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -353,8 +352,10 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
                     Log.i("fichnadodata","la hora de entrada es difrente de cero, ya hemos fichado antes ");
 
+                    sheetBootomShowPorqueYaMarco(true);
 
-                    Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
+
+                   // Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -405,17 +406,14 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
 
                 }else{  //el user ya ficho
-
                     Log.i("fichnadodata","ya fichamos fin comida ");
-
 
                     Toast.makeText(this, "Ya marcaste fin de comida", Toast.LENGTH_SHORT).show();
 
-
-
-
             }
         }
+
+
 
         else if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_SALIDA){
                 if(ficharObjec.getHoraSalidaMilliseconds()==0){
@@ -426,7 +424,6 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
                     showFichaje(time,"Salida",R.drawable.hora_salida);
 
-
                     //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
 
                 }
@@ -435,7 +432,10 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
                     Log.i("fichnadodata","la hora de salida ya estaba agregada..");
 
-                    Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
+                    sheetBootomShowPorqueYaMarco(false);
+
+
+                  //  Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
 
 
             }
@@ -564,6 +564,8 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
             super.onPreExecute();
         }
 
+
+
         protected ArrayList<String> doInBackground(Bitmap... bp) {
 
             if (bp[0] != null) {
@@ -691,6 +693,32 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
 
     }
+
+
+    private void sheetBootomShowPorqueYaMarco(boolean esHoraEntrada){
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ActivityReconocimientoF.this);
+
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_incorrect);
+
+        TextView txtAdviserxxcc=bottomSheetDialog.findViewById(R.id.txtAdviserxxcc);
+        ImageView imagSrc=bottomSheetDialog.findViewById(R.id.imagSrc);
+
+        imagSrc.setImageResource(R.drawable.ic_baseline_timer_off_24);
+
+
+        if(esHoraEntrada){
+            txtAdviserxxcc.setText("Ya marcaste la hora de entrada del dia de hoy ");
+
+        }else{
+            txtAdviserxxcc.setText("Ya marcaste la hora de salida del dia de hoy ");
+
+        }
+
+
+        bottomSheetDialog.show();
+
+    }
+
 
 }
 
