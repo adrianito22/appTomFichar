@@ -28,7 +28,7 @@
         app:layout_constraintGuide_percent="0.33" />
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cardViewInicioComida"
+        android:id="@+id/cardViewInformes"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cardBackgroundColor="#2196F3"
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="30dp"
-            android:src="@drawable/ic_baseline_local_dining_24" />
+            android:src="@drawable/ic_baseline_stacked_bar_chart_24" />
 
         <TextView
             android:id="@+id/textView6"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="10dp"
-            android:text="Inicio Comida"
+            android:text="Informes"
             android:textColor="@android:color/white" />
 
     </android.support.v7.widget.CardView>
@@ -146,8 +146,8 @@
         app:cardBackgroundColor="#2196F3"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
+        app:layout_constraintStart_toStartOf="@+id/guideline4"
         app:layout_constraintTop_toTopOf="@+id/guideline7">
 
         <ImageView
@@ -270,15 +270,15 @@
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cardViewFinComida"
+        android:id="@+id/cardViewOther"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:cardBackgroundColor="#E91E63"
         app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline15"
-        app:layout_constraintEnd_toStartOf="@+id/guideline10"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline7" >
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline9"
+        app:layout_constraintTop_toTopOf="@+id/guideline7">
 
         <ImageView
             android:id="@+id/imageView4"
@@ -286,7 +286,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="30dp"
-            android:src="@drawable/ic_baseline_food_bank_24" />
+            android:src="@drawable/ic_baseline_edit_calendar_24" />
 
         <TextView
             android:id="@+id/textView7"
@@ -294,7 +294,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="10dp"
-            android:text="Fin de comida"
+            android:text="Calendario Laboral"
             android:textColor="@android:color/white" />
 
     </android.support.v7.widget.CardView>
@@ -304,7 +304,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="129dp" />
+        app:layout_constraintGuide_begin="142dp" />
 
     <LinearLayout
         android:id="@+id/layoutAddEmpleado"

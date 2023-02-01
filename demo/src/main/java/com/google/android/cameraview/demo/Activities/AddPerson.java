@@ -365,7 +365,7 @@ public class AddPerson extends AppCompatActivity {
 
                     //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
                   //  Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
-                    Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique);
+                    Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()));
 
                     Fichar.hasMapAllEmpleados.put(idunique,empleadoObject);
 

@@ -54,7 +54,7 @@ public class AdapterEmpleado extends RecyclerView.Adapter<AdapterEmpleado.MyView
 
 
             holder.txtName.setText(listEmpleado.get(position).getNombreYapellidoEmpleado());
-
+             holder.txtCodigoMarcacion.setText(listEmpleado.get(position).getCodigoPaFichar());
     }
 
 
@@ -82,7 +82,7 @@ public class AdapterEmpleado extends RecyclerView.Adapter<AdapterEmpleado.MyView
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView txtName;
+        private TextView txtName,txtCodigoMarcacion;
         private LinearLayout linearLayout;
 
 
@@ -91,6 +91,7 @@ public class AdapterEmpleado extends RecyclerView.Adapter<AdapterEmpleado.MyView
             super(itemView);
 
             txtName =  itemView.findViewById(R.id.txtName);
+            txtCodigoMarcacion=itemView.findViewById(R.id.txtCodigoMarcacion);
             linearLayout =itemView.findViewById(R.id.linearLayout);
 
             linearLayout.findViewById(R.id.linearLayout).setOnClickListener(new View.OnClickListener() {

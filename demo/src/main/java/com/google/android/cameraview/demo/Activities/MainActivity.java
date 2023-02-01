@@ -7,16 +7,17 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.util.Util;
 import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.FaceRecognizer;
@@ -40,11 +41,13 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     CardView cardViewEntrada;
-    CardView cardViewInicioComida;
-    CardView cardViewFinComida;
+    CardView cardViewInformes;
+    CardView cardViewOther;
     CardView cardViewSalida;
     LinearLayout layoutAddEmpleado;
    LinearLayout layoutAllEmployers;
+
+
 
     Handler handler = new Handler();
 
@@ -95,10 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
         layoutAllEmployers=findViewById(R.id.layoutAllEmployers);
         cardViewEntrada=findViewById(R.id.cardViewEntrada);
-        cardViewInicioComida=findViewById(R.id.cardViewInicioComida);
-        cardViewFinComida=findViewById(R.id.cardViewFinComida);
+        cardViewInformes =findViewById(R.id.cardViewInformes);
+        cardViewOther =findViewById(R.id.cardViewOther);
         cardViewSalida=findViewById(R.id.cardViewSalida);
         layoutAddEmpleado=findViewById(R.id.layoutAddEmpleado);
+
 
         SharePref.init(MainActivity.this);
 
@@ -229,38 +233,43 @@ public class MainActivity extends AppCompatActivity {
 void listennersEventos(){
 
 
+
+
+
      cardViewEntrada.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
 
              Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_ENTRADA;
 
-             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
-             startActivity(intent);
+
+             sheetBootomFicharOptions();
+
+
 
 
          }
      });
-     cardViewInicioComida.setOnClickListener(new View.OnClickListener() {
+     cardViewInformes.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
 
-                Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_INCIO_COMIDA;
+            //    Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_INCIO_COMIDA;
 
-             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
-             startActivity(intent);
+           //  Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
+             //startActivity(intent);
 
          }
      });
-     cardViewFinComida.setOnClickListener(new View.OnClickListener() {
+     cardViewOther.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
 
-             Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_FIN_COMIDA;
+         //    Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_FIN_COMIDA;
 
 
-             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
-             startActivity(intent);
+             //Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
+           //  startActivity(intent);
 
          }
      });
@@ -271,8 +280,10 @@ void listennersEventos(){
          public void onClick(View view) {
              Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_SALIDA;
 
-             Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
-             startActivity(intent);
+             sheetBootomFicharOptions();
+
+           //  Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
+          //   startActivity(intent);
 
          }
      });
@@ -392,6 +403,51 @@ void listennersEventos(){
         FaceRecognizer.getInstance().release();
     }
 
+    private void sheetBootomFicharOptions(){
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
+
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_option_fichar);
+
+        Button btnRecocimientoFacial=bottomSheetDialog.findViewById(R.id.btnRecocimientoFacial);
+        Button btnCodigo=bottomSheetDialog.findViewById(R.id.btnCodigo);
+
+        //ImageView imgClose=bottomSheetDialog.findViewById(R.id.imgClose);
+        //8  bottomSheetDialog.setCancelable(false);
+
+
+        btnRecocimientoFacial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
+                startActivity(intent);
+
+                bottomSheetDialog.dismiss();
+
+
+            }
+        });
+
+
+
+        btnCodigo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ActivityCodigoFichar.class);
+                startActivity(intent);
+                bottomSheetDialog.dismiss();
+
+
+            }
+        });
+
+
+
+
+        bottomSheetDialog.show();
+
+    }
 
 
 }

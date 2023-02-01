@@ -43,17 +43,28 @@ public class Empleado {
     private String  nombreYapellidoEmpleado;
     private String  idEmpleado;
 
+    public String getCodigoPaFichar() {
+        return codigoPaFichar;
+    }
+
+    public void setCodigoPaFichar(String codigoPaFichar) {
+        this.codigoPaFichar = codigoPaFichar;
+    }
+
+    private String  codigoPaFichar;
+
 
     public Empleado(){
 
     }
 
-    public Empleado( String nombreYapellidoEmpleado, String idEmpleado) {
+    public Empleado( String nombreYapellidoEmpleado, String idEmpleado,String codigoPaFichar) {
 
         fechaRegistro = new Date().getTime();
         fechaRegistroString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(fechaRegistro);
         this.nombreYapellidoEmpleado = nombreYapellidoEmpleado;
         this.idEmpleado = idEmpleado;
+        this.codigoPaFichar=codigoPaFichar;
 
     }
 
