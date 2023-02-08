@@ -39,7 +39,8 @@
             android:ems="10"
             android:hint="Buscar Empleados"
             android:inputType="textPersonName"
-            android:textColorHint="#8A8A8A" />
+            android:textColorHint="#8A8A8A"
+            android:textSize="14sp" />
 
 
     </LinearLayout>
@@ -92,7 +93,7 @@
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:entries="@array/entriesExample" />
+                    android:entries="@array/datesExample" />
             </LinearLayout>
 
         </LinearLayout>
@@ -110,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="3dp"
-                android:text="Fecha" />
+                android:text="Tipo de reporte" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -123,7 +124,7 @@
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:entries="@array/entriesExample" />
+                    android:entries="@array/tipoReporte" />
             </LinearLayout>
 
         </LinearLayout>
@@ -141,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="3dp"
-                android:text="Fecha" />
+                android:text="Otra opcion aqui" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -154,7 +155,7 @@
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:entries="@array/entriesExample" />
+                    android:entries="@array/datesExample" />
             </LinearLayout>
 
         </LinearLayout>

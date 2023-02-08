@@ -15,11 +15,17 @@
     <string name="title_activity_add_person">Agregar Persona</string>
 
 
-    <string-array name="entriesExample">
-        <item>0-25%</item>
-        <item>26-50%</item>
-        <item>76-100%</item>
+    <string-array name="datesExample">
+        <item>1 enero 2023</item>
+        <item>2 enero 2023</item>
+        <item>3 enero 2023</item>
 
+    </string-array>
+
+
+    <string-array name="tipoReporte">
+        <item>Marcacion</item>
+        <item>Asistencia</item>
     </string-array>
 
 
