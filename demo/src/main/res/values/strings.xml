@@ -13,4 +13,14 @@
     <string name="take_picture">Reconocer</string>
     <string name="add_person">Agregar</string>
     <string name="title_activity_add_person">Agregar Persona</string>
+
+
+    <string-array name="entriesExample">
+        <item>0-25%</item>
+        <item>26-50%</item>
+        <item>76-100%</item>
+
+    </string-array>
+
+
 </resources>

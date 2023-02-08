@@ -1,14 +1,18 @@
 package com.google.android.cameraview.demo.Activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,10 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
     RecyclerView recylerVInformsAll;
      ArrayList<Empleado>listAllEmpleados= new ArrayList<>();
 
+    ArrayList<Empleado>listFilteredEmpleados= new ArrayList<>();
+
+    EditText ediNombreEmpleado;
+
 
 
     @Override
@@ -32,8 +40,12 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empleados_all);
 
+        ediNombreEmpleado=findViewById(R.id.ediNombreEmpleado);
         recylerVInformsAll=findViewById(R.id.recylerVInformsAll);
 
+
+        //iniicializamos text watcher
+        textWatcher();
 
         HashMap<String, Empleado> mhasMap = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
 
@@ -200,6 +212,101 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
     }
 
 
+
+    private void textWatcher(  ) {
+
+        ediNombreEmpleado.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Log.i("comisaria","el size en before text es "+ i2);
+                // Log.i("comisaria","el size  en ontexttext es "+edt_search.getText().toString().length() );
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                // Log.i("comisaria","el size  en ontexttext es "+edt_search.getText().toString().length() );
+                Log.i("comisaria","llamamos " );
+
+
+
+                listFilteredEmpleados.clear();
+                listFilteredEmpleados= new ArrayList<>();
+
+                for(int index = 0; index<  listAllEmpleados.size(); index++) {
+
+                    //  String textSearch=charSequence.toString().toUpperCase(Locale.ROOT);
+
+                    if( charSequence.toString().isEmpty() ||  listAllEmpleados.get(index).getNombreYapellidoEmpleado().contains(charSequence.toString().toUpperCase()))
+                    {
+
+                        listFilteredEmpleados.add(listAllEmpleados.get(index));
+
+                       // Log.i("comisaria","llamamos el size de lista es "+listFiltered.size() );
+
+
+                        addDataReciclerAndShowOptions(listFilteredEmpleados);
+
+                    }
+
+
+
+                    //llaamos a crear recilcer nuevamente todos
+
+                }
+
+                if(listFilteredEmpleados.size()==0){
+
+                    addDataReciclerAndShowOptions(listFilteredEmpleados);
+
+                }
+
+
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //  Log.i("comisaria","el size  en affter es "+edt_search.getText().toString().length() );
+
+
+            }
+
+        });
+
+    }
+
+    private void addDataReciclerAndShowOptions(ArrayList<Empleado> listEmpleados) {
+
+        recylerVInformsAll.setVisibility(View.VISIBLE);
+
+        recylerVInformsAll.setHasFixedSize(true);
+
+        AdapterEmpleado adapter = new AdapterEmpleado(ActivityEmpleadosAll.this, listEmpleados);
+
+        recylerVInformsAll.setLayoutManager(new LinearLayoutManager(ActivityEmpleadosAll.this,
+                LinearLayoutManager.VERTICAL, false));
+
+        recylerVInformsAll.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new AdapterEmpleado.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+
+                /***aqui obtenemos el objeto global*/
+
+                Log.i("elcickler","hemos clickeado");
+
+
+
+            }
+        });
+
+
+    }
 
 
 }
