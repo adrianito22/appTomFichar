@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="3dp"
-    tools:context=".Activities.ActivityEmpleadosAll">
+    tools:context=".Activities.ActivityReportes">
 
 
     <LinearLayout
@@ -90,23 +90,21 @@
                 android:orientation="vertical">
 
                 <Spinner
-                    android:id="@+id/spinner"
+                    android:id="@+id/spinnerDateRange"
+
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:entries="@array/datesExample" />
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/kkl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -121,7 +119,6 @@
                 android:orientation="vertical">
 
                 <Spinner
-                    android:id="@+id/spinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:entries="@array/tipoReporte" />
@@ -130,14 +127,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/kkl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView11"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

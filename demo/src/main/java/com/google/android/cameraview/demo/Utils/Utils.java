@@ -8,6 +8,10 @@ import java.util.Random;
 
 public class Utils {
 
+    /**CONTRASENA QUE NECESITAMOS PARA ENTRAR A ADMIN**/
+
+    public final static String PASSWORD_ADMIN="1111";
+
     public static boolean existeNewUserAdd=false;
 
 

@@ -12,7 +12,7 @@
     <string name="flash_on">Flash encendido</string>
     <string name="take_picture">Reconocer</string>
     <string name="add_person">Agregar</string>
-    <string name="title_activity_add_person">Agregar Persona</string>
+    <string name="title_activity_add_person">Agregar Persona </string>
 
 
     <string-array name="datesExample">

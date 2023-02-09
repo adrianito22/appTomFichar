@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demo.NoActionBar">
         <activity
-            android:name=".ActivityReportes"
-            android:exported="false" />
+            android:name=".Activities.ActivityReportes"
+            android:exported="true" />
         <activity
             android:name=".Activities.ActivityCodigoFichar"
             android:exported="true" />

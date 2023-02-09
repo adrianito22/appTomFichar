@@ -20,4 +20,20 @@
 
     <style name="Theme.Demo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="MonthPickerDialogStyle" >
+        <item name="monthBgColor">#FFFFFF</item>
+        <item name="monthBgSelectedColor">@color/colorAccent</item>
+        <item name="monthFontColorSelected">#FFFFFF</item>
+        <item name="monthFontColorNormal">#595858</item>
+        <item name="monthFontColorDisabled">@color/colorAccent</item>
+
+        <item name="headerBgColor">@color/colorAccent</item>
+        <item name="headerFontColorSelected">#fff</item>
+        <item name="headerFontColorNormal">#85FFFFFF</item>
+        <item name="headerTitleColor">#fff</item>
+
+        <item name="dialogActionButtonColor">@color/colorAccent</item>
+    </style>
+
+
 </resources>
