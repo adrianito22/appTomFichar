@@ -58,8 +58,9 @@ public class AdapterAsistencePromedio extends RecyclerView.Adapter<AdapterAsiste
 
              /**condiciones pintamos en rojo los que salieron muy temprano y entraron un poco tarde de la hora selecionada..*/
 
-             /***CREAR SECCION QUE DIGA ESTABLCER HORARIOS UN FIEL DONSE SELECIONE HORA DE ENTRADA Y OTRO DE SALIDA Y DIAS LABORABLES...MARCA Y SELECIONA SI ESE DIA ES ,MEDIO TIEMPO
-              * //TAMBIEN OTRO PARA MEDIO TIEMPO SABADO / M TIME.**/
+             /*** CREAR SECCION QUE DIGA ESTABLCER HORARIOS UN FIEL DONSE SELECIONE HORA DE ENTRADA Y OTRO DE SALIDA Y DIAS LABORABLES...
+              *MARCA Y SELECIONA SI ESE DIA ES ,MEDIO TIEMPO
+              * //TAMBIEN OTRO PARA MEDIO TIEMPO SABADO / M TIME. d**/
 
 
              /**BASE DE DATOS......*/

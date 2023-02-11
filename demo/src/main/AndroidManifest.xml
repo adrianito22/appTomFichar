@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demo.NoActionBar">
         <activity
+            android:name=".Activities.ActivityHorario"
+            android:exported="true" />
+        <activity
             android:name=".Activities.ActivityReportes"
             android:exported="true" />
         <activity
