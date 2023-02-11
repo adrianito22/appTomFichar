@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     CardView cardViewEntrada;
     CardView cardViewInformes;
-    CardView cardViewOther;
+    CardView cardViewHorario;
     CardView cardViewSalida;
     LinearLayout layoutAddEmpleado;
    LinearLayout layoutAllEmployers;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         layoutAllEmployers=findViewById(R.id.layoutAllEmployers);
         cardViewEntrada=findViewById(R.id.cardViewEntrada);
         cardViewInformes =findViewById(R.id.cardViewInformes);
-        cardViewOther =findViewById(R.id.cardViewOther);
+        cardViewHorario =findViewById(R.id.cardViewHorario);
         cardViewSalida=findViewById(R.id.cardViewSalida);
         layoutAddEmpleado=findViewById(R.id.layoutAddEmpleado);
 
@@ -256,20 +256,20 @@ void listennersEventos(){
 
             //    Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_INCIO_COMIDA;
 
-           //  Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
-             //startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, ActivityReportes.class);
+             startActivity(intent);
 
          }
      });
-     cardViewOther.setOnClickListener(new View.OnClickListener() {
+    cardViewHorario.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
 
          //    Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_FIN_COMIDA;
 
 
-             //Intent intent = new Intent(MainActivity.this, ActivityReconocimientoF.class);
-           //  startActivity(intent);
+             Intent intent = new Intent(MainActivity.this, ActivityHorario.class);
+             startActivity(intent);
 
          }
      });

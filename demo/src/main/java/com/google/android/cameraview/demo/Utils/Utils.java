@@ -10,7 +10,25 @@ public class Utils {
 
     /**CONTRASENA QUE NECESITAMOS PARA ENTRAR A ADMIN**/
 
+
+    public static final int MES_ESPECIFICO=4;
+    public static final int DIA_ESPECIFICO=5;
+
+
     public final static String PASSWORD_ADMIN="1111";
+
+    public final static int NUMS_DIAS_MINIMO=2;
+
+
+    /**dias semna*/
+    public static int LUNES=1;
+    public static int MARTES=2;
+    public static int MIERCOLES=3;
+    public static int JUEVES=4;
+    public static int VIERNES=5;
+    public static int SABADO=6;
+    public static int DOMINGO=7;
+
 
     public static boolean existeNewUserAdd=false;
 

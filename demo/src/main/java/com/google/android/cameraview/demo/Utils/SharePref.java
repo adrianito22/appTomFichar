@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.google.android.cameraview.demo.models.Empleado;
 import com.google.android.cameraview.demo.models.Fichar;
+import com.google.android.cameraview.demo.models.HorarIosTrabajos;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,6 +23,8 @@ public class SharePref {
 
  public static  final String KEY_FICHAR_MAP="KEY_FICHAR_MAP";
     public static  final String KEY_ALL_EMPLEADOS_Map ="KEYALLEMPLEADOSxxx";
+
+    public static  final String KEY_ALL_HORARIOS ="horarios";
 
     private static SharedPreferences mSharedPrefUniqueObjc;
 
@@ -78,6 +81,49 @@ public class SharePref {
 
         Type type = new TypeToken<HashMap<String,Fichar>>(){}.getType();
         HashMap<String,Fichar> map;
+        map = gson.fromJson(response, type);
+
+
+        if(response.equals("")) {
+            Log.i("lashareperf","no hay data en share");
+
+            map= new HashMap<>();
+            return map;
+
+        }else{
+            Log.i("lashareperf","Si hay data en share y data es length es "+response);
+            return map;
+        }
+
+
+    }
+
+
+
+    public static  void saveMapHorario(HashMap<String, String> inputMap, String keySharePref) {
+        if (mSharedPrefUniqueObjc != null){
+            // JSONObject jsonObject = new JSONObject(inputMap);
+            //   String jsonString = jsonObject.toString();
+            mSharedPrefUniqueObjc.edit()
+                    //  .remove("My_map")
+                    .putString(keySharePref, new Gson().toJson(inputMap))
+
+
+                    // .putString(keySharePref, jsonString)
+                    .apply();
+
+            Log.i("norooas","el size de map aqui es "+inputMap.size());
+
+        }
+    }
+
+    public static  HashMap<String,String> loadMapPreferencesHorario(String keyShare) {
+
+        Gson   gson = new Gson();
+        String response=mSharedPrefUniqueObjc.getString(keyShare , "");
+
+        Type type = new TypeToken<HashMap<String,String>>(){}.getType();
+        HashMap<String,String> map;
         map = gson.fromJson(response, type);
 
 
@@ -176,6 +222,57 @@ public class SharePref {
         }
 
     }
+
+
+
+
+
+    public static void saveListHorarios (ArrayList<HorarIosTrabajos> listHorarios, String KeyTOsAVE) {
+        Gson   gson = new Gson();
+        String jsonListString = gson.toJson(listHorarios);
+
+      //  .edit()
+                //.remove("My_map")
+              //  .putString(KeyTOsAVE, jsonListString).
+
+                mSharedPrefUniqueObjc.edit()
+                //  .remove("My_map")
+                .putString(KeyTOsAVE, new Gson().toJson(jsonListString))
+
+
+                // .putString(keySharePref, jsonString)
+                .apply();
+
+                // .putString(keySharePref, jsonString)
+
+        Log.i("sumare","el size es "+jsonListString.length()+" y el key es "+KeyTOsAVE);
+
+    }
+
+    public static  ArrayList<HorarIosTrabajos> getListHorarios ( String KeyOfItem) {
+        Gson   gson = new Gson();
+        String response=mSharedPrefUniqueObjc.getString(KeyOfItem , "");
+
+        Type type = new TypeToken<ArrayList<HorarIosTrabajos>>(){}.getType();
+        ArrayList<HorarIosTrabajos> listProductores;
+        listProductores = gson.fromJson(response, type);
+
+
+        if(response.equals("")) {
+            Log.i("lashareperf","no hay data en share");
+
+            listProductores= new ArrayList<>();
+            return listProductores;
+        }
+
+        else{
+            Log.i("lashareperf","Si hay data en share y el length es "+listProductores.size());
+
+            return listProductores;
+        }
+
+    }
+
 
 
 }
