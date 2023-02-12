@@ -11,6 +11,16 @@ public class Utils {
     /**CONTRASENA QUE NECESITAMOS PARA ENTRAR A ADMIN**/
 
 
+    public static String [] arrayMesSelecionado={"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
+            "Agosto", "Septiembre","Octubre","Noviembre","Diciembre"};
+
+
+    public static  int tipodeDatoMostrar=Utils.ITEM_MARACIONES_MODO;
+
+    public static final int ITEM_MARACIONES_MODO=121;
+    public static final int ITEM_ASISTENCIA_MODO=120;
+
+
     public static final int MES_ESPECIFICO=4;
     public static final int DIA_ESPECIFICO=5;
 

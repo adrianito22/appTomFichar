@@ -90,7 +90,7 @@
                 android:background="#FADAFF">
 
                 <TextView
-                    android:id="@+id/textView13"
+                    android:id="@+id/txtDateSelected"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="7dp"
@@ -131,6 +131,7 @@
                 android:orientation="vertical">
 
                 <Spinner
+                    android:id="@+id/spinTipoReporte"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:entries="@array/tipoReporte" />
@@ -142,7 +143,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="0dp"

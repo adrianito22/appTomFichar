@@ -146,14 +146,14 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
                 ficharObjec.setEntradaMilliseconds(new Date().getTime());
 
+
+
+
+
                 Log.i("fichnadodata","la hora de entrada es cero fichamos ahora");
-
-
 
                 showFichaje(time,"Entrada",R.drawable.hora_entrada);
 
-
-                //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
 
 
             }else{  //el user ya ficho

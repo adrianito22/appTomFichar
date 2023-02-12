@@ -9,16 +9,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.SharePref;
 import com.google.android.cameraview.demo.Utils.Utils;
 import com.google.android.cameraview.demo.adapters.AdapterAsistencePromedio;
-import com.google.android.cameraview.demo.adapters.AdapterEmpleado;
 import com.google.android.cameraview.demo.models.Empleado;
 import com.google.android.cameraview.demo.models.Fichar;
 import com.google.android.cameraview.demo.models.PromedioAsistenceEmpleado;
@@ -38,11 +39,16 @@ public class ActivityReportes extends AppCompatActivity {
    int mesSelecionado=0;
     int yearSelecionado=0;
     String fechaSelecionadaCalendar ="";
-
+    boolean isFirstShowReciclerData =true;
     LinearLayout linLaySelectRageDate;
+     TextView txtDateSelected;
 
+     Spinner spinnerTipoReporte;
+
+     int modoDateRangeSearch= Utils.DIA_ESPECIFICO;
 
     ArrayList<Empleado>miLisEmpleados= new ArrayList<>();
+
 
 
     @Override
@@ -52,6 +58,16 @@ public class ActivityReportes extends AppCompatActivity {
 
         linLaySelectRageDate =findViewById(R.id.imgSelectRageDate);
         recylerVInformsAll=findViewById(R.id.recylerVInformsAll);
+        txtDateSelected=findViewById(R.id.txtDateSelected);
+        spinnerTipoReporte =findViewById(R.id.spinTipoReporte);
+
+        //obtenmos toda la lista de empleados
+
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        fechaSelecionadaCalendar=dateFormat.format(date);
+
+
 
         linLaySelectRageDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,12 +80,63 @@ public class ActivityReportes extends AppCompatActivity {
 
 
 
-        //obtenmos toda la lista de empleados
-
-        HashMap<String,Empleado> miMapEmpleados =SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
 
         //creamos una lista con todos los empleados
 
+
+
+
+        spinnerTipoReporte.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                if(spinnerTipoReporte.getSelectedItem().toString().equalsIgnoreCase("Marcación")){
+                    Utils.tipodeDatoMostrar=Utils.ITEM_MARACIONES_MODO;
+
+                          ///mostramos prefefinido una sola vez
+                    if(isFirstShowReciclerData){
+                        showFisrtReciclerData();
+                        isFirstShowReciclerData=false;
+                    }else{
+
+                        generateAsistenciaArrayListByFilter(miLisEmpleados,modoDateRangeSearch);
+
+
+                        //aqui mostramos normalemente
+
+                    }
+
+
+                }else {
+                    Utils.tipodeDatoMostrar=Utils.ITEM_ASISTENCIA_MODO;
+
+                    //aqui debemos tener el modo
+
+                    generateAsistenciaArrayListByFilter(miLisEmpleados,modoDateRangeSearch);
+
+
+                    //showFisrtReciclerData();
+
+
+                }
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+
+
+    }
+
+
+
+
+    private void showFisrtReciclerData(){
+        HashMap<String,Empleado> miMapEmpleados =SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
 
         if(miMapEmpleados.size()>0){
             miLisEmpleados.addAll(miMapEmpleados.values());
@@ -77,9 +144,7 @@ public class ActivityReportes extends AppCompatActivity {
 
             //                 String fechaOfMilliseconds=mDay+"/"+mMonth+"/"+mYear;  en este formaro
 
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = new Date();
-            fechaSelecionadaCalendar=dateFormat.format(date);
+
             generateAsistenciaArrayListByFilter(miLisEmpleados,Utils.DIA_ESPECIFICO);
 
 
@@ -91,8 +156,6 @@ public class ActivityReportes extends AppCompatActivity {
             txtAdviserHere.setVisibility(View.VISIBLE);
 
         }
-
-
 
     }
 
@@ -194,15 +257,26 @@ public class ActivityReportes extends AppCompatActivity {
 
     private void showMont() {
 
-
-        //    long seconds =10000000;
-
         Calendar ca = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
         MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(ActivityReportes.this,
                 new MonthPickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(int selectedMonth, int selectedYear) { // on date set }
+
+                        Log.i("misafama","ondatset mes es "+selectedMonth+" y year es "+selectedYear);
+
+                        //AQUI EL MES
+
+                        mesSelecionado=selectedMonth+1;
+                        yearSelecionado=selectedYear;
+                        txtDateSelected.setText(Utils.arrayMesSelecionado[selectedMonth]);
+                        modoDateRangeSearch=Utils.MES_ESPECIFICO;
+                        //llamos  generar by mes...
+                        generateAsistenciaArrayListByFilter(miLisEmpleados,Utils.MES_ESPECIFICO);
+
+
+                        //aqui vamos..
 
 
                     }
@@ -213,9 +287,9 @@ public class ActivityReportes extends AppCompatActivity {
                 .setMinYear(2023)
                 .setActivatedYear(ca.get(Calendar.YEAR))
                 .setMaxYear(ca.get(Calendar.YEAR))
-                .setMinMonth(Calendar.FEBRUARY)
+                .setMinMonth(Calendar.JANUARY)
                 .setTitle("Selecione El rango")
-                .setMonthRange(Calendar.FEBRUARY, Calendar.NOVEMBER)
+                .setMonthRange(Calendar.JANUARY, Calendar.DECEMBER)
                 // .setMaxMonth(Calendar.OCTOBER)
                 // .setYearRange(1890, 1890)
                 // .setMonthAndYearRange(Calendar.FEBRUARY, Calendar.OCTOBER, 1890, 1890)
@@ -228,8 +302,8 @@ public class ActivityReportes extends AppCompatActivity {
                     @Override
                     public void onMonthChanged(int i) {
 
-                        mesSelecionado=i;
-                        Log.i("misafama","mes es "+i);
+                      //  mesSelecionado=i;
+                        Log.i("especificmes","mes es "+i);
 
 
                     }
@@ -240,7 +314,7 @@ public class ActivityReportes extends AppCompatActivity {
             public void onYearChanged(int selectedYear) { // on year selected } })
 
 
-                yearSelecionado=selectedYear;
+              //  yearSelecionado=selectedYear;
                    Log.i("misafama","solaper year es "+selectedYear);
             }
         });
@@ -253,7 +327,7 @@ public class ActivityReportes extends AppCompatActivity {
     //
 
     //aqui ya le pasamos la lista de fichaje con el que vamos a contruir una lista de promedios.
-    private void generateAsistenciaArrayListByFilter(ArrayList<Empleado>listUsersToGetFichajePromedio,int modo){
+    private void generateAsistenciaArrayListByFilter(ArrayList<Empleado>listUsersToGetFichajePromedio,int modoDateRangeSearch){
 
         ArrayList<PromedioAsistenceEmpleado>arrayList= new ArrayList<>();
 
@@ -267,39 +341,31 @@ public class ActivityReportes extends AppCompatActivity {
             //debug imprimos los datos de este fichaje
 
 
-            for(Fichar objec: hashMapAllRegistrosThisUser.values()){
-
-                Log.i("misdta","el getEntradaMilliseconds es "+objec.getEntradaMilliseconds());
-                Log.i("misdta","el getHoraSalidaMilliseconds es "+objec.getHoraSalidaMilliseconds());
-
-
-            }
-
-
             //ahora necesitamos solo obtener los de este mes...
 
-              if(modo== Utils.MES_ESPECIFICO){
-                 // mesSelecionado
+              if(modoDateRangeSearch== Utils.MES_ESPECIFICO){
+
+                  Log.i("especificmes","seleciono mes especifico ");
+
+                  // mesSelecionado
                 ArrayList<Fichar>lisFichajeCurrentUser=generaListMaracacionesEspecifiDateOrRange(hashMapAllRegistrosThisUser,Utils.MES_ESPECIFICO);
 
-                PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,ficharObjec.getNombreYapellidoEmpleado());
 
-                arrayList.add(promedioObjec);
+                if(lisFichajeCurrentUser.size()>0){
+                        PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,
+                                ficharObjec.getNombreYapellidoEmpleado());
+                        arrayList.add(promedioObjec);
+                    }
+
 
 
               }
 
-              else if(modo==Utils.DIA_ESPECIFICO){
+              else if(modoDateRangeSearch==Utils.DIA_ESPECIFICO){
 
-                  REVISAR AQUI LOS DOS STRING QUE SE COMPARAN.. Y VER SI EL METODO DE ABAJO NOS GENEROA UN VA;OR./
-
+                 // REVISAR AQUI LOS DOS STRING QUE SE COMPARAN.. Y VER SI EL METODO DE ABAJO NOS GENEROA UN VA;OR./
                   ArrayList<Fichar>lisFichajeCurrentUser=generaListMaracacionesEspecifiDateOrRange(hashMapAllRegistrosThisUser,Utils.DIA_ESPECIFICO);
-
-                  Log.i("misdta","el getEntradaMilliseconds es "+objec.getEntradaMilliseconds());
-
-
                   PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,ficharObjec.getNombreYapellidoEmpleado());
-
                   arrayList.add(promedioObjec);
 
 
@@ -309,6 +375,9 @@ public class ActivityReportes extends AppCompatActivity {
 
 
         }
+
+
+        Log.i("superme","DL SIZE DE ARRAU LIST ES "+arrayList.size());
 
 
         setDataRecyclerView(arrayList);
@@ -321,17 +390,20 @@ public class ActivityReportes extends AppCompatActivity {
     private ArrayList<Fichar>generaListMaracacionesEspecifiDateOrRange(HashMap<String, Fichar> hashMapAllRegistrosThisUser,int modo){
 
         ArrayList<Fichar>lisFichar= new ArrayList<>();
-
         GregorianCalendar c = new GregorianCalendar();
-        Calendar calendar = Calendar.getInstance();
 
 
         for(Fichar ficharObjec: hashMapAllRegistrosThisUser.values()){
 
              if(modo==Utils.MES_ESPECIFICO) {
                  c.setTimeInMillis(ficharObjec.getEntradaMilliseconds());
-                 int month = c.get(Calendar.MONTH);
+                 int month = c.get(Calendar.MONTH)+1;
                  int year = c.get(Calendar.YEAR);
+
+                 Log.i("especificmes","el month by millisecond es "+month+" el mes selecionado num es "+mesSelecionado);
+
+                 Log.i("especificmes","el year by millisecond es "+year+" el year selecioando es "+yearSelecionado);
+
                  if (month == mesSelecionado && year == yearSelecionado) {
                      lisFichar.add(ficharObjec);
 
@@ -342,15 +414,18 @@ public class ActivityReportes extends AppCompatActivity {
 
              else if(modo==Utils.DIA_ESPECIFICO){
 
-                 calendar.setTimeInMillis(ficharObjec.getEntradaMilliseconds());
-                 int mYear = calendar.get(Calendar.YEAR);
-                 int mMonth = calendar.get(Calendar.MONTH);
-                 int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                 String fechaOfMilliseconds=mDay+"/"+mMonth+"/"+mYear;
+                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                 String currentDate = dateFormat.format(ficharObjec.getEntradaMilliseconds());
 
-                 if (fechaOfMilliseconds.equals(fechaSelecionadaCalendar)) {
+                 Log.i("hakunama","el fecha milisegundoses "+currentDate);
+                 Log.i("hakunama","el fecha selecionado calendario es "+fechaSelecionadaCalendar);
+
+
+                 if (currentDate.equals(fechaSelecionadaCalendar)) {
                      lisFichar.add(ficharObjec);
+                     Log.i("hakunama","el fecha entarda es  "+ficharObjec.getEntradaMilliseconds());
+
 
                  }
 
@@ -380,10 +455,32 @@ public class ActivityReportes extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
 
-                         fechaSelecionadaCalendar =i2+"/"+(i1+1)+"/"+i;
+                              String dia;
+                              String mes;
+
+                         fechaSelecionadaCalendar =i2+"/"+(i1+1)+"/"+i;  //dia mes .year
+                        txtDateSelected.setText(fechaSelecionadaCalendar);
+
+                        dia=String.valueOf(i2);
+                        mes=String.valueOf(i1+1);
 
 
-                      //  generateAsistenciaArrayListByFilter(Utils.DIA_ESPECIFICO);
+                        if(i2<10){
+                            dia="0"+dia;
+                         }
+
+                        if(i1+1<10){
+                            mes="0"+mes;
+                        }
+
+
+                        fechaSelecionadaCalendar=dia+"/"+mes+"/"+i;
+
+                              Log.i("ladatae","el ffechalsecionada es"+fechaSelecionadaCalendar);
+
+                        modoDateRangeSearch=Utils.DIA_ESPECIFICO;
+
+                        generateAsistenciaArrayListByFilter(miLisEmpleados,Utils.DIA_ESPECIFICO);
 
                        // ediFecha.setText(dateSelec);
 

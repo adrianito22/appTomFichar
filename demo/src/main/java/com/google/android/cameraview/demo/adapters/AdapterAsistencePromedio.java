@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.Utils.Utils;
 import com.google.android.cameraview.demo.models.PromedioAsistenceEmpleado;
 
 import java.util.ArrayList;
@@ -35,11 +36,25 @@ public class AdapterAsistencePromedio extends RecyclerView.Adapter<AdapterAsiste
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.item_marcaciones_promedio, parent, false);
-        MyViewHolder holder = new MyViewHolder(view);
-        view.setOnClickListener(this);
 
-        return holder;
+
+        if(Utils.tipodeDatoMostrar==Utils.ITEM_MARACIONES_MODO){
+            View view = inflater.inflate(R.layout.item_marcaciones_promedio, parent, false);
+            MyViewHolder holder = new MyViewHolder(view);
+            view.setOnClickListener(this);
+            return holder;
+
+        }else{
+            View view = inflater.inflate(R.layout.item_asistencia_dias, parent, false);
+            MyViewHolder holder = new MyViewHolder(view);
+            view.setOnClickListener(this);
+            return holder;
+
+
+        }
+
+
+
     }
 
 
@@ -50,10 +65,22 @@ public class AdapterAsistencePromedio extends RecyclerView.Adapter<AdapterAsiste
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
-             holder.txtNameEmpleado.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getEmpleadoName());
-             holder.txtEntradaHora.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getEntradaPromedio());
-             holder.txtHoraSalida.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getSalidaPromedio());
+            if(Utils.tipodeDatoMostrar==Utils.ITEM_MARACIONES_MODO){
 
+                holder.txtNameEmpleado.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getEmpleadoName());
+                holder.txtEntradaHora.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getEntradaPromedio());
+                holder.txtHoraSalida.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getSalidaPromedio());
+
+
+
+
+            }else{ //son dias de asitencia
+
+                holder.txtNameEmpleado.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getEmpleadoName());
+                holder.txtHoraSalida.setText(String.valueOf(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getAsistenciaPromedio()));
+
+
+            }
 
 
              /**condiciones pintamos en rojo los que salieron muy temprano y entraron un poco tarde de la hora selecionada..*/

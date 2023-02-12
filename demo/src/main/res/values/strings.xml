@@ -24,7 +24,7 @@
 
 
     <string-array name="tipoReporte">
-        <item>Marcacion</item>
+        <item>Marcación</item>
         <item>Asistencia</item>
     </string-array>
 
