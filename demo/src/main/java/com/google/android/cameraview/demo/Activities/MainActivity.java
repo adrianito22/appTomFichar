@@ -265,10 +265,9 @@ void listennersEventos(){
          @Override
          public void onClick(View view) {
 
-         //    Fichar.tipoFichanSelecionadoCurrent=Fichar.FICHAJE_FIN_COMIDA;
 
-
-             Intent intent = new Intent(MainActivity.this, ActivityHorario.class);
+             Intent intent = new Intent(MainActivity.this, ActivityPassMain.class);
+             intent.putExtra("key",Utils.GO_ActivityHorario);
              startActivity(intent);
 
          }
@@ -293,7 +292,10 @@ void listennersEventos(){
         @Override
         public void onClick(View view) {
 
-            Intent intent = new Intent(MainActivity.this, AddPerson.class);
+
+
+            Intent intent = new Intent(MainActivity.this, ActivityPassMain.class);
+            intent.putExtra("key",Utils.GO_AddPerson);
             startActivity(intent);
 
 

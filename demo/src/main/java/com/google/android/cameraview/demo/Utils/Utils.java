@@ -9,6 +9,11 @@ import java.util.Random;
 public class Utils {
 
     /**CONTRASENA QUE NECESITAMOS PARA ENTRAR A ADMIN**/
+    public final static String PASSWORD_ADMIN="1111";
+
+
+    public static final int GO_ActivityHorario=200;
+    public static final int GO_AddPerson=201;
 
 
     public static String [] arrayMesSelecionado={"Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio",
@@ -25,7 +30,6 @@ public class Utils {
     public static final int DIA_ESPECIFICO=5;
 
 
-    public final static String PASSWORD_ADMIN="1111";
 
     public final static int NUMS_DIAS_MINIMO=2;
 

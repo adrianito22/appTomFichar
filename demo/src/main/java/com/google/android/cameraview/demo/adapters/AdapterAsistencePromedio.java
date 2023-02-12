@@ -96,7 +96,6 @@ public class AdapterAsistencePromedio extends RecyclerView.Adapter<AdapterAsiste
     }
 
 
-
     public void setOnClickListener(View.OnClickListener listener){
         this.listener=listener;
     }
