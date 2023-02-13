@@ -239,7 +239,7 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
 
                     //  String textSearch=charSequence.toString().toUpperCase(Locale.ROOT);
 
-                    if( charSequence.toString().isEmpty() ||  listAllEmpleados.get(index).getNombreYapellidoEmpleado().contains(charSequence.toString().toUpperCase()))
+                    if( !charSequence.toString().isEmpty() ||  listAllEmpleados.get(index).getNombreYapellidoEmpleado().contains(charSequence.toString().toUpperCase()))
                     {
 
                         listFilteredEmpleados.add(listAllEmpleados.get(index));

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.SharePref;
 import com.google.android.cameraview.demo.Utils.Utils;
@@ -42,12 +43,12 @@ public class ActivityReportes extends AppCompatActivity {
     boolean isFirstShowReciclerData =true;
     LinearLayout linLaySelectRageDate;
      TextView txtDateSelected;
-
      Spinner spinnerTipoReporte;
-
      int modoDateRangeSearch= Utils.DIA_ESPECIFICO;
-
     ArrayList<Empleado>miLisEmpleados= new ArrayList<>();
+    TextView txt1;
+    TextView txt2;
+    TextView txt3;
 
 
 
@@ -60,6 +61,14 @@ public class ActivityReportes extends AppCompatActivity {
         recylerVInformsAll=findViewById(R.id.recylerVInformsAll);
         txtDateSelected=findViewById(R.id.txtDateSelected);
         spinnerTipoReporte =findViewById(R.id.spinTipoReporte);
+
+         txt1=findViewById(R.id.txt1);
+         txt2=findViewById(R.id.txt2);
+         txt3=findViewById(R.id.txt3);
+
+
+
+
 
         //obtenmos toda la lista de empleados
 
@@ -161,10 +170,29 @@ public class ActivityReportes extends AppCompatActivity {
 
     private void setDataRecyclerView(ArrayList<PromedioAsistenceEmpleado> list){
 
+        if(Utils.tipodeDatoMostrar== Utils.ITEM_MARACIONES_MODO){
+
+            txt2.setVisibility(View.VISIBLE);
+            txt2.setText("Hora entrada");
+            txt3.setText("Hora salida");
+
+
+        }
+
+        else
+
+        {
+
+            txt2.setVisibility(View.GONE);
+            txt3.setText("Dias asistencia");
+
+
+        }
+
+
         if(list.size()==0){
             TextView txtAdviserHere=findViewById(R.id.txtAdviserHere);
             txtAdviserHere.setVisibility(View.VISIBLE);
-
         }
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ActivityReportes.this);
@@ -172,6 +200,9 @@ public class ActivityReportes extends AppCompatActivity {
         AdapterAsistencePromedio adapter = new AdapterAsistencePromedio(ActivityReportes.this, list);
         recylerVInformsAll.setLayoutManager(layoutManager);
         recylerVInformsAll.setAdapter(adapter);
+
+
+
 
 
         adapter.setOnItemClickListener(new AdapterAsistencePromedio.ClickListener() {
@@ -476,7 +507,7 @@ public class ActivityReportes extends AppCompatActivity {
 
                         fechaSelecionadaCalendar=dia+"/"+mes+"/"+i;
 
-                              Log.i("ladatae","el ffechalsecionada es"+fechaSelecionadaCalendar);
+                             // Log.i("ladatae","el ffechalsecionada es"+fechaSelecionadaCalendar);
 
                         modoDateRangeSearch=Utils.DIA_ESPECIFICO;
 
@@ -527,6 +558,7 @@ public class ActivityReportes extends AppCompatActivity {
 
             if(ficharObject.getEntradaMilliseconds()>0){
                 contadorItems++;
+                diasAsistencia++;
 
             }
 

@@ -3,6 +3,7 @@ package com.google.android.cameraview.demo.Activities;
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
@@ -95,6 +96,16 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
        // Log.i("sumare","el size lis here es t"+lis.size());
 
 
+
+        imgAddEmpleado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intencion = new Intent(ActivityHorario.this, AddPerson.class);
+                startActivity(intencion);
+
+            }
+        });
 
 
         txtImputEntrada.setOnTouchListener(new View.OnTouchListener() {
