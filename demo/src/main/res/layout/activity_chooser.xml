@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/gradient_holo_pink_cate" />
+            app:srcCompat="@drawable/gradient_holo_pink_cate" />
 
 
 
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/gradient_holo_brown_category" />
+            app:srcCompat="@drawable/gradient_holo_brown_category" />
 
 
 
@@ -153,7 +153,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/gradient_holo_gray" />
+            app:srcCompat="@drawable/gradient_holo_gray" />
 
 
 

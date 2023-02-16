@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="30dp"
-            android:src="@drawable/ic_baseline_stacked_bar_chart_24" />
+            app:srcCompat="@drawable/ic_baseline_stacked_bar_chart_24" />
 
         <TextView
             android:id="@+id/textView6"
@@ -74,7 +74,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="30dp"
-            android:src="@drawable/ic_baseline_add_home_work_24" />
+            app:srcCompat="@drawable/ic_baseline_add_home_work_24" />
 
         <TextView
             android:id="@+id/textView2"
@@ -110,7 +110,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="20dp"
-            android:src="@drawable/ic_baseline_people_24" />
+            app:srcCompat="@drawable/ic_baseline_people_24" />
 
         <TextView
             android:id="@+id/textView9"
@@ -156,7 +156,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="30dp"
-            android:src="@drawable/ic_baseline_exit_to_app_24" />
+            app:srcCompat="@drawable/ic_baseline_exit_to_app_24" />
 
         <TextView
             android:id="@+id/textView5"
@@ -286,7 +286,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="30dp"
-            android:src="@drawable/ic_baseline_edit_calendar_24" />
+            app:srcCompat="@drawable/ic_baseline_edit_calendar_24" />
 
         <TextView
             android:id="@+id/textView7"
@@ -323,7 +323,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:padding="20dp"
-            android:src="@drawable/ic_baseline_person_add_alt_1_24" />
+            app:srcCompat="@drawable/ic_baseline_person_add_alt_1_24" />
 
         <TextView
             android:id="@+id/textView8"

@@ -1,10 +1,9 @@
 package com.google.android.cameraview.demo.Utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 
 import com.google.android.cameraview.demo.models.Empleado;
 import com.google.android.cameraview.demo.models.Fichar;
@@ -15,8 +14,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SharePref {
 
@@ -34,7 +31,7 @@ public class SharePref {
     public static void init(Context context)
     {
         if(mSharedPrefUniqueObjc == null)
-            mSharedPrefUniqueObjc = context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
+            mSharedPrefUniqueObjc = context.getSharedPreferences(context.getPackageName(), AppCompatActivity.MODE_PRIVATE);
 
 
     }

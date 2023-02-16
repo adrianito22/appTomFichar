@@ -212,7 +212,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="right"
-                android:src="@drawable/ic_baseline_person_add_horario" />
+                app:srcCompat="@drawable/ic_baseline_person_add_horario" />
 
         </LinearLayout>
 
