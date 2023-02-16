@@ -3,6 +3,7 @@ package com.google.android.cameraview.demo.Utils;
 import android.util.Log;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Random;
 
@@ -10,7 +11,11 @@ public class Utils {
 
     /**CONTRASENA QUE NECESITAMOS PARA ENTRAR A ADMIN**/
     public final static String PASSWORD_ADMIN="1111";
+    public static boolean isEditHorario=false;
 
+
+    public final static HashMap<String,HashMap<String,String>> mihasWhitMhorariosAll= new HashMap();
+    public static String currentHorarioSelectedUid;
 
     public static final int GO_ActivityHorario=200;
     public static final int GO_AddPerson=201;

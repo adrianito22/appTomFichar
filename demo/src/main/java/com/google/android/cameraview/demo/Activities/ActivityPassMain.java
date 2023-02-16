@@ -58,7 +58,7 @@ public class ActivityPassMain extends AppCompatActivity {
 
 
                         if(activityDondeVamos==Utils.GO_ActivityHorario){
-                            startActivity(new Intent(ActivityPassMain.this, ActivityHorario.class));
+                            startActivity(new Intent(ActivityPassMain.this, ActivityAllHorarios.class));
 
                         }
                         else if(activityDondeVamos==Utils.GO_AddPerson){

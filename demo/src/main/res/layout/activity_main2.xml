@@ -5,6 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     tools:context=".Activities.ActivityReconocimientoF"
     android:background="#000">
 
@@ -14,7 +15,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:adjustViewBounds="true"
+        android:layout_gravity="center"
         android:background="@android:color/black" />
 
     <android.support.v7.widget.Toolbar

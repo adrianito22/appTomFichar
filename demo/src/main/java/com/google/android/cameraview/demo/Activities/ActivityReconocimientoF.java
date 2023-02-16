@@ -5,6 +5,7 @@ package com.google.android.cameraview.demo.Activities;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
@@ -50,6 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
 
 public class ActivityReconocimientoF extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -99,15 +102,15 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_camera_empty);
 
-
+/*
         mCameraView = (CameraView) findViewById(R.id.camera);
-        Button fab = (Button) findViewById(R.id.take_picture);
+
+       Button fab = (Button) findViewById(R.id.take_picture);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         checkPermissions();
-
 
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
@@ -124,8 +127,12 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
-    }
+*/
 
+        takePickCamera();
+
+
+    }
 
 
 
@@ -201,8 +208,10 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
-            mCameraView.start();
+           // mCameraView.start();
         }
+
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
 
@@ -213,7 +222,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
     @Override
     protected void onPause() {
         Log.d(TAG, "onPause called");
-        mCameraView.stop();
+      //  mCameraView.stop();
         super.onPause();
     }
 
@@ -247,7 +256,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -263,14 +272,17 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
             case R.id.switch_camera:
                 if (mCameraView != null) {
                     int facing = mCameraView.getFacing();
+                    ///int facing = 500;
+
                     mCameraView.setFacing(facing == CameraView.FACING_FRONT ?
                             CameraView.FACING_BACK : CameraView.FACING_FRONT);
                 }
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
+*/
     private String getResultMessage(ArrayList<String> names) {
         String msg = "";
         if (names.isEmpty()) {
@@ -582,12 +594,12 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
                         Toast.makeText(getApplicationContext(), "Time cost: " + (endTime - startTimeLocally) / 1000f + " sec", Toast.LENGTH_LONG).show();
+
+
                     }
                 });
-
-
-
 
 
 
@@ -605,9 +617,9 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
                      if(!idEncontrado.equals("")){ //asi obtenemos solo la primera coincidencia
                          break;
                      }
-
-
                 }
+
+
 
                 HashSet<String> hashSet = new HashSet<String>();
                 hashSet.addAll(names);
@@ -623,7 +635,6 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
 
         }
-
 
 
         protected void onPostExecute(ArrayList<String> names) {
@@ -696,12 +707,27 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
 
     private void sheetBootomShowPorqueYaMarco(boolean esHoraEntrada){
+
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(ActivityReconocimientoF.this);
 
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_incorrect);
 
         TextView txtAdviserxxcc=bottomSheetDialog.findViewById(R.id.txtAdviserxxcc);
         ImageView imagSrc=bottomSheetDialog.findViewById(R.id.imagSrc);
+        Button btnLoTengo=bottomSheetDialog.findViewById(R.id.btnLoTengo);
+        bottomSheetDialog.setCancelable(false);
+        btnLoTengo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finish();
+                bottomSheetDialog.dismiss();
+
+
+
+            }
+        });
+
 
         imagSrc.setImageResource(R.drawable.ic_baseline_timer_off_24);
 
@@ -717,6 +743,34 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
         bottomSheetDialog.show();
 
+    }
+
+
+    void takePickCamera() {
+
+        Intent camera_intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Start the activity with camera_intent, and request pic id
+        startActivityForResult(camera_intent, 100);
+        //startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE); // OLD WAY
+
+    }
+
+
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Match the request 'pic id with requestCode
+        if (requestCode == 100) {
+            // BitMap is data structure of image file which store the image in memory
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+
+         //   Bitmap bp = drawResizedBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
+            new detectAsync().execute(photo);
+
+            // Set the image in imageview for display
+            //click_image_id.setImageBitmap(photo);
+        }
     }
 
 

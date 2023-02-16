@@ -227,9 +227,9 @@ public class SharePref {
 
 
 
-    public static void saveListHorarios (ArrayList<HorarIosTrabajos> listHorarios, String KeyTOsAVE) {
+    public static void saveListHorarios (HashMap<String, HorarIosTrabajos> hasMapHorarios, String KeyTOsAVE) {
         Gson   gson = new Gson();
-        String jsonListString = gson.toJson(listHorarios);
+        String jsonListString = gson.toJson(hasMapHorarios);
 
       //  .edit()
                 //.remove("My_map")
@@ -237,8 +237,9 @@ public class SharePref {
 
                 mSharedPrefUniqueObjc.edit()
                 //  .remove("My_map")
-                .putString(KeyTOsAVE, new Gson().toJson(jsonListString))
+                .putString(KeyTOsAVE,jsonListString )
 
+                        .putString(KeyTOsAVE, jsonListString)
 
                 // .putString(keySharePref, jsonString)
                 .apply();
@@ -249,26 +250,29 @@ public class SharePref {
 
     }
 
-    public static  ArrayList<HorarIosTrabajos> getListHorarios ( String KeyOfItem) {
+    public static  HashMap<String, HorarIosTrabajos> getListHorarios ( String KeyOfItem) {
         Gson   gson = new Gson();
         String response=mSharedPrefUniqueObjc.getString(KeyOfItem , "");
 
-        Type type = new TypeToken<ArrayList<HorarIosTrabajos>>(){}.getType();
-        ArrayList<HorarIosTrabajos> listProductores;
-        listProductores = gson.fromJson(response, type);
+        //Type type = new TypeToken<ArrayList<HorarIosTrabajos>>(){}.getType();
+
+        Type listType = new TypeToken<HashMap<String, HorarIosTrabajos>>(){}.getType();
 
 
+        HashMap<String, HorarIosTrabajos> listHorarios = gson.fromJson(response, listType);
+
+        assert response != null;
         if(response.equals("")) {
             Log.i("lashareperf","no hay data en share");
 
-            listProductores= new ArrayList<>();
-            return listProductores;
+            listHorarios= new HashMap();
+            return listHorarios;
         }
 
         else{
-            Log.i("lashareperf","Si hay data en share y el length es "+listProductores.size());
+            Log.i("lashareperf","Si hay data en share y el length es "+listHorarios.size());
 
-            return listProductores;
+            return listHorarios;
         }
 
     }

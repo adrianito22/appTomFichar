@@ -47,6 +47,8 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
     TextView txtSabado;
     TextView txtDomingo;
 
+     TextInputEditText ediNombreHorario;
+
     TextView txtNumsEmpleados;
     ImageView imgAddEmpleado;
 
@@ -80,17 +82,23 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
         txtImputSalida.setKeyListener(null);
 
 
-         //obtenemos preferencias y si hay data la seteamos
-        MImap= SharePref.loadMapPreferencesHorario(SharePref.KEY_ALL_HORARIOS);
 
+        if(Utils.isEditHorario){
 
+            //obtenemos preferencias y si hay data la seteamos
 
-        if(MImap.size()>0){
+            MImap= SharePref.loadMapPreferencesHorario(Utils.currentHorarioSelectedUid);
 
-            Log.i("sumare","el size es mayor a 0");
-            seteamosHorarioDePrefrencias();
+            if(MImap.size()>0){
+
+                Log.i("sumare","el size es mayor a 0");
+                seteamosHorarioDePrefrencias();
+
+            }
 
         }
+
+
 
 
        // Log.i("sumare","el size lis here es t"+lis.size());
@@ -167,21 +175,19 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
                 }
 
 
+                if(ediNombreHorario.getText().toString().equals("")){
+                    Toast.makeText(ActivityHorario.this, " Agrege un nombre al Horario", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 ///vamos a guardar el horario...
 
                 MImap.put(String.valueOf(txtImputEntrada.getId()),txtImputEntrada.getText().toString());
 
                 MImap.put(String.valueOf(txtImputSalida.getId()),txtImputSalida.getText().toString());
 
-
-                 /**debug*/
-                for(String  value: MImap.values()){
-
-                    Log.i("misdatas","el value item map es "+value);
-
-                }
-
-
+                MImap.put(String.valueOf(ediNombreHorario.getId()),ediNombreHorario.getText().toString());
 
 
                 TextView [] txtArray={txtLunes,txtMartes,txtMiercoles,txtJueves,txtViernes,txtSabado,txtDomingo};
@@ -190,16 +196,36 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
                     if(txtCurrent.getBackground()==ContextCompat.getDrawable(  ActivityHorario.this, R.drawable.back_dia_selected)){
                         MImap.put(String.valueOf(txtCurrent.getTag()),txtCurrent.getTag().toString());
-
                     }
+                }
+
+
+                HorarIosTrabajos horarioObjec= new HorarIosTrabajos(txtImputEntrada.getText().toString(),txtImputSalida.getText().toString(),
+                       ediNombreHorario.getText().toString());
+
+                HashMap<String, HorarIosTrabajos>mapHorariosTrabajos=SharePref.getListHorarios(SharePref.KEY_ALL_HORARIOS);
+
+                if(Utils.isEditHorario){ //estamos editando
+                    horarioObjec.setIdHorarioHereKEYpreferences(Utils.currentHorarioSelectedUid);
+                    mapHorariosTrabajos.put(Utils.currentHorarioSelectedUid,horarioObjec);
+
+               }
+                else{ //es crear un nuevo horario
+                    mapHorariosTrabajos.put(horarioObjec.getIdHorarioHereKEYpreferences(),horarioObjec);
 
                 }
 
 
-                SharePref.saveMapHorario(MImap,SharePref.KEY_ALL_HORARIOS);
+                Log.i("smaornrnr","el uid de horario object es "+horarioObjec.getIdHorarioHereKEYpreferences());
 
 
-                Toast.makeText(ActivityHorario.this, "Se actualizó Horario", Toast.LENGTH_SHORT).show();
+                SharePref.saveListHorarios(mapHorariosTrabajos,SharePref.KEY_ALL_HORARIOS);
+                SharePref.saveMapHorario(MImap,horarioObjec.getIdHorarioHereKEYpreferences());
+
+
+                Toast.makeText(ActivityHorario.this, "Se guaradó Horario", Toast.LENGTH_SHORT).show();
+
+                finish();
 
                 Log.i("sumare","hemos guardado aqui hurra");
 
@@ -209,6 +235,20 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
         });
 
 
+    }
+
+
+    private int  getPosicionBYid(ArrayList<HorarIosTrabajos>list){
+        int position=0;
+        for(HorarIosTrabajos objec: list){
+
+            if(objec.getIdHorarioHereKEYpreferences().equals(Utils.currentHorarioSelectedUid)){
+
+             return position;
+            }
+
+        }
+        return 10000;
     }
 
 
@@ -259,7 +299,7 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
          txtImputEntrada=findViewById(R.id.txtImputEntrada);
          txtImputSalida=findViewById(R.id.txtImputSalida);
         btnGuardar=findViewById(R.id.btnGuardar);
-
+        ediNombreHorario=findViewById(R.id.ediNombreHorario);
         //DIAS SEMANA
          txtLunes=findViewById(R.id.txtLunes);
          txtMartes=findViewById(R.id.txtMartes);
@@ -317,6 +357,8 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
         txtImputEntrada.setText(MImap.get(String.valueOf(R.id.txtImputEntrada)));
         txtImputSalida.setText(MImap.get(String.valueOf(R.id.txtImputSalida)));
+        ediNombreHorario.setText(MImap.get(String.valueOf(R.id.ediNombreHorario)));
+
 
 
         TextView [] arraTextView={
