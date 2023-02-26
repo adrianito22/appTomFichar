@@ -7,6 +7,13 @@
     tools:context=".Activities.ActivityDetailsAsistence">
 
     <android.support.constraint.Guideline
+        android:id="@+id/guideline28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <android.support.constraint.Guideline
         android:id="@+id/guideline24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -76,14 +83,14 @@
 
     <ImageView
         android:id="@+id/imageView9"
-        android:layout_width="61dp"
-        android:layout_height="0dp"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline23"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline27"
+        app:layout_constraintStart_toStartOf="@+id/guideline26"
         app:layout_constraintTop_toBottomOf="@+id/txtNameHere"
-        tools:srcCompat="@drawable/baseline_face_24cc" />
+        app:srcCompat="@drawable/baseline_face_24cc" />
 
     <LinearLayout
         android:id="@+id/layoutLista"
@@ -152,6 +159,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.18" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.42" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.57" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline25"

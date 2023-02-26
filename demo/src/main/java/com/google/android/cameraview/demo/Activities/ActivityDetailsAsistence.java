@@ -69,9 +69,6 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
         txtNameHere.setText(Utils.nameCurrentEmpleado);
 
 
-
-
-
         FragmentList fragment= new FragmentList();
         loadFragment(fragment);
 
@@ -80,7 +77,6 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
         layoutCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 FragmentCalendar fragment= new FragmentCalendar();
                 loadFragment(fragment);
