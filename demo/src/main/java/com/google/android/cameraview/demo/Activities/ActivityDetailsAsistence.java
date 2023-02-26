@@ -1,6 +1,7 @@
 package com.google.android.cameraview.demo.Activities;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,13 +11,19 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.fragments.FragmentCalendar;
 import com.google.android.cameraview.demo.fragments.FragmentList;
 
 public class ActivityDetailsAsistence extends AppCompatActivity {
+
+
+     ImageView btnBackButton;
+     TextView txtNameHere;
 
     LinearLayout layoutCalendar;
     LinearLayout layoutLista;
@@ -37,11 +44,27 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
         setContentView(R.layout.activity_details_asistence);
 
 
-
-
-
         layoutCalendar=findViewById(R.id.layoutCalendar);
         layoutLista=findViewById(R.id.layoutLista);
+
+         LinearLayout layoutLineCalendar=findViewById(R.id.layoutLineCalendar);
+        LinearLayout layoutLineLista=findViewById(R.id.layoutLineLista);
+
+
+
+
+        btnBackButton=findViewById(R.id.btnBackButton);
+         btnBackButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+
+                 finish();
+             }
+
+         });
+
+
+         txtNameHere=findViewById(R.id.txtNameHere);
 
 
 
@@ -59,6 +82,17 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
                 FragmentCalendar fragment= new FragmentCalendar();
                 loadFragment(fragment);
 
+                ///modificcomo el color de este layout
+                layoutCalendar.setBackgroundColor(Color.parseColor("#3F51B5"));
+                layoutLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
+
+
+                layoutLineCalendar.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                layoutLineLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
+
+
             }
         });
 
@@ -70,6 +104,15 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
 
                 FragmentList fragment= new FragmentList();
                 loadFragment(fragment);
+
+
+                ///modificcomo el color de este layout
+                layoutCalendar.setBackgroundColor(Color.parseColor("#3F51B5"));
+                layoutLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
+
+                layoutLineCalendar.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                layoutLineLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
             }
         });
@@ -95,5 +138,7 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit(); // save the changes
     }
+
+
 
 }

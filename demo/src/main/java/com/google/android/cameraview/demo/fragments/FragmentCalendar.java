@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 import android.widget.CalendarView;
 
 import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.customClass.EventDecorator;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 
 import sun.bob.mcalendarview.MCalendarView;
 import sun.bob.mcalendarview.vo.DateData;
@@ -26,7 +29,7 @@ public class FragmentCalendar extends Fragment {
     View view;
 
 
-    MCalendarView calendarVIew;
+    MaterialCalendarView calendarVIew;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -79,7 +82,9 @@ public class FragmentCalendar extends Fragment {
 
         calendarVIew=    view.findViewById(R.id.calendarView);
 
+        decorateSomeDates();
 
+        /*
         ArrayList<DateData> dates=new ArrayList<>();
 
         dates.add(new DateData(2022,04,26));
@@ -89,8 +94,27 @@ public class FragmentCalendar extends Fragment {
             //mark multiple dates with this code.
             calendarVIew.markDate(dates.get(i).getYear(),dates.get(i).getMonth(),dates.get(i).getDay());
         }
+*/
+
 
          return view;
        // return inflater.inflate(R.layout.fragment_calendar, container, false);
     }
+
+    private void decorateSomeDates(){
+
+        HashSet<CalendarDay> setDays = new HashSet<>();
+
+        CalendarDay calDay = CalendarDay.from(2023,2,15);
+        CalendarDay calDay2 = CalendarDay.from(2023,2,16);
+
+        setDays.add(calDay);
+        setDays.add(calDay2);
+
+        // setDays.add(new CalendarDay(2,2,2));
+        int myColor = R.color.colorAccent;
+        calendarVIew.addDecorator(new EventDecorator(myColor, setDays,getActivity()));
+    }
+
+
 }
