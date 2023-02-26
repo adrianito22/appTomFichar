@@ -22,6 +22,7 @@ public class Fichar {
         horaInicioComidaMilliseconds= 0;
         horaFinComidaMilliseconds= 0;
         horaSalidaMilliseconds= 0;
+        horasTrabajadas=0;
     }
 
 
@@ -61,6 +62,17 @@ public class Fichar {
     private long horaSalidaMilliseconds;
     private long entradaMilliseconds; //fecha y hora de entrada
     private long horaInicioComidaMilliseconds;
+
+    public long getHorasTrabajadas() {
+        return horasTrabajadas;
+    }
+
+    public void setHorasTrabajadas(long horasTrabajadas) {
+        this.horasTrabajadas = horasTrabajadas;
+    }
+
+    private long horasTrabajadas;
+
 
 
 

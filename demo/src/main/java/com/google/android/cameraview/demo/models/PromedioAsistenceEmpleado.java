@@ -9,14 +9,22 @@ public class PromedioAsistenceEmpleado {
     private String empleadoName;
     private String entradaPromedio;
     private String salidaPromedio;
+
+    public String getIdUserEmpleado() {
+        return idUserEmpleado;
+    }
+
+    private String idUserEmpleado;
+
     private int asistenciaPromedio; //el porcentaje de asistencia ...
 
 
-    public PromedioAsistenceEmpleado(String empleadoName, String entradaPromedio, String salidaPromedio, int asistenciaPromedio) {
+    public PromedioAsistenceEmpleado(String empleadoName, String entradaPromedio, String salidaPromedio, int asistenciaPromedio,String idUserEmpleado) {
         this.empleadoName = empleadoName;
         this.entradaPromedio = entradaPromedio;
         this.salidaPromedio = salidaPromedio;
         this.asistenciaPromedio = asistenciaPromedio;
+        this.idUserEmpleado=idUserEmpleado;
     }
 
 

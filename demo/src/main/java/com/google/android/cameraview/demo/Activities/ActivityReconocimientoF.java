@@ -36,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.cameraview.CameraView;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.FaceRecognizer;
@@ -106,11 +105,6 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
         Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_empty);
-            imageView6=findViewById(R.id.imageView6);
-        /*from raw folder*/
-        Glide.with(this)
-                .load(R.raw.timegift)
-                .into(imageView6);
 
 /*
         mCameraView = (CameraView) findViewById(R.id.camera);

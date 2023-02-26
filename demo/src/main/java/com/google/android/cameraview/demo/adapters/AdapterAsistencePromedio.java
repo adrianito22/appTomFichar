@@ -2,6 +2,7 @@ package com.google.android.cameraview.demo.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,21 @@ public class AdapterAsistencePromedio extends RecyclerView.Adapter<AdapterAsiste
 
                 holder.txtNameEmpleado.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getEmpleadoName());
                 holder.txtEntradaHora.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getEntradaPromedio());
-                holder.txtHoraSalida.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getSalidaPromedio());
+
+
+
+
+                Log.i("hamner","el salida promedio es "+listPromedioAsistencePromedioAsistenceEmpleado.get(position).getSalidaPromedio());
+                if(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getSalidaPromedio().equals("0:0")){
+
+                    holder.txtHoraSalida.setText("----");
+
+                }else{
+                    holder.txtHoraSalida.setText(listPromedioAsistencePromedioAsistenceEmpleado.get(position).getSalidaPromedio());
+
+
+                }
+
 
 
 

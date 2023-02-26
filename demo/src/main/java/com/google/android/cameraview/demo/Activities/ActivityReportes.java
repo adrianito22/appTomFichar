@@ -2,6 +2,7 @@ package com.google.android.cameraview.demo.Activities;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.util.Util;
 import com.google.android.cameraview.demo.R;
 import com.google.android.cameraview.demo.Utils.SharePref;
 import com.google.android.cameraview.demo.Utils.Utils;
@@ -45,7 +45,7 @@ public class ActivityReportes extends AppCompatActivity {
      TextView txtDateSelected;
      Spinner spinnerTipoReporte;
      int modoDateRangeSearch= Utils.DIA_ESPECIFICO;
-    ArrayList<Empleado>miLisEmpleados= new ArrayList<>();
+    ArrayList<Empleado> miLisAllEmpleadosRegistrados = new ArrayList<>();
     TextView txt1;
     TextView txt2;
     TextView txt3;
@@ -61,6 +61,9 @@ public class ActivityReportes extends AppCompatActivity {
         recylerVInformsAll=findViewById(R.id.recylerVInformsAll);
         txtDateSelected=findViewById(R.id.txtDateSelected);
         spinnerTipoReporte =findViewById(R.id.spinTipoReporte);
+
+
+          SharePref.init(ActivityReportes.this);
 
          txt1=findViewById(R.id.txt1);
          txt2=findViewById(R.id.txt2);
@@ -108,7 +111,7 @@ public class ActivityReportes extends AppCompatActivity {
                         isFirstShowReciclerData=false;
                     }else{
 
-                        generateAsistenciaArrayListByFilter(miLisEmpleados,modoDateRangeSearch);
+                        generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
 
 
                         //aqui mostramos normalemente
@@ -121,7 +124,7 @@ public class ActivityReportes extends AppCompatActivity {
 
                     //aqui debemos tener el modo
 
-                    generateAsistenciaArrayListByFilter(miLisEmpleados,modoDateRangeSearch);
+                    generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
 
 
                     //showFisrtReciclerData();
@@ -145,16 +148,16 @@ public class ActivityReportes extends AppCompatActivity {
 
 
     private void showFisrtReciclerData(){
+
+
+
+
         HashMap<String,Empleado> miMapEmpleados =SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
 
         if(miMapEmpleados.size()>0){
-            miLisEmpleados.addAll(miMapEmpleados.values());
-            //mostramos por defecto la asitencia del di de hoy//
 
-            //                 String fechaOfMilliseconds=mDay+"/"+mMonth+"/"+mYear;  en este formaro
-
-
-            generateAsistenciaArrayListByFilter(miLisEmpleados,Utils.DIA_ESPECIFICO);
+            miLisAllEmpleadosRegistrados.addAll(miMapEmpleados.values());
+            generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.DIA_ESPECIFICO);
 
 
         }
@@ -170,30 +173,32 @@ public class ActivityReportes extends AppCompatActivity {
 
     private void setDataRecyclerView(ArrayList<PromedioAsistenceEmpleado> list){
 
-        if(Utils.tipodeDatoMostrar== Utils.ITEM_MARACIONES_MODO){
+        if(Utils.tipodeDatoMostrar== Utils.ITEM_MARACIONES_MODO) {
 
             txt2.setVisibility(View.VISIBLE);
             txt2.setText("Hora entrada");
             txt3.setText("Hora salida");
 
-
         }
 
-        else
-
-        {
+        else {
 
             txt2.setVisibility(View.GONE);
             txt3.setText("Dias asistencia");
 
-
         }
 
+
+        Log.i("sizelists","el size de lista es "+list.size());
 
         if(list.size()==0){
+
             TextView txtAdviserHere=findViewById(R.id.txtAdviserHere);
             txtAdviserHere.setVisibility(View.VISIBLE);
+
+
         }
+
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ActivityReportes.this);
 
@@ -201,20 +206,18 @@ public class ActivityReportes extends AppCompatActivity {
         recylerVInformsAll.setLayoutManager(layoutManager);
         recylerVInformsAll.setAdapter(adapter);
 
-
-
-
-
         adapter.setOnItemClickListener(new AdapterAsistencePromedio.ClickListener() {
             @Override
             public void onItemClick(int position, View v) {
 
 
+                Intent intencion= new Intent(ActivityReportes.this, ActivityDetailsAsistence.class);
+                intencion.putExtra("KEY_USER_SELECTED",list.get(position).getIdUserEmpleado());
+                startActivity(intencion);
+
+
              //   sheetBootomInforOptions(position);
-
                 //  sheetBootomInforOptions(v.getTag(R.id.tagUniqueId1).toString(),v.getTag(R.id.tagUniqueId2).toString(),v.getTag(R.id.codigoProductor).toString());
-
-
                 Log.i("elcickler","el click es llamado al secionar item fichaje");
 
 
@@ -304,7 +307,7 @@ public class ActivityReportes extends AppCompatActivity {
                         txtDateSelected.setText(Utils.arrayMesSelecionado[selectedMonth]);
                         modoDateRangeSearch=Utils.MES_ESPECIFICO;
                         //llamos  generar by mes...
-                        generateAsistenciaArrayListByFilter(miLisEmpleados,Utils.MES_ESPECIFICO);
+                        generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.MES_ESPECIFICO);
 
 
                         //aqui vamos..
@@ -362,21 +365,18 @@ public class ActivityReportes extends AppCompatActivity {
 
         ArrayList<PromedioAsistenceEmpleado>arrayList= new ArrayList<>();
 
+        Log.i("hakunama","DL SIZE DE ARRAU LIST start es  "+arrayList.size());
 
-        for(Empleado ficharObjec: listUsersToGetFichajePromedio){ //biscamos
 
-            HashMap<String, Fichar> hashMapAllRegistrosThisUser= SharePref.loadMapPreferencesFichaje(ficharObjec.getIdEmpleado());
+        for(Empleado empleadoObject: listUsersToGetFichajePromedio){ //biscamos
+
+            HashMap<String, Fichar> hashMapAllRegistrosThisUser= SharePref.loadMapPreferencesFichaje(empleadoObject.getIdEmpleado());
 
             Log.i("misdta","el size de map fichaje de este user es "+hashMapAllRegistrosThisUser.size());
 
-            //debug imprimos los datos de este fichaje
-
-
-            //ahora necesitamos solo obtener los de este mes...
-
               if(modoDateRangeSearch== Utils.MES_ESPECIFICO){
 
-                  Log.i("especificmes","seleciono mes especifico ");
+                  Log.i("hakunama","seleciono mes especifico ");
 
                   // mesSelecionado
                 ArrayList<Fichar>lisFichajeCurrentUser=generaListMaracacionesEspecifiDateOrRange(hashMapAllRegistrosThisUser,Utils.MES_ESPECIFICO);
@@ -384,7 +384,7 @@ public class ActivityReportes extends AppCompatActivity {
 
                 if(lisFichajeCurrentUser.size()>0){
                         PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,
-                                ficharObjec.getNombreYapellidoEmpleado());
+                                empleadoObject.getNombreYapellidoEmpleado(),empleadoObject.getIdEmpleado());
                         arrayList.add(promedioObjec);
                     }
 
@@ -394,21 +394,30 @@ public class ActivityReportes extends AppCompatActivity {
 
               else if(modoDateRangeSearch==Utils.DIA_ESPECIFICO){
 
+
                  // REVISAR AQUI LOS DOS STRING QUE SE COMPARAN.. Y VER SI EL METODO DE ABAJO NOS GENEROA UN VA;OR./
                   ArrayList<Fichar>lisFichajeCurrentUser=generaListMaracacionesEspecifiDateOrRange(hashMapAllRegistrosThisUser,Utils.DIA_ESPECIFICO);
-                  PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,ficharObjec.getNombreYapellidoEmpleado());
-                  arrayList.add(promedioObjec);
 
+
+                  Log.i("hakunama","el size de la lista es  "+lisFichajeCurrentUser.size());
+
+                  if(lisFichajeCurrentUser.size()>0){
+
+
+                      PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,empleadoObject.getNombreYapellidoEmpleado()
+                      ,empleadoObject.getIdEmpleado());
+                      arrayList.add(promedioObjec);
+                  }
+
+
+                  Log.i("hakunama","el size de la ahora es "+arrayList.size());
 
               }
 
 
-
-
         }
 
-
-        Log.i("superme","DL SIZE DE ARRAU LIST ES "+arrayList.size());
+        Log.i("hakunama","DL SIZE DE ARRAU LIST vv  ES "+arrayList.size());
 
 
         setDataRecyclerView(arrayList);
@@ -511,7 +520,7 @@ public class ActivityReportes extends AppCompatActivity {
 
                         modoDateRangeSearch=Utils.DIA_ESPECIFICO;
 
-                        generateAsistenciaArrayListByFilter(miLisEmpleados,Utils.DIA_ESPECIFICO);
+                        generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.DIA_ESPECIFICO);
 
                        // ediFecha.setText(dateSelec);
 
@@ -529,7 +538,7 @@ public class ActivityReportes extends AppCompatActivity {
 
 
 
-    PromedioAsistenceEmpleado generatePromedioObjectThisUserByArrayList(ArrayList<Fichar>list,String nombre){
+    PromedioAsistenceEmpleado generatePromedioObjectThisUserByArrayList(ArrayList<Fichar>list,String nombre,String idUserEmpleado){
 
         Log.i("sistemasx","el size de lista es  "+list.size());
 
@@ -583,11 +592,8 @@ public class ActivityReportes extends AppCompatActivity {
 
 
 
-
-
-
         return new PromedioAsistenceEmpleado(nombre,horaEntrada+":"+minutosEntrada,
-                horaSalida+":"+minutosSalida,diasAsistencia);
+                horaSalida+":"+minutosSalida,diasAsistencia,idUserEmpleado);
 
 
     }

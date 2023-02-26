@@ -128,7 +128,6 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
 
             }
-
         }
 
 
@@ -156,13 +155,15 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
 
 
-            }else{  //el user ya ficho
+            }
+
+            else
+
+            {  //el user ya ficho
 
                 Log.i("fichnadodata","la hora de entrada es difrente de cero, ya hemos fichado antes ");
 
-
                 Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
-
 
             }
 
@@ -176,14 +177,23 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
 
         else if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_SALIDA){
+
+            ///si no tenemos el fichacje de entrada no podremos marcar mas
+
+
+            if(ficharObjec.getEntradaMilliseconds()==0){
+
+                Toast.makeText(this, "Antes tienes que marcar Hora de entrada", Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+
+
             if(ficharObjec.getHoraSalidaMilliseconds()==0){
-
                 ficharObjec.setHoraSalidaMilliseconds(new Date().getTime());
-
                 Log.i("fichnadodata","la hora de salida la ficahmos ahora");
-
                 showFichaje(time,"Salida",R.drawable.hora_salida);
-
 
                 //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layotItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:weightSum="12">
+
+
+        <TextView
+            android:id="@+id/txtNameEmpleado"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="Dia"
+            android:textColor="#0E0E0E"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtEntradaHora"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="Entrada"
+            android:textColor="#070707"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtHoraSalida"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="Salida"
+            android:textColor="#090808"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/txtTotalHoras"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="4"
+            android:gravity="center"
+            android:text="Total horas"
+            android:textColor="#040303"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
