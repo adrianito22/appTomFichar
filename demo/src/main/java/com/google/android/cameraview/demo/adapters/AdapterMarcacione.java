@@ -97,6 +97,7 @@ public class AdapterMarcacione extends RecyclerView.Adapter<AdapterMarcacione.My
 
 
 
+
             minutos = (int) ((ficharObjec.getHoraSalidaMilliseconds() / (1000*60)) % 60);
             hora = (int) ((ficharObjec.getHoraSalidaMilliseconds() / (1000*60*60)) % 24);
             holder.txtHoraSalida.setText(hora +":"+ minutos);

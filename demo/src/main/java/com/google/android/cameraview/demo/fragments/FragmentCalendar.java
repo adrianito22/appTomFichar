@@ -5,8 +5,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import com.google.android.cameraview.demo.R;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import sun.bob.mcalendarview.MCalendarView;
+import sun.bob.mcalendarview.vo.DateData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +24,10 @@ import com.google.android.cameraview.demo.R;
 public class FragmentCalendar extends Fragment {
 
     View view;
+
+
+    MCalendarView calendarVIew;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,6 +76,19 @@ public class FragmentCalendar extends Fragment {
 
 
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
+
+        calendarVIew=    view.findViewById(R.id.calendarView);
+
+
+        ArrayList<DateData> dates=new ArrayList<>();
+
+        dates.add(new DateData(2022,04,26));
+        dates.add(new DateData(2022,04,27));
+
+        for(int i=0;i<dates.size();i++) {
+            //mark multiple dates with this code.
+            calendarVIew.markDate(dates.get(i).getYear(),dates.get(i).getMonth(),dates.get(i).getDay());
+        }
 
          return view;
        // return inflater.inflate(R.layout.fragment_calendar, container, false);
