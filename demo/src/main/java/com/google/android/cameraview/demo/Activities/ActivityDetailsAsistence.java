@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.Utils.Utils;
 import com.google.android.cameraview.demo.fragments.FragmentCalendar;
 import com.google.android.cameraview.demo.fragments.FragmentList;
 
@@ -65,6 +66,8 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
 
 
          txtNameHere=findViewById(R.id.txtNameHere);
+        txtNameHere.setText(Utils.nameCurrentEmpleado);
+
 
 
 

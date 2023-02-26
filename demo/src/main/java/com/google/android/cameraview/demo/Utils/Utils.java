@@ -13,6 +13,7 @@ public class Utils {
     public final static String PASSWORD_ADMIN="1111";
     public static boolean isEditHorario=false;
 
+    public static String nameCurrentEmpleado="";
 
     public final static HashMap<String,HashMap<String,String>> mihasWhitMhorariosAll= new HashMap();
     public static String currentHorarioSelectedUid;

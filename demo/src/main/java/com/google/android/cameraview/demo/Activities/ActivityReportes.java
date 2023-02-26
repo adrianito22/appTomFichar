@@ -210,9 +210,12 @@ public class ActivityReportes extends AppCompatActivity {
             @Override
             public void onItemClick(int position, View v) {
 
+                Utils.nameCurrentEmpleado=list.get(position).getEmpleadoName();
 
                 Intent intencion= new Intent(ActivityReportes.this, ActivityDetailsAsistence.class);
                 intencion.putExtra("KEY_USER_SELECTED",list.get(position).getIdUserEmpleado());
+
+
                 startActivity(intencion);
 
 
