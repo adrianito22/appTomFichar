@@ -2,22 +2,25 @@ package com.google.android.cameraview.demo.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 
 import com.google.android.cameraview.demo.R;
+import com.google.android.cameraview.demo.Utils.SharePref;
 import com.google.android.cameraview.demo.customClass.EventDecorator;
+import com.google.android.cameraview.demo.models.Fichar;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
-
-import sun.bob.mcalendarview.MCalendarView;
-import sun.bob.mcalendarview.vo.DateData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +33,7 @@ public class FragmentCalendar extends Fragment {
 
 
     MaterialCalendarView calendarVIew;
+    private String idCurrentSelected="";
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -67,8 +71,11 @@ public class FragmentCalendar extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            idCurrentSelected = getArguments().getString("KEY_USER_SELECTED");
+
+            Log.i("mishdgf","el id current es "+idCurrentSelected);
+
+
         }
     }
 
@@ -82,7 +89,16 @@ public class FragmentCalendar extends Fragment {
 
         calendarVIew=    view.findViewById(R.id.calendarView);
 
-        decorateSomeDates();
+         Calendar  calendar = Calendar.getInstance();
+         calendar.setTimeInMillis(System.currentTimeMillis());
+
+
+        Log.i("mishdgf","el mes es  "+calendar.get(Calendar.MONTH)+" Y  el year es "+calendar.get(Calendar.YEAR));
+
+
+        getFichajesEspecificMesAndDecorateDiasATRABAJADOS(idCurrentSelected,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
+
+
 
         /*
         ArrayList<DateData> dates=new ArrayList<>();
@@ -101,20 +117,91 @@ public class FragmentCalendar extends Fragment {
        // return inflater.inflate(R.layout.fragment_calendar, container, false);
     }
 
-    private void decorateSomeDates(){
+    private void decorateSomeDatesDiasTrabajadosAndGetMoreData(){
+
+
+
+    }
+
+    private void getFichajesEspecificMesAndDecorateDiasATRABAJADOS(String idUserEmpleado, int mesSelecionadoNum, int yearSelecionado  ){
+
+        HashMap<String, Fichar> hashMapAllRegistrosThisUser= SharePref.loadMapPreferencesFichaje(idUserEmpleado);
+
+        ArrayList<Fichar>lisFichar= new ArrayList<>();
+
+        GregorianCalendar c = new GregorianCalendar();
+
+         int diasTrabajados=0;
+         long millisecondsTimeTrabajados=0;
+        long millisecondsTimeTrabajoDia=0;
+
+
+        for(Fichar ficharObjec: hashMapAllRegistrosThisUser.values()){
+            c.setTimeInMillis(ficharObjec.getEntradaMilliseconds());
+            int month = c.get(Calendar.MONTH)+1;
+            int year = c.get(Calendar.YEAR);
+
+            Log.i("especificmes","el month by millisecond es "+month+" el mes selecionado num es "+mesSelecionadoNum);
+            Log.i("especificmes","el year by millisecond es "+year+" el year selecioando es "+yearSelecionado);
+
+            Log.i("mishdgf","mes es "+month+" y el otro mes es "+mesSelecionadoNum);
+
+            if (month == mesSelecionadoNum && year == yearSelecionado) {
+                lisFichar.add(ficharObjec);
+
+                diasTrabajados++;
+
+                millisecondsTimeTrabajoDia= ficharObjec.getHoraSalidaMilliseconds()- ficharObjec.getEntradaMilliseconds();
+
+                millisecondsTimeTrabajados=millisecondsTimeTrabajados+millisecondsTimeTrabajoDia;
+
+
+
+                Log.i("mishdgf","AGREGAMOS UN DATA ");
+
+            }
+        }
+
+
+
+
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+
+        Log.i("ssssd","los dias trabajados del mes son  "+diasTrabajados);
+        Log.i("ssssd","las horas trabajadas del mes son "+dateFormat.format(millisecondsTimeTrabajados));
 
         HashSet<CalendarDay> setDays = new HashSet<>();
+        Calendar calendar = Calendar.getInstance();
 
-        CalendarDay calDay = CalendarDay.from(2023,2,15);
-        CalendarDay calDay2 = CalendarDay.from(2023,2,16);
+        int mYear ;
+        int mMonth;
+        int mDay ;
 
-        setDays.add(calDay);
-        setDays.add(calDay2);
+         /**recorremos la lista de lisfichar que tenemos y creamos objtos calendar day*/
+        for(Fichar ficharObjec: lisFichar){
+
+
+
+            calendar.setTimeInMillis(ficharObjec.getEntradaMilliseconds());
+            mYear = calendar.get(Calendar.YEAR);
+            mMonth = calendar.get(Calendar.MONTH)+1;
+            mDay   = calendar.get(Calendar.DAY_OF_MONTH);
+            CalendarDay calendarDay=CalendarDay.from(mYear,mMonth,mDay);
+            setDays.add(calendarDay);
+
+        }
+
+        // CalendarDay calDay2 = CalendarDay.from(2023,2,16);
+
+       // setDays.add(calDay2);
 
         // setDays.add(new CalendarDay(2,2,2));
         int myColor = R.color.colorAccent;
         calendarVIew.addDecorator(new EventDecorator(myColor, setDays,getActivity()));
+
+
     }
+
 
 
 }

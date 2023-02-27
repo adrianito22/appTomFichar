@@ -48,8 +48,6 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
         layoutCalendar=findViewById(R.id.layoutCalendar);
         layoutLista=findViewById(R.id.layoutLista);
 
-         LinearLayout layoutLineCalendar=findViewById(R.id.layoutLineCalendar);
-        LinearLayout layoutLineLista=findViewById(R.id.layoutLineLista);
 
 
 
@@ -82,13 +80,12 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
                 loadFragment(fragment);
 
                 ///modificcomo el color de este layout
-                layoutCalendar.setBackgroundColor(Color.parseColor("#3F51B5"));
-                layoutLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                layoutCalendar.setBackgroundResource(R.drawable.back_selector);
+                layoutLista.setBackgroundResource(R.drawable.back_selector_no);
 
 
 
-                layoutLineCalendar.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                layoutLineLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
 
 
 
@@ -104,14 +101,12 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
                 FragmentList fragment= new FragmentList();
                 loadFragment(fragment);
 
-
                 ///modificcomo el color de este layout
-                layoutCalendar.setBackgroundColor(Color.parseColor("#3F51B5"));
-                layoutLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                layoutCalendar.setBackgroundResource(R.drawable.back_selector_no);
+                layoutLista.setBackgroundResource(R.drawable.back_selector);
 
 
-                layoutLineCalendar.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                layoutLineLista.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
 
             }
         });

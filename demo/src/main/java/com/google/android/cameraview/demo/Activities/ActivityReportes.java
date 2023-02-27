@@ -190,11 +190,16 @@ public class ActivityReportes extends AppCompatActivity {
 
 
         Log.i("sizelists","el size de lista es "+list.size());
+        TextView txtAdviserHere=findViewById(R.id.txtAdviserHere);
 
         if(list.size()==0){
 
-            TextView txtAdviserHere=findViewById(R.id.txtAdviserHere);
             txtAdviserHere.setVisibility(View.VISIBLE);
+
+
+        }else{
+
+            txtAdviserHere.setVisibility(View.GONE);
 
 
         }

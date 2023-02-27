@@ -2,6 +2,7 @@ package com.google.android.cameraview.demo.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,6 +104,21 @@ public class AdapterMarcacione extends RecyclerView.Adapter<AdapterMarcacione.My
             holder.txtHoraSalida.setText(hora +":"+ minutos);
 
             horasTrabajadas=dateFormatHorasTrabajadas.format(ficharObjec.getHoraSalidaMilliseconds()- ficharObjec.getEntradaMilliseconds());
+
+
+            ///si munits trabajados es menor a 60 entonces solo ponemos los minutos....
+            ///probar con horas para ver que sale.....
+
+
+            /**determinar losimuntos usando un split array y obtener la posicion y comparar si es menor a 60 y el otrto valor contiene un cero ,,etonces menos de una hora...*/
+
+              DateFormat dateFormatMinutos = new SimpleDateFormat("mm");
+
+            ///  Log.i("minuto","el time es "+dateFormatMinutos.format(horasTrabajadas));
+
+
+            //mejor obtenemos usanod un array y split....
+
             holder.txtTotalHoras.setText(horasTrabajadas+"h");
 
 
@@ -115,7 +131,7 @@ public class AdapterMarcacione extends RecyclerView.Adapter<AdapterMarcacione.My
         {
 
             holder.txtHoraSalida.setText("----");
-            holder.txtTotalHoras.setText("____");
+            holder.txtTotalHoras.setText("----");
 
 
         }

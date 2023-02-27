@@ -176,18 +176,21 @@ public class FragmentList extends Fragment {
         RecyclerView recylerVInformsAll=view.findViewById(R.id.recylerVInformsAll);
 
         Log.i("sizelists","el size de lista es "+list.size());
-        TextView txtAdviserHere=view.findViewById(R.id.txtAdviserHere);
-        if(list.size()==0){
+        TextView txtAdviserHere=view.findViewById(R.id.txtAdviserHereXX);
 
-            txtAdviserHere.setVisibility(View.VISIBLE);
+        if(list.size()==0){
+            Log.i("sizelists","se ejecuto el if mostramos aviso");
+
+            txtAdviserHere.setVisibility(TextView.VISIBLE);
 
 
         }
 
 
         else{
+            Log.i("sizelists","else oluctamos aviso ");
 
-            txtAdviserHere.setVisibility(View.INVISIBLE);
+            txtAdviserHere.setVisibility(TextView.GONE);
 
 
         }

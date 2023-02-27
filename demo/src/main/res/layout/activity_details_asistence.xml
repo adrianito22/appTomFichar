@@ -32,7 +32,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <ImageView
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
-                tools:srcCompat="@drawable/baseline_calendar_month_24" />
+                app:srcCompat="@drawable/baseline_calendar_month_24" />
 
             <TextView
                 android:id="@+id/textView14"
@@ -51,12 +51,6 @@
                 android:text="CALENDARIO" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layoutLineCalendar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
-
     </LinearLayout>
 
     <TextView
@@ -65,7 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="TextView"
-        android:textSize="16sp"
+        android:textColor="#673AB7"
+        android:textSize="17sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,6 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:backgroundTint="#673AB7"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_keyboard_backspace_24" />
@@ -96,6 +92,7 @@
         android:id="@+id/layoutLista"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/back_selector"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/guideline22"
         app:layout_constraintEnd_toStartOf="@+id/guideline20"
@@ -104,7 +101,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -113,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="30dp"
-                tools:srcCompat="@drawable/baseline_view_list_24" />
+                app:srcCompat="@drawable/baseline_view_list_24" />
 
             <TextView
                 android:id="@+id/textView13"
@@ -123,12 +121,6 @@
                 android:text="LISTA" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layoutLineLista"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
 
     </LinearLayout>
 
@@ -179,7 +171,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.19" />
 
     <FrameLayout
         android:id="@+id/frameLayout"
