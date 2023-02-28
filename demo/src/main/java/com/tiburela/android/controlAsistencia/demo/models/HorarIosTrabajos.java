@@ -1,10 +1,15 @@
 package com.tiburela.android.controlAsistencia.demo.models;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class HorarIosTrabajos {
 
+
+  public HorarIosTrabajos(){
+
+  }
 
   private String horaraEntradaString;
   private String horaraSalidadaString;
@@ -20,6 +25,25 @@ public class HorarIosTrabajos {
 
   private String idHorarioHereKEYpreferences;
 
+  public String getKeylocalizeMapHorario() {
+    return keylocalizeMapHorario;
+  }
+
+  public void setKeylocalizeMapHorario(String keylocalizeMapHorario) {
+    this.keylocalizeMapHorario = keylocalizeMapHorario;
+  }
+
+  private String keylocalizeMapHorario;
+
+  public String getKeyWhereLocalizeObjec() {
+    return keyWhereLocalizeObjec;
+  }
+
+  public void setKeyWhereLocalizeObjec(String keyWhereLocalizeObjec) {
+    this.keyWhereLocalizeObjec = keyWhereLocalizeObjec;
+  }
+
+  private String keyWhereLocalizeObjec;
 
   public String getHorarioNombre() {
     return horarioNombre;
@@ -71,6 +95,9 @@ public class HorarIosTrabajos {
     this.horaraSalidadaString = horaraSalidadaString;
     this.horarioNombre=horarioNombre;
     idHorarioHereKEYpreferences= UUID.randomUUID().toString();
+     keyWhereLocalizeObjec="";
+    keylocalizeMapHorario="";
+
 
   }
 
@@ -80,7 +107,21 @@ public class HorarIosTrabajos {
 
 
 
+  public Map<String, Object> toMap() {
+    HashMap<String, Object> result = new HashMap<>();
 
+
+    result.put("horaraEntradaString", horaraEntradaString);
+    result.put("horaraSalidadaString", horaraSalidadaString);
+    result.put("horarioNombre", horarioNombre);
+    result.put("idHorarioHereKEYpreferences", idHorarioHereKEYpreferences);
+    result.put("keyWhereLocalizeObjec", keyWhereLocalizeObjec);
+    result.put("keylocalizeMapHorario", keylocalizeMapHorario);
+
+
+    return result;
+
+  }
 
 
 

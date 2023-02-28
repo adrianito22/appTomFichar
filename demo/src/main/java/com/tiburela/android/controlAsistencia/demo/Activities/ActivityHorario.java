@@ -18,7 +18,17 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.models.HorarIosTrabajos;
@@ -32,7 +42,7 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
     HashMap<String,String>MImap= new HashMap<>();
 
-
+    HorarIosTrabajos horarioTrabajoDowload;
     TextInputEditText txtImputEntrada;
     TextInputEditText txtImputSalida;
 
@@ -84,8 +94,11 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
         if(Utils.isEditHorario){
 
-            //obtenemos preferencias y si hay data la seteamos
 
+            dowloadHorRIOoBJEC(Utils.currentHorarioSelectedUid);
+
+            //obtenemos preferencias y si hay data la seteamos
+/*
             MImap= SharePref.loadMapPreferencesHorario(Utils.currentHorarioSelectedUid);
 
             if(MImap.size()>0){
@@ -94,7 +107,7 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
                 seteamosHorarioDePrefrencias();
 
             }
-
+*/
         }
 
 
@@ -180,53 +193,15 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
                 }
 
 
-                ///vamos a guardar el horario...
 
-                MImap.put(String.valueOf(txtImputEntrada.getId()),txtImputEntrada.getText().toString());
+                if(Utils.modoOnlineActivate){
 
-                MImap.put(String.valueOf(txtImputSalida.getId()),txtImputSalida.getText().toString());
+                }else {  //agudramso en prefencioas
 
-                MImap.put(String.valueOf(ediNombreHorario.getId()),ediNombreHorario.getText().toString());
-
-
-                TextView [] txtArray={txtLunes,txtMartes,txtMiercoles,txtJueves,txtViernes,txtSabado,txtDomingo};
-
-                for(TextView txtCurrent: txtArray){//si contiene el bacground
-
-                    if(txtCurrent.getBackground()==ContextCompat.getDrawable(  ActivityHorario.this, R.drawable.back_dia_selected)){
-                        MImap.put(String.valueOf(txtCurrent.getTag()),txtCurrent.getTag().toString());
-                    }
-                }
-
-
-                HorarIosTrabajos horarioObjec= new HorarIosTrabajos(txtImputEntrada.getText().toString(),txtImputSalida.getText().toString(),
-                       ediNombreHorario.getText().toString());
-
-                HashMap<String, HorarIosTrabajos>mapHorariosTrabajos=SharePref.getListHorarios(SharePref.KEY_ALL_HORARIOS);
-
-                if(Utils.isEditHorario){ //estamos editando
-                    horarioObjec.setIdHorarioHereKEYpreferences(Utils.currentHorarioSelectedUid);
-                    mapHorariosTrabajos.put(Utils.currentHorarioSelectedUid,horarioObjec);
-
-               }
-                else{ //es crear un nuevo horario
-                    mapHorariosTrabajos.put(horarioObjec.getIdHorarioHereKEYpreferences(),horarioObjec);
+                    saveDataInPreferences();
 
                 }
 
-
-                Log.i("smaornrnr","el uid de horario object es "+horarioObjec.getIdHorarioHereKEYpreferences());
-
-
-                SharePref.saveListHorarios(mapHorariosTrabajos,SharePref.KEY_ALL_HORARIOS);
-                SharePref.saveMapHorario(MImap,horarioObjec.getIdHorarioHereKEYpreferences());
-
-
-                Toast.makeText(ActivityHorario.this, "Se guaradó Horario", Toast.LENGTH_SHORT).show();
-
-                finish();
-
-                Log.i("sumare","hemos guardado aqui hurra");
 
 
 
@@ -235,6 +210,134 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
 
     }
+
+
+
+    private void saveDataInPreferences(){
+
+        ///vamos a guardar el horario...
+
+        MImap.put(String.valueOf(txtImputEntrada.getId()),txtImputEntrada.getText().toString());
+
+        MImap.put(String.valueOf(txtImputSalida.getId()),txtImputSalida.getText().toString());
+
+        MImap.put(String.valueOf(ediNombreHorario.getId()),ediNombreHorario.getText().toString());
+
+
+        TextView [] txtArray={txtLunes,txtMartes,txtMiercoles,txtJueves,txtViernes,txtSabado,txtDomingo};
+
+        for(TextView txtCurrent: txtArray){//si contiene el bacground
+
+            if(txtCurrent.getBackground()==ContextCompat.getDrawable(  ActivityHorario.this, R.drawable.back_dia_selected)){
+                MImap.put(String.valueOf(txtCurrent.getTag()),txtCurrent.getTag().toString());
+            }
+        }
+
+
+        HorarIosTrabajos horarioObjec= new HorarIosTrabajos(txtImputEntrada.getText().toString(),txtImputSalida.getText().toString(),
+                ediNombreHorario.getText().toString());
+
+        HashMap<String, HorarIosTrabajos>mapHorariosTrabajos=SharePref.getListHorarios(SharePref.KEY_ALL_HORARIOS);
+
+
+
+        if(Utils.isEditHorario){ //estamos editando
+            horarioObjec.setIdHorarioHereKEYpreferences(Utils.currentHorarioSelectedUid);
+            mapHorariosTrabajos.put(Utils.currentHorarioSelectedUid,horarioObjec);
+
+        }
+
+        else{ //es crear un nuevo horario
+            mapHorariosTrabajos.put(horarioObjec.getIdHorarioHereKEYpreferences(),horarioObjec);
+            RealtimDatabase.addHorariosTrabajo(ActivityHorario.this,horarioObjec);
+
+
+        }
+
+
+        Log.i("smaornrnr","el uid de horario object es "+horarioObjec.getIdHorarioHereKEYpreferences());
+
+
+        SharePref.saveListHorarios(mapHorariosTrabajos,SharePref.KEY_ALL_HORARIOS);
+        SharePref.saveMapHorario(MImap,horarioObjec.getIdHorarioHereKEYpreferences());
+
+
+        Toast.makeText(ActivityHorario.this, "Se guaradó Horario", Toast.LENGTH_SHORT).show();
+
+        finish();
+
+        Log.i("sumare","hemos guardado aqui hurra");
+
+
+
+    }
+
+
+    private void saveDataInDataBase(){
+
+        ///vamos a guardar el horario...
+
+        MImap.put(String.valueOf(txtImputEntrada.getId()),txtImputEntrada.getText().toString());
+
+        MImap.put(String.valueOf(txtImputSalida.getId()),txtImputSalida.getText().toString());
+
+        MImap.put(String.valueOf(ediNombreHorario.getId()),ediNombreHorario.getText().toString());
+
+
+        TextView [] txtArray={txtLunes,txtMartes,txtMiercoles,txtJueves,txtViernes,txtSabado,txtDomingo};
+
+        for(TextView txtCurrent: txtArray){//si contiene el bacground
+
+            if(txtCurrent.getBackground()==ContextCompat.getDrawable(  ActivityHorario.this, R.drawable.back_dia_selected)){
+                MImap.put(String.valueOf(txtCurrent.getTag()),txtCurrent.getTag().toString());
+            }
+
+        }
+
+
+        HorarIosTrabajos horarioObjec= new HorarIosTrabajos(txtImputEntrada.getText().toString(),txtImputSalida.getText().toString(),
+                ediNombreHorario.getText().toString());
+
+
+
+        if(Utils.isEditHorario){ //estamos editando
+
+            horarioObjec.setIdHorarioHereKEYpreferences(Utils.currentHorarioSelectedUid);
+          //  String keydondeGudaremos= RealtimDatabase.rootDatabaseReference.push().getKey();
+            RealtimDatabase.updateHorarioTrabajoMap(ActivityHorario.this,MImap, horarioTrabajoDowload.getKeylocalizeMapHorario() );
+            RealtimDatabase.updateHorariosTrabajo(ActivityHorario.this,horarioObjec,horarioTrabajoDowload.getKeyWhereLocalizeObjec());
+
+
+
+        }
+
+        else{ //es crear un nuevo horario
+
+            String keydondeGudaremos= RealtimDatabase.rootDatabaseReference.push().getKey();
+            horarioObjec.setKeylocalizeMapHorario(keydondeGudaremos);
+
+            RealtimDatabase.addHorariosTrabajo(ActivityHorario.this,horarioObjec);
+            RealtimDatabase.addHorarioDataMap(ActivityHorario.this,MImap, keydondeGudaremos );
+
+        }
+
+
+
+      //  SharePref.saveMapHorario(MImap,horarioObjec.getIdHorarioHereKEYpreferences());
+        Toast.makeText(ActivityHorario.this, "Se guaradó Horario", Toast.LENGTH_SHORT).show();
+
+        finish();
+
+        Log.i("sumare","hemos guardado aqui hurra");
+
+
+
+    }
+
+
+
+
+
 
 
     private int  getPosicionBYid(ArrayList<HorarIosTrabajos>list){
@@ -292,6 +395,108 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
         picker.show();
     }
 
+    private void dowloadHorRIOoBJEC(String IDuNIQUEHORARIO ){
+
+        DatabaseReference usersdRef = RealtimDatabase.rootDatabaseReference.child("horarios").child("horariostrabajos");
+
+        Query query = usersdRef.orderByChild("idHorarioHereKEYpreferences").equalTo(IDuNIQUEHORARIO);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+
+                    HorarIosTrabajos informe=ds.getValue(HorarIosTrabajos.class);
+                    Log.i("holerd","aqui se encontro un cuadro muestreo......");
+
+                    if(informe!=null){
+
+                        dowloadHoriosMap(informe.getKeylocalizeMapHorario());
+
+                        break;
+                    }
+
+
+                }
+
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.i("misdata","el error es  "+ error.getMessage());
+
+            }
+        } );
+
+    }
+
+
+    private void dowloadHoriosMap(String keylocalizemap  ){
+
+        ValueEventListener seenListener  = RealtimDatabase.rootDatabaseReference.child("mapsHorariosData").child("maps").child(keylocalizemap)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                              MImap = new HashMap<>();
+
+
+
+                        for (DataSnapshot dss : dataSnapshot.getChildren()) {
+                            String key = dss.getKey();
+                            String fieldData = dss.getValue(String.class);
+
+                            if (fieldData != null) {///
+                                MImap.put(key, fieldData);
+                            }
+                        }
+
+
+                          if(MImap!=null){
+                              seteamosHorarioDePrefrencias();
+
+                          }
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.i("libiadod", "el error es " + databaseError.getMessage());
+
+
+                    }
+                });
+
+    }
+
+
+    private void getunavez(){
+
+        DatabaseReference mDatabase = RealtimDatabase.rootDatabaseReference.child("mapsHorariosData").child("maps");
+
+        mDatabase.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+
+
+
+
+                }
+            }
+        });
+
+}
 
 
     void findviewids(){

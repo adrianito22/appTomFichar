@@ -338,7 +338,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
         if(ficharObjec==null){ //si fichar objet es nulo cremoa sun nirvo
 
-            ficharObjec= new Fichar();
+            ficharObjec= new Fichar(keyCurrentUser,new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
 
         }
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());

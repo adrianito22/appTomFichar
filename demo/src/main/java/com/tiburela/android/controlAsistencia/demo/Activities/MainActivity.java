@@ -22,6 +22,7 @@ import com.tiburela.android.controlAsistencia.CameraView;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
 import com.tiburela.android.controlAsistencia.demo.Utils.FileUtils;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
@@ -95,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_center);
+
+        RealtimDatabase.initDatabasesRootOnly();
+
 
         layoutAllEmployers=findViewById(R.id.layoutAllEmployers);
         cardViewEntrada=findViewById(R.id.cardViewEntrada);

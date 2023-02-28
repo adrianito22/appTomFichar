@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.customClass.OtpEditText;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
@@ -133,7 +134,7 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
         if(ficharObjec==null){ //si fichar objet es nulo cremoa sun nirvo
 
-            ficharObjec= new Fichar();
+            ficharObjec= new Fichar(keyCurrentUser,new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
 
         }
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -215,6 +216,122 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
 
         SharePref.saveMapFichaje(hashMapFichajeRegistros,keyCurrentUser);
+        //RealtimDatabase.(ActivityCodigoFichar.this,);
+
+
+
+    }
+
+
+
+    void marcamosFichajeONline(String keyCurrentUser){
+
+        //  Fichar fichar= Fichar.hashMapAllFicharRegistros
+
+        //obtenomos el hasmap de fichaje de este empleado ,usando el id como key de prefrences...
+
+
+        Fichar ficharObjec=null;
+
+        HashMap<String, Fichar>hashMapFichajeRegistros=SharePref.loadMapPreferencesFichaje(keyCurrentUser);
+
+        if(hashMapFichajeRegistros.size()>0){ //hay data...chekeamos si tenemos el registro del dia de hoy usando un la fecha actual como key..
+            if(hashMapFichajeRegistros.containsKey(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()))){
+                //SI EXISTE OBTENEMOS EL OBJETO FICHAR  usando la fecha como key
+                ficharObjec= hashMapFichajeRegistros.get(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+
+
+            }
+        }
+
+
+
+        if(ficharObjec==null){ //si fichar objet es nulo cremoa sun nirvo
+
+            ficharObjec= new Fichar(keyCurrentUser,new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+
+        }
+        String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+
+
+        if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_ENTRADA){
+            if(ficharObjec.getEntradaMilliseconds()==0){
+
+                ficharObjec.setEntradaMilliseconds(new Date().getTime());
+
+
+
+
+
+                Log.i("fichnadodata","la hora de entrada es cero fichamos ahora");
+
+                showFichaje(time,"Entrada",R.drawable.hora_entrada);
+
+
+
+            }
+
+            else
+
+            {  //el user ya ficho
+
+                Log.i("fichnadodata","la hora de entrada es difrente de cero, ya hemos fichado antes ");
+
+                Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
+
+            }
+
+
+
+
+
+
+        }
+
+
+
+        else if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_SALIDA){
+
+            ///si no tenemos el fichacje de entrada no podremos marcar mas
+
+
+            if(ficharObjec.getEntradaMilliseconds()==0){
+
+                Toast.makeText(this, "Antes tienes que marcar Hora de entrada", Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+
+
+            if(ficharObjec.getHoraSalidaMilliseconds()==0){
+                ficharObjec.setHoraSalidaMilliseconds(new Date().getTime());
+                Log.i("fichnadodata","la hora de salida la ficahmos ahora");
+                showFichaje(time,"Salida",R.drawable.hora_salida);
+
+                //  Toast.makeText(this, "Hora de entrada Agregada", Toast.LENGTH_SHORT).show();
+
+            }
+
+            else{  //el user ya ficho
+
+                Log.i("fichnadodata","la hora de salida ya estaba agregada..");
+
+                Toast.makeText(this, "Ya marcaste la hora de entrada", Toast.LENGTH_SHORT).show();
+
+
+            }
+
+        }
+
+
+        //guardamos o remplzamos
+        hashMapFichajeRegistros.put(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()),ficharObjec);
+
+
+        SharePref.saveMapFichaje(hashMapFichajeRegistros,keyCurrentUser);
+        //RealtimDatabase.(ActivityCodigoFichar.this,);
+
 
 
     }
