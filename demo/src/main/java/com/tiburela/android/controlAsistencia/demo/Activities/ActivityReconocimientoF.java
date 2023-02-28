@@ -33,9 +33,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.CameraView;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
 import com.tzutalin.dlib.VisionDetRet;
@@ -296,8 +302,11 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
             //encontramos alguna careta..///vamos a c
 
+                 dowloadHorRIOoBJECIFexistAndFichajeoRupdate(idEncontrado);
 
-                marcamosFichaje(idEncontrado);
+            //    marcamosFichaje(idEncontrado);
+
+
 
 
         }
@@ -311,7 +320,122 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
         return msg;
     }
 
+    private void dowloadHorRIOoBJECIFexistAndFichajeoRupdate(String idFIchajeData) {
 
+        DatabaseReference usersdRef = RealtimDatabase.rootDatabaseReference.child("marcaciones").child("allmarcaciones");
+
+        Query query = usersdRef.orderByChild("keyficharDate").equalTo(idFIchajeData);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+                Fichar informe = null;
+                for (DataSnapshot ds : snapshot.getChildren()) {
+
+                    informe = ds.getValue(Fichar.class);
+                    Log.i("holerd", "aqui se encontro un cuadro muestreo......");
+
+                    if (informe != null) {
+
+
+                        break;
+                    }
+
+
+                }
+
+
+                if (informe == null) {
+                    fichaOnlineAndUpdate(informe, false);
+
+                } else {
+                    fichaOnlineAndUpdate(informe, true);
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                Log.i("misdata", "el error es  " + error.getMessage());
+
+            }
+        });
+
+    }
+
+
+
+    private void fichaOnlineAndUpdate(Fichar fichar, boolean existeFIchaje) {
+
+        String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+
+
+        if (existeFIchaje ) {//editamos el fichaje
+
+            if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_ENTRADA){
+
+                if(fichar.getEntradaMilliseconds()==0){
+
+                    fichar.setEntradaMilliseconds(new Date().getTime());
+
+                    showFichaje(time, "Entrada", R.drawable.hora_entrada);
+
+                    RealtimDatabase.updateMarcacion(ActivityReconocimientoF.this,fichar, fichar.getKeyWhereLocalizeObjec() );
+
+
+                }else{
+
+                    Toast.makeText(this, "Ya haz fichado anteriomente ", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            else if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_SALIDA){
+
+                if(fichar.getHoraSalidaMilliseconds()==0){
+
+                    fichar.setHoraSalidaMilliseconds(new Date().getTime());
+                    showFichaje(time, "Salida", R.drawable.hora_salida);
+
+                    RealtimDatabase.updateMarcacion(ActivityReconocimientoF.this,fichar, fichar.getKeyWhereLocalizeObjec() );
+
+
+
+                }else{
+
+                    Toast.makeText(this, "Ya haz fichado anteriomente ", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+
+        }
+
+
+        else {
+
+            fichar = new Fichar(idEncontrado, new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+
+
+            if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_ENTRADA){
+                if (fichar.getEntradaMilliseconds() == 0) {
+
+                    fichar.setEntradaMilliseconds(new Date().getTime());
+                    showFichaje(time, "Entrada", R.drawable.hora_entrada);
+                    RealtimDatabase.addMarcacion(ActivityReconocimientoF.this,fichar);
+
+
+                }
+
+
+            }
+
+        }
+    }
 
     void marcamosFichaje(String keyCurrentUser){
 

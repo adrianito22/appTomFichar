@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.developers.imagezipper.ImageZipper;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
@@ -352,32 +353,7 @@ public class AddPerson extends AppCompatActivity {
                 else
 
                 {
-                    Log.i("simplerr", "se eejcuto else onpostexcejcute "+imgPath);
-
-                    String [] array=imgPath.split("/");
-
-                    String idunique=array[array.length-1];
-
-                    Log.i("simplerr", "el id unico es "+idunique);
-
-                    //OBTENEMOS LA LISTA DE EMPLEADOS Y SI ESTA VACIO SIGNIFCA QUE NO TENEMOS NINGUN EMPLEADO....
-                    Fichar.hasMapAllEmpleados = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
-
-                    //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
-                  //  Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
-                    Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()));
-
-                    Fichar.hasMapAllEmpleados.put(idunique,empleadoObject);
-
-                    //gaurdamos en preferencias.
-                    SharePref.saveMapEmpleados(Fichar.hasMapAllEmpleados,SharePref.KEY_ALL_EMPLEADOS_Map);
-
-                    Toast.makeText(getApplicationContext(),"Usuario agregado exitosamente",Toast.LENGTH_LONG).show();
-
-                    Utils.existeNewUserAdd=true;
-
-                    finish();
-
+                    addEmpleadoDatabase();
 
                 }
 
@@ -387,6 +363,58 @@ public class AddPerson extends AppCompatActivity {
             }
 
         }
+    }
+
+
+    private void addEmpleadoDatabase(){
+
+        Log.i("simplerr", "se eejcuto else onpostexcejcute "+imgPath);
+        String [] array=imgPath.split("/");
+
+        String idunique=array[array.length-1];
+
+        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()));
+
+        RealtimDatabase.addEmpleado(AddPerson.this,empleadoObject);
+
+
+        Utils.existeNewUserAdd=true;
+
+        finish();
+
+    }
+
+
+    private void addEmpleadoPreferencias(){
+
+
+        Log.i("simplerr", "se eejcuto else onpostexcejcute "+imgPath);
+
+        String [] array=imgPath.split("/");
+
+        String idunique=array[array.length-1];
+
+        Log.i("simplerr", "el id unico es "+idunique);
+
+        //OBTENEMOS LA LISTA DE EMPLEADOS Y SI ESTA VACIO SIGNIFCA QUE NO TENEMOS NINGUN EMPLEADO....
+        Fichar.hasMapAllEmpleados = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+
+        //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
+        //  Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
+        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()));
+
+        Fichar.hasMapAllEmpleados.put(idunique,empleadoObject);
+
+        //gaurdamos en preferencias.
+        SharePref.saveMapEmpleados(Fichar.hasMapAllEmpleados,SharePref.KEY_ALL_EMPLEADOS_Map);
+
+        Toast.makeText(getApplicationContext(),"Usuario agregado exitosamente",Toast.LENGTH_LONG).show();
+
+        Utils.existeNewUserAdd=true;
+
+        finish();
+
+
     }
 
 

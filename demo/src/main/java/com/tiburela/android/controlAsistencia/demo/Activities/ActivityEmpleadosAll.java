@@ -13,7 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.adapters.AdapterEmpleado;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
@@ -44,11 +50,13 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
         //iniicializamos text watcher
         textWatcher();
 
-        HashMap<String, Empleado> mhasMap = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+
+        dowloadAllEmpleados();
 
 
-
-        if(mhasMap.size()>0){ //la lista tiene data
+        /*
+       HashMap<String, Empleado> mhasMap = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+        if(mhasMap.size()>0){
 
             listAllEmpleados.addAll(mhasMap.values());
 
@@ -64,7 +72,7 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
 
         }
 
-
+*/
 
 
 
@@ -106,6 +114,41 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
 
 
     }
+
+    private void dowloadAllEmpleados(  ){
+
+        ValueEventListener seenListener  = RealtimDatabase.rootDatabaseReference.child("empleados").child("allEmpleados")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                         listAllEmpleados= new ArrayList<>();
+
+
+                        for (DataSnapshot dss : dataSnapshot.getChildren()) {
+                            Empleado empleado = dss.getValue(Empleado.class);
+
+                            if (empleado != null) {
+                                listAllEmpleados.add(empleado);
+
+                            }
+
+                        }
+
+
+                        setDataRecyclerView(listAllEmpleados);
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.i("libiadod", "el error es " + databaseError.getMessage());
+
+                    }
+                });
+
+    }
+
 
 
     private void sheetBootomInforOptions(int positionSelected){
