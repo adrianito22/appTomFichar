@@ -1,15 +1,16 @@
 apply plugin: 'com.android.library'
 
 
+
 version = "${rootProject.ext.releaseVersionName}"
 group = "com.tzutalin.dlib-android-app"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 33
         versionCode 1
         versionName "${rootProject.ext.releaseVersionName}"
     }

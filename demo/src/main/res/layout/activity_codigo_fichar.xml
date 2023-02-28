@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.ActivityCodigoFichar">
+    tools:context="com.tiburela.android.controlAsistencia.demo.Activities.ActivityCodigoFichar">
 
     <TextView
         android:id="@+id/textView10"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <com.google.android.cameraview.demo.customClass.OtpEditText
+    <com.tiburela.android.controlAsistencia.demo.customClass.OtpEditText
         android:id="@+id/et_otpCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

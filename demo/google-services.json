@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "809244264013",
+    "firebase_url": "https://tomappcontrolasistencia-default-rtdb.firebaseio.com",
+    "project_id": "tomappcontrolasistencia",
+    "storage_bucket": "tomappcontrolasistencia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:809244264013:android:1dc2401b8336fb2cc6be04",
+        "android_client_info": {
+          "package_name": "com.tiburela.android.controlAsistencia.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "809244264013-qd3nc0v4hbkh11h963kvl9d6r9sp6aqu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tiburela.android.controlAsistencia.demo",
+            "certificate_hash": "085d4cbea929f456a4107837fddc610f711ce8f7"
+          }
+        },
+        {
+          "client_id": "809244264013-9f5u7cii0ds4ljau2d67cjodbpar3me5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASZgkX8podcXCDT5hmz3mRZuvWhBtZQw0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "809244264013-9f5u7cii0ds4ljau2d67cjodbpar3me5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

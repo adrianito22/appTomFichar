@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context=".Activities.ActivityReconocimientoF"
+    tools:context="com.tiburela.android.controlAsistencia.demo.Activities.ActivityReconocimientoF"
     android:background="#000">
 
-    <com.google.android.cameraview.CameraView
+    <com.tiburela.android.controlAsistencia.CameraView
         android:id="@+id/camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

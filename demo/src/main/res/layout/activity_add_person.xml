@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/grey_90"
-    tools:context="com.google.android.cameraview.demo.Activities.AddPerson">
+    tools:context="com.google.android.cameraview.demo.com.tiburela.android.cameraview.demo.Activities.AddPerson">
 
 
     <android.support.v7.widget.Toolbar

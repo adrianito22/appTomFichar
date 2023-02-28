@@ -5,7 +5,7 @@
     android:id="@+id/linearLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.ActivityAllHorarios">
+    tools:context="com.tiburela.android.controlAsistencia.demo.Activities.ActivityAllHorarios">
 
 
     <LinearLayout

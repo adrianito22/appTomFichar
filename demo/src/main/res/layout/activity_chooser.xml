@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_90"
-    tools:context=".Activities.ChooserActivity">
+    tools:context="com.tiburela.android.controlAsistencia.demo.Activities.ChooserActivity">
 
 
     <android.support.v7.widget.Toolbar

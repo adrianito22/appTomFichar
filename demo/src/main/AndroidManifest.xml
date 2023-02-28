@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.android.cameraview.demo">
+    package="com.tiburela.android.controlAsistencia.demo">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -13,31 +13,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demo.NoActionBar">
         <activity
-            android:name=".Activities.ActivityDetailsAsistence"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityLogin"
             android:exported="true" />
         <activity
-            android:name=".Activities.TestActivity"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityDetailsAsistence"
             android:exported="true" />
         <activity
-            android:name=".Activities.ActivityAllHorarios"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.TestActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityAllHorarios"
             android:exported="false" />
         <activity
-            android:name=".Activities.ActivityPassMain"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityPassMain"
             android:exported="false" />
         <activity
-            android:name=".Activities.ActivityHorario"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityHorario"
             android:exported="true" />
         <activity
-            android:name=".Activities.ActivityReportes"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityReportes"
             android:exported="true" />
         <activity
-            android:name=".Activities.ActivityCodigoFichar"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityCodigoFichar"
             android:exported="true" />
         <activity
-            android:name=".Activities.ActivityEmpleadosAll"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityEmpleadosAll"
             android:exported="true" />
         <activity
-            android:name=".Activities.MainActivity"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,13 +49,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.ActivityReconocimientoF"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityReconocimientoF"
             android:theme="@style/Theme.Demo" />
         <activity
-            android:name=".Activities.ChooserActivity"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ChooserActivity"
             android:theme="@style/Theme.Demo" />
         <activity
-            android:name=".Activities.AddPerson"
+            android:name="com.tiburela.android.controlAsistencia.demo.Activities.AddPerson"
             android:label="@string/title_activity_add_person"
             android:theme="@style/Theme.Demo" />
 

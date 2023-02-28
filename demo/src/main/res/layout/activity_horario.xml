@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.ActivityHorario">
+    tools:context="com.tiburela.android.controlAsistencia.demo.Activities.ActivityHorario">
 
     <TextView
         android:id="@+id/txtNombreHorario"

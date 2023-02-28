@@ -7,7 +7,7 @@
     android:layout_margin="5dp"
     android:background="@drawable/back_horario"
     android:orientation="vertical"
-    tools:context=".Activities.ActivityHorario">
+    tools:context="com.tiburela.android.controlAsistencia.demo.Activities.ActivityHorario">
 
     <LinearLayout
         android:layout_width="match_parent"
