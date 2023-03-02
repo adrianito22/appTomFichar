@@ -19,7 +19,7 @@ public class Utils {
 
     public static String nameCurrentEmpleado="";
 
-    public final static HashMap<String,HashMap<String,String>> mihasWhitMhorariosAll= new HashMap();
+    public  static HashMap<String,HashMap<String,String>> mihasWhitMhorariosAll= new HashMap();
     public static String currentHorarioSelectedUid;
 
     public static final int GO_ActivityHorario=200;

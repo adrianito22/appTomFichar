@@ -81,7 +81,7 @@ public class RealtimDatabase {
                 if (task.isSuccessful()) {
 
 
-                    Toast.makeText(context, "Se subio Correctamente", Toast.LENGTH_LONG).show();
+                   // Toast.makeText(context, "Se subio Correctamente", Toast.LENGTH_LONG).show();
                     // Toast.makeText(context, "Se subio", Toast.LENGTH_SHORT).show();
 
                     //callback aqui...

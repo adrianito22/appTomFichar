@@ -68,7 +68,7 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_horario);
 
-        SharePref.init(ActivityHorario.this);
+       // SharePref.init(ActivityHorario.this);
 
         findviewids();
 
@@ -196,6 +196,8 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
                 if(Utils.modoOnlineActivate){
 
+                    saveDataInDataBase();
+
                 }else {  //agudramso en prefencioas
 
                     saveDataInPreferences();
@@ -319,12 +321,11 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
             RealtimDatabase.addHorariosTrabajo(ActivityHorario.this,horarioObjec);
             RealtimDatabase.addHorarioDataMap(ActivityHorario.this,MImap, keydondeGudaremos );
 
+
+
         }
 
 
-
-      //  SharePref.saveMapHorario(MImap,horarioObjec.getIdHorarioHereKEYpreferences());
-        Toast.makeText(ActivityHorario.this, "Se guaradó Horario", Toast.LENGTH_SHORT).show();
 
         finish();
 

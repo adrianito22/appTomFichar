@@ -1,14 +1,25 @@
 package com.tiburela.android.controlAsistencia.demo.adapters;
 
 import android.content.Context;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 
@@ -54,6 +65,10 @@ public class AdapterEmpleado extends RecyclerView.Adapter<AdapterEmpleado.MyView
 
             holder.txtName.setText(listEmpleado.get(position).getNombreYapellidoEmpleado());
              holder.txtCodigoMarcacion.setText(listEmpleado.get(position).getCodigoPaFichar());
+
+             dowloadAndSetImg(listEmpleado.get(position).getUrlPickEmpleado(),holder.imageView,ctx);
+
+
     }
 
 
@@ -83,7 +98,7 @@ public class AdapterEmpleado extends RecyclerView.Adapter<AdapterEmpleado.MyView
 
         private TextView txtName,txtCodigoMarcacion;
         private LinearLayout linearLayout;
-
+        private ImageView imageView;
 
 
         public MyViewHolder(View itemView) {
@@ -92,6 +107,7 @@ public class AdapterEmpleado extends RecyclerView.Adapter<AdapterEmpleado.MyView
             txtName =  itemView.findViewById(R.id.txtName);
             txtCodigoMarcacion=itemView.findViewById(R.id.txtCodigoMarcacion);
             linearLayout =itemView.findViewById(R.id.linearLayout);
+            imageView=itemView.findViewById(R.id.imageView);
 
             linearLayout.findViewById(R.id.linearLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -128,7 +144,86 @@ public class AdapterEmpleado extends RecyclerView.Adapter<AdapterEmpleado.MyView
 
 
     }
+/*
+    private void dowloadAndSetImg(ImagenReport imagenReport, ImageView holder, Context context){
 
+
+        storageRef  = StorageData.rootStorageReference.child("imagenes_all_reports/"+imagenReport.getUniqueIdNamePic());
+
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+
+
+                Glide.with(context)
+                        .load(uri)
+                        .fitCenter()
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)  //ESTABA EN ALL         //ALL or NONE as your requirementDiskCacheStrategy.DATA
+                        //.thumbnail(Glide.with(OfertsAdminActivity.context).load(R.drawable.enviado_icon))
+                        //.error(R.drawable.)
+                        //aqi cargamos una version lower
+
+                        .into(holder);
+
+
+
+                //  imagenReport.setUrlStoragePic(uri.toString());
+
+                //  ImagenReport.hashMapImagesData.put(imagenReport.getUniqueIdNamePic(),imagenReport);
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i("ladtastor","es un fallo y es "+exception.getMessage());
+
+                try{
+
+                    //   Glide.with(ActivitySeeReports.context)
+                    //.load(R.drawable.acea2)
+                    // .fitCenter()
+                    // .into(holder.imgViewLogoGIFTc);
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+
+            }
+        });
+
+
+
+
+
+
+    }
+*/
+
+    private void dowloadAndSetImg(String url, ImageView holder, Context context){
+
+        Glide.with(context)
+                .load(url)
+
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)  //ESTABA EN ALL         //ALL or NONE as your requirementDiskCacheStrategy.DATA
+                //.thumbnail(Glide.with(OfertsAdminActivity.context).load(R.drawable.enviado_icon))
+                //.error(R.drawable.)
+                //aqi cargamos una version lower
+                .apply(RequestOptions.circleCropTransform())
+
+                .circleCrop()
+                .into(holder);
+
+
+
+
+    }
 
 
 
