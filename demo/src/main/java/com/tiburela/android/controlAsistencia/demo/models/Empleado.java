@@ -50,6 +50,17 @@ public class Empleado {
     private String  nombreYapellidoEmpleado;
     private String  idEmpleado;
 
+    public String getUrlPickEmpleado() {
+        return urlPickEmpleado;
+    }
+
+    public void setUrlPickEmpleado(String urlPickEmpleado) {
+        this.urlPickEmpleado = urlPickEmpleado;
+    }
+
+    private String  urlPickEmpleado;
+
+
     public String getCodigoPaFichar() {
         return codigoPaFichar;
     }
@@ -80,6 +91,7 @@ public class Empleado {
         this.idEmpleado = idEmpleado;
         this.codigoPaFichar=codigoPaFichar;
         keyWhereLocalizeObjec="";
+        urlPickEmpleado="";
 
     }
 
@@ -95,6 +107,8 @@ public class Empleado {
         result.put("idEmpleado", idEmpleado);
         result.put("codigoPaFichar", codigoPaFichar);
         result.put("keyWhereLocalizeObjec",keyWhereLocalizeObjec);
+        result.put("urlPickEmpleado",urlPickEmpleado);
+
 
 
         return result;

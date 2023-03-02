@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -23,6 +24,8 @@ import androidx.core.content.FileProvider;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +38,7 @@ import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
 import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
+import com.tiburela.android.controlAsistencia.demo.Utils.StorageData;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
@@ -48,6 +52,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import in.myinnos.awesomeimagepicker.activities.AlbumSelectActivity;
 import in.myinnos.awesomeimagepicker.helpers.ConstantsCustomGallery;
@@ -95,6 +100,8 @@ public class AddPerson extends AppCompatActivity {
         btn_select_image.setOnClickListener(mOnClickListener);
 
         checkPermissions();
+
+        checkpewrmisionAminStorage();
 
 
     }
@@ -368,15 +375,16 @@ public class AddPerson extends AppCompatActivity {
 
     private void addEmpleadoDatabase(){
 
-        Log.i("simplerr", "se eejcuto else onpostexcejcute "+imgPath);
+        Log.i("simplerr", "se eejcuto add empleado "+imgPath);
         String [] array=imgPath.split("/");
 
         String idunique=array[array.length-1];
 
         Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()));
 
-        RealtimDatabase.addEmpleado(AddPerson.this,empleadoObject);
+        StorageData.uploadObjecAndImagen( UUID.randomUUID().toString(),empleadoObject,AddPerson.this,destination);
 
+       // RealtimDatabase.addEmpleado(AddPerson.this,empleadoObject);
 
         Utils.existeNewUserAdd=true;
 
@@ -573,6 +581,29 @@ public class AddPerson extends AppCompatActivity {
 
 
         return true;
+    }
+
+
+
+    private void checkpewrmisionAminStorage(){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+            if (Environment.isExternalStorageManager()){
+
+    // If you don't have access, launch a new activity to show the user the system's dialog
+    // to allow access to the external storage
+            }else{
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        }
+
+
+
     }
 
 }

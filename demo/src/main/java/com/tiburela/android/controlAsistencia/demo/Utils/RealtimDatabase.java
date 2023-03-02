@@ -1,6 +1,7 @@
 package com.tiburela.android.controlAsistencia.demo.Utils;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -120,6 +121,9 @@ public class RealtimDatabase {
                     //callback aqui...
 
                 } else {
+
+                    Log.i("simplerr", "se eejcuto el else la excpecion es  "+task.getException());
+
 
                     Toast.makeText(context, "Ocurrio un Error, revisa tu conexion Internet", Toast.LENGTH_LONG).show();
 

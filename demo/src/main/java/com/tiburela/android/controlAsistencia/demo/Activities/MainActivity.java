@@ -24,6 +24,7 @@ import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
 import com.tiburela.android.controlAsistencia.demo.Utils.FileUtils;
 import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
+import com.tiburela.android.controlAsistencia.demo.Utils.StorageData;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_center);
 
         RealtimDatabase.initDatabasesRootOnly();
+        StorageData.initStorageReference();
 
 
         layoutAllEmployers=findViewById(R.id.layoutAllEmployers);

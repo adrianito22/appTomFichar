@@ -115,6 +115,9 @@ public class ActivityLogin extends AppCompatActivity {
                           userGoogle = mAuth.getCurrentUser();
 
 
+                            startActivity(new Intent(ActivityLogin.this,MainActivity.class ));
+
+
                         }
                         else {
                             Log.i("dataLogin","se ejecuto firebaseAuthWithGoogle() else failure ");
@@ -147,15 +150,16 @@ public class ActivityLogin extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        super.onStart();
 
-        if(mAuth!=null){
+         userGoogle = mAuth.getCurrentUser();
 
+        if(userGoogle!=null){
 
             startActivity(new Intent(ActivityLogin.this,MainActivity.class ));
 
         }
 
-        super.onStart();
 
     }
 
