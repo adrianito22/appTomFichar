@@ -16,7 +16,7 @@
 
 package com.tiburela.android.controlAsistencia;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import org.hamcrest.Description;

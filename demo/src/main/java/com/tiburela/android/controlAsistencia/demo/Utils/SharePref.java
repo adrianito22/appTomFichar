@@ -2,7 +2,7 @@ package com.tiburela.android.controlAsistencia.demo.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;

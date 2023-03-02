@@ -1,31 +1,30 @@
 package com.tiburela.android.controlAsistencia.demo.Activities;
 
-import android.support.design.widget.BottomSheetDialog;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import org.jetbrains.annotations.Nullable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
-import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.adapters.AdapterEmpleado;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ActivityEmpleadosAll extends AppCompatActivity {
 

@@ -16,7 +16,8 @@
 
 package com.tiburela.android.controlAsistencia;
 
-import android.support.v4.util.ArrayMap;
+
+import android.util.ArrayMap;
 
 import java.util.Set;
 import java.util.SortedSet;

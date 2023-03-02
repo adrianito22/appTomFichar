@@ -10,13 +10,13 @@
     tools:context="com.google.android.cameraview.demo.com.tiburela.android.cameraview.demo.Activities.AddPerson">
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarAddPeople"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary"
         android:visibility="gone"
-        app:titleTextColor="#fff"></android.support.v7.widget.Toolbar>
+        app:titleTextColor="#fff"></androidx.appcompat.widget.Toolbar>
 
 
 

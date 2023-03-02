@@ -7,7 +7,7 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     buildTypes {
         release {
@@ -16,24 +16,26 @@ android {
         }
     }
     sourceSets {
+
         main.java.srcDirs += 'src/main/base'
         main.java.srcDirs += 'src/main/api9'
         main.java.srcDirs += 'src/main/api14'
         main.java.srcDirs += 'src/main/api21'
         main.java.srcDirs += 'src/main/api23'
+
     }
 }
 
 dependencies {
-    implementation "com.android.support:support-annotations:$supportLibraryVersion"
-    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation 'androidx.core:core:1.9.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
 
     // Tests
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation('com.android.support.test:runner:0.5') {
+    androidTestImplementation('androidx.test.ext:junit:1.1.1') {
         exclude module: 'support-annotations'
     }
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2') {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.5.1') {
         exclude module: 'support-annotations'
     }
 }

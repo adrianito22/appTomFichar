@@ -1,8 +1,9 @@
 package com.tiburela.android.controlAsistencia.demo.Activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -114,7 +115,8 @@ public class ActivityLogin extends AppCompatActivity {
                           userGoogle = mAuth.getCurrentUser();
 
 
-                        } else {
+                        }
+                        else {
                             Log.i("dataLogin","se ejecuto firebaseAuthWithGoogle() else failure ");
 
                             Log.i("logingoogle","ocurrio un errro "+task.getException());
@@ -140,6 +142,20 @@ public class ActivityLogin extends AppCompatActivity {
 
 
 
+
+    }
+
+    @Override
+    protected void onStart() {
+
+        if(mAuth!=null){
+
+
+            startActivity(new Intent(ActivityLogin.this,MainActivity.class ));
+
+        }
+
+        super.onStart();
 
     }
 

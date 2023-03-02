@@ -13,8 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Demo.NoActionBar">
         <activity
-            android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityLogin"
-            android:exported="true" />
+            android:name=".Activities.ActivityLogin"
+            android:exported="true" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <activity
             android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityDetailsAsistence"
             android:exported="true" />
@@ -42,11 +50,7 @@
         <activity
             android:name="com.tiburela.android.controlAsistencia.demo.Activities.MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.tiburela.android.controlAsistencia.demo.Activities.ActivityReconocimientoF"
@@ -60,7 +64,7 @@
             android:theme="@style/Theme.Demo" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="com.google.android.cameraview.demo"
             android:exported="false"
             android:grantUriPermissions="true">
