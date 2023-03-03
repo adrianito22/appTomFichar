@@ -136,7 +136,7 @@ public class RealtimDatabase {
     }
 
 
-    public static void addHorarioDataMap(Context context,   HashMap<String,String> MImap,String keyDondeAddMAP) {
+    public static void addHorarioTrabajoMap(Context context, HashMap<String,String> MImap, String keyDondeAddMAP) {
 
         DatabaseReference mibasedata = rootDatabaseReference.child("mapsHorariosData").child("maps");
         mibasedata.child(keyDondeAddMAP).setValue(MImap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -269,6 +269,7 @@ public class RealtimDatabase {
 
     public static void updateHorarioTrabajoMap(Context context,   HashMap<String,String> MImap,String keyUpdateNode) {
 
+        //        DatabaseReference mibasedata = rootDatabaseReference.child("mapsHorariosData").child("maps");
         DatabaseReference mibasedata = rootDatabaseReference.child("mapsHorariosData").child("maps");
 
         mibasedata.child(keyUpdateNode).setValue(MImap).addOnCompleteListener(new OnCompleteListener<Void>() {

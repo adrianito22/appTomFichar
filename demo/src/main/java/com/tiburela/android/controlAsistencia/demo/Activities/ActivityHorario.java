@@ -42,9 +42,10 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
     HashMap<String,String>MImap= new HashMap<>();
 
-    HorarIosTrabajos horarioTrabajoDowload;
     TextInputEditText txtImputEntrada;
     TextInputEditText txtImputSalida;
+
+    String keylocalizeMapHorario="";
 
 
    //DIAS SEMANA
@@ -306,9 +307,9 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
             horarioObjec.setIdHorarioHereKEYpreferences(Utils.currentHorarioSelectedUid);
           //  String keydondeGudaremos= RealtimDatabase.rootDatabaseReference.push().getKey();
-            RealtimDatabase.updateHorarioTrabajoMap(ActivityHorario.this,MImap, horarioTrabajoDowload.getKeylocalizeMapHorario() );
-            RealtimDatabase.updateHorariosTrabajo(ActivityHorario.this,horarioObjec,horarioTrabajoDowload.getKeyWhereLocalizeObjec());
-
+            RealtimDatabase.updateHorarioTrabajoMap(ActivityHorario.this,MImap, Utils.horarioTrabajoGlobalSelected.getKeylocalizeMapHorario() );
+            horarioObjec.setKeylocalizeMapHorario(keylocalizeMapHorario);
+            RealtimDatabase.updateHorariosTrabajo(ActivityHorario.this,horarioObjec,Utils.horarioTrabajoGlobalSelected.getKeyWhereLocalizeObjec());
 
 
         }
@@ -318,8 +319,8 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
             String keydondeGudaremos= RealtimDatabase.rootDatabaseReference.push().getKey();
             horarioObjec.setKeylocalizeMapHorario(keydondeGudaremos);
 
+            RealtimDatabase.addHorarioTrabajoMap(ActivityHorario.this,MImap, keydondeGudaremos );
             RealtimDatabase.addHorariosTrabajo(ActivityHorario.this,horarioObjec);
-            RealtimDatabase.addHorarioDataMap(ActivityHorario.this,MImap, keydondeGudaremos );
 
 
 
@@ -413,6 +414,7 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
                     if(informe!=null){
 
+                        keylocalizeMapHorario=informe.getKeylocalizeMapHorario();
                         dowloadHoriosMap(informe.getKeylocalizeMapHorario());
 
                         break;
@@ -444,7 +446,6 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                               MImap = new HashMap<>();
-
 
 
                         for (DataSnapshot dss : dataSnapshot.getChildren()) {

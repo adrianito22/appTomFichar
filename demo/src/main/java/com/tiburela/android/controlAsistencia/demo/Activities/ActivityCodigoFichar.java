@@ -66,18 +66,9 @@ public class ActivityCodigoFichar extends AppCompatActivity {
                 }
 
 
-                if (!checkIFcodeExisteEnAlgunEmpleadoAndGetId(et_otpCode.getText().toString())) { //si no esite
+                /***cheekemos si codigo existe , si existe llamamos funcion marcar si no mostramos sheet (no existe)**/
+                checkifExisteCodigoficharEmpleadoAndCallFichaje(et_otpCode.getText().toString(),idCurrentUser);
 
-                    sheetBootomShowINcorrect();
-
-                    // Toast.makeText(ActivityCodigoFichar.this, "NO existe este codigo", Toast.LENGTH_SHORT).show();
-                } else { //si el codigo existe vamos a marcar....
-
-                    dowloadHorRIOoBJECIFexistAndFichajeoRupdate(idCurrentUser);
-                    //marcamosFichaje(idCurrentUser);
-
-
-                }
 
 
                 //entonces aqui fichamos...
@@ -204,32 +195,44 @@ public class ActivityCodigoFichar extends AppCompatActivity {
     }
 
 
-    private void dowloadHorRIOoBJECIFexistAndFichajeoRupdate(String idFIchajeData) {
+    private void dowloadHorRIOoBJECIFexistAndFichajeoRupdate(String idUserId) {
 
         DatabaseReference usersdRef = RealtimDatabase.rootDatabaseReference.child("marcaciones").child("allmarcaciones");
 
-        Query query = usersdRef.orderByChild("keyficharDate").equalTo(idFIchajeData);
+        Query query = usersdRef.orderByChild("ficharUserId").equalTo(idUserId);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Fichar informe = null;
+                 boolean existeFichajeMes=false;
+
                 for (DataSnapshot ds : snapshot.getChildren()) {
 
                     informe = ds.getValue(Fichar.class);
-                    Log.i("holerd", "aqui se encontro un cuadro muestreo......");
 
-                    if (informe != null) {
+                    if (informe != null ) {
 
+                        SimpleDateFormat format=new SimpleDateFormat("dd-MM-yyyy");
 
-                        break;
+                        String fechaFichada= format.format(informe.getEntradaMilliseconds());
+
+                        if(fechaFichada.equalsIgnoreCase(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()))){
+                            existeFichajeMes=true;
+
+                            Log.i("solamerra","existe fichaje ");
+                            break;
+                        }
+
                     }
 
 
                 }
 
 
-                if (informe == null) {
+                if (!existeFichajeMes) {
+                    Log.i("solamerra","no existe fichaje ");
+
                     fichaOnlineAndUpdate(informe, false);
 
                 } else {
@@ -251,6 +254,58 @@ public class ActivityCodigoFichar extends AppCompatActivity {
     }
 
 
+
+    private void checkifExisteCodigoficharEmpleadoAndCallFichaje(String codifoFichar, String idEmpleado) {
+
+        DatabaseReference usersdRef = RealtimDatabase.rootDatabaseReference.child("empleados").child("allEmpleados");
+
+        Query query = usersdRef.orderByChild("codigoPaFichar").equalTo(codifoFichar);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Empleado empleado = null;
+
+                for (DataSnapshot ds : snapshot.getChildren()) {
+
+                    empleado = ds.getValue(Empleado.class);
+
+                    if (empleado != null ) {
+
+                        break;
+
+                    }
+
+
+                }
+
+
+                if (empleado!=null) { //signifca que exxiste este codigo en algun suario
+
+                    dowloadHorRIOoBJECIFexistAndFichajeoRupdate(idEmpleado);
+
+                } else {
+                    sheetBootomShowINcorrect();
+
+                    //mostramos advertencia
+
+                }
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.i("misdata", "el error es  " + error.getMessage());
+
+            }
+        });
+
+    }
+
+
+
     private void fichaOnlineAndUpdate(Fichar fichar, boolean existeFIchaje) {
 
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -270,6 +325,7 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
 
                 }else{
+
 
                     Toast.makeText(this, "Ya haz fichado anteriomente ", Toast.LENGTH_SHORT).show();
                 }
@@ -492,6 +548,14 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_incorrect);
 
+        Button btnLoTengo=bottomSheetDialog.findViewById(R.id.btnLoTengo);
+        btnLoTengo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                bottomSheetDialog.dismiss();
+            }
+        });
 
         //ImageView imgClose=bottomSheetDialog.findViewById(R.id.imgClose);
         //8  bottomSheetDialog.setCancelable(false);

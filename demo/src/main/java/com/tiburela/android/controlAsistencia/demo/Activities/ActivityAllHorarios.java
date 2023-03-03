@@ -110,6 +110,9 @@ Button btnCrearHorario;
 
                 Utils.isEditHorario=true;
 
+                Utils.horarioTrabajoGlobalSelected=listx.get(position);
+
+
                 Intent intencion= new Intent(ActivityAllHorarios.this, ActivityHorario.class);
                 startActivity(intencion);
 
