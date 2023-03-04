@@ -24,6 +24,14 @@ public Fichar(){
 
     public static HashMap<String ,Empleado> hasMapAllEmpleados = new HashMap<>();
 
+    public String getFicharUserId() {
+        return ficharUserId;
+    }
+
+    public void setFicharUserId(String ficharUserId) {
+        this.ficharUserId = ficharUserId;
+    }
+
     private String ficharUserId;
 
     public String getKeyficharDate() {

@@ -267,38 +267,46 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                 // Log.i("comisaria","el size  en ontexttext es "+edt_search.getText().toString().length() );
-                Log.i("comisaria","llamamos " );
+                Log.i("comisaria","llamamos ontextchange " );
 
 
 
                 listFilteredEmpleados.clear();
                 listFilteredEmpleados= new ArrayList<>();
 
+                if(listAllEmpleados==null){
+                    return;
+                }
+
                 for(int index = 0; index<  listAllEmpleados.size(); index++) {
 
-                    //  String textSearch=charSequence.toString().toUpperCase(Locale.ROOT);
-
-                    if( !charSequence.toString().isEmpty() ||  listAllEmpleados.get(index).getNombreYapellidoEmpleado().contains(charSequence.toString().toUpperCase()))
+                    if( !charSequence.toString().isEmpty() &&  listAllEmpleados.get(index).getNombreYapellidoEmpleado().toUpperCase().contains(charSequence.toString().toUpperCase()))
                     {
-
                         listFilteredEmpleados.add(listAllEmpleados.get(index));
-
-                       // Log.i("comisaria","llamamos el size de lista es "+listFiltered.size() );
-
-
-                        addDataReciclerAndShowOptions(listFilteredEmpleados);
-
+                        Log.i("comisaria","se ejecuto el if aqui agregamos este nombre  "+listAllEmpleados.get(index).getNombreYapellidoEmpleado());
                     }
-
-
-
                     //llaamos a crear recilcer nuevamente todos
 
                 }
+                recylerVInformsAll.removeAllViews();;
 
-                if(listFilteredEmpleados.size()==0){
+                addDataReciclerAndShowOptions(listFilteredEmpleados);
 
+
+                //adap.notifyDataSetChanged();
+
+                Log.i("comisaria","bien el size es  "+listFilteredEmpleados.size());
+
+
+
+
+
+                if(listFilteredEmpleados.size()==0 && charSequence.toString().isEmpty()){
+                    addDataReciclerAndShowOptions(listAllEmpleados);
+
+                }else{
                     addDataReciclerAndShowOptions(listFilteredEmpleados);
+
 
                 }
 

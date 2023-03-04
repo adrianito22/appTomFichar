@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.internal.Util;
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.adapters.AdapterAsistencePromedio;
@@ -33,10 +42,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 public class ActivityReportes extends AppCompatActivity {
-   RecyclerView recylerVInformsAll;
+
+    HashMap<String,ArrayList<Fichar>> mapOfMapAllFichajeUserByRange = new HashMap<>();
+
+
+    long desdeDateMillisecond=0;
+    long hastaDateMillisecond=0;
+
+    int modoMostrarDataRecicler=Utils.ITEM_MARACIONES_MODO;
+
+
+
+    RecyclerView recylerVInformsAll;
    int mesSelecionado=0;
     int yearSelecionado=0;
     String fechaSelecionadaCalendar ="";
@@ -109,22 +130,29 @@ public class ActivityReportes extends AppCompatActivity {
                     if(isFirstShowReciclerData){
                         showFisrtReciclerData();
                         isFirstShowReciclerData=false;
-                    }else{
+                    }
 
-                        generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
+                    else
 
+                    {
 
+                        dowloadAllEmpleadosAndGetPromedio(desdeDateMillisecond,hastaDateMillisecond,modoDateRangeSearch);
+
+                        //  dowloadAllEmpleadosAndGetPromedio(modoDateRangeSearch);
+                       // generateAsistenciaArrayListByFilterXOnline(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
+                       // generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
                         //aqui mostramos normalemente
-
                     }
 
 
                 }else {
+
                     Utils.tipodeDatoMostrar=Utils.ITEM_ASISTENCIA_MODO;
 
                     //aqui debemos tener el modo
+                    dowloadAllEmpleadosAndGetPromedio(desdeDateMillisecond,hastaDateMillisecond,modoDateRangeSearch);
 
-                    generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
+                  //  generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
 
 
                     //showFisrtReciclerData();
@@ -148,15 +176,32 @@ public class ActivityReportes extends AppCompatActivity {
 
 
     private void showFisrtReciclerData(){
+        //obtenmos el dia de hoy
+
+        Calendar calendar= Calendar.getInstance();
+        // calendar.set(Calendar.DAY_OF_MONTH,7);
+        calendar.add(Calendar.DATE, -1);
+        desdeDateMillisecond=calendar.getTimeInMillis();
+
+        calendar.add(Calendar.DATE, +2); //estaba en  +1
+         hastaDateMillisecond=calendar.getTimeInMillis();
+
+//                        SimpleDateFormat format=new SimpleDateFormat("dd-MM-yyyy");
+         SimpleDateFormat forma=new SimpleDateFormat("dd/MM/yyyy");
+
+         Log.i("comenzardata","el dia de ayer "+forma.format(desdeDateMillisecond)+" el dia de manana es "+forma.format(hastaDateMillisecond));
+
+
+        dowloadAllEmpleadosAndGetPromedio(desdeDateMillisecond,hastaDateMillisecond,Utils.DIA_ESPECIFICO);
 
 
 
-
+/*
         HashMap<String,Empleado> miMapEmpleados =SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
 
         if(miMapEmpleados.size()>0){
 
-            miLisAllEmpleadosRegistrados.addAll(miMapEmpleados.values());
+          //  miLisAllEmpleadosRegistrados.addAll(miMapEmpleados.values());
             generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.DIA_ESPECIFICO);
 
 
@@ -169,7 +214,75 @@ public class ActivityReportes extends AppCompatActivity {
 
         }
 
+        */
+
+
     }
+
+    private void dowloadAllEmpleadosAndGetPromedio( long desde,long hasta,int modoRangeDate ){
+
+        ValueEventListener seenListener  = RealtimDatabase.rootDatabaseReference.child("empleados").child("allEmpleados")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        miLisAllEmpleadosRegistrados= new ArrayList<>();
+
+
+                        for (DataSnapshot dss : dataSnapshot.getChildren()) {
+                            Empleado empleado = dss.getValue(Empleado.class);
+
+                            if (empleado != null) {
+                                miLisAllEmpleadosRegistrados.add(empleado);
+
+                            }
+
+                        }
+
+
+
+                        if(miLisAllEmpleadosRegistrados.size()>0){
+
+                            Log.i("comenzardata","es mayor a cero");
+
+                            if(modoRangeDate==Utils.DIA_ESPECIFICO){
+
+                                Log.i("comenzardata","es un dia especifico");
+
+                                dowloadMarcacionesByDateRange(desde,hasta,modoRangeDate);
+
+                                //    dowloadMaraciones_DIA_ESPECIFICO(0);
+                                //generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.DIA_ESPECIFICO);
+
+                            }else{
+                                Log.i("comenzardata","es un mes especifico");
+
+                                dowloadMarcacionesByDateRange(desde,hasta,modoRangeDate);
+                               // generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.MES_ESPECIFICO);
+
+                            }
+
+
+                        }else{
+                            TextView txtAdviserHere=findViewById(R.id.txtAdviserHere);
+                            txtAdviserHere.setVisibility(View.VISIBLE);
+
+                        }
+
+
+
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.i("libiadod", "el error es " + databaseError.getMessage());
+
+                    }
+                });
+
+    }
+
 
     private void setDataRecyclerView(ArrayList<PromedioAsistenceEmpleado> list){
 
@@ -308,17 +421,27 @@ public class ActivityReportes extends AppCompatActivity {
 
                         Log.i("misafama","ondatset mes es "+selectedMonth+" y year es "+selectedYear);
 
-                        //AQUI EL MES
-
                         mesSelecionado=selectedMonth+1;
                         yearSelecionado=selectedYear;
                         txtDateSelected.setText(Utils.arrayMesSelecionado[selectedMonth]);
                         modoDateRangeSearch=Utils.MES_ESPECIFICO;
                         //llamos  generar by mes...
-                        generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.MES_ESPECIFICO);
+
+                        Calendar calendarx =  Calendar.getInstance();
+                        calendarx.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH));
+
+                        long calendaerioStart=calendarx.getTimeInMillis();
+
+                        calendarx.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH));
+                        SimpleDateFormat ddd=new SimpleDateFormat("dd-MM-yyyy");
+                        String date= ddd.format(calendaerioStart);
+
+                        Log.i("superman","el dia desde "+date+" hasta el dia"+ddd.format(calendarx.getTimeInMillis()));
 
 
-                        //aqui vamos..
+
+
+                        dowloadAllEmpleadosAndGetPromedio(calendaerioStart,calendarx.getTimeInMillis(),Utils.MES_ESPECIFICO);
 
 
                     }
@@ -369,6 +492,97 @@ public class ActivityReportes extends AppCompatActivity {
     //
 
     //aqui ya le pasamos la lista de fichaje con el que vamos a contruir una lista de promedios.
+
+
+    private void generateAsistenciaArrayListByFilterXOnline(ArrayList<Empleado>listUsersToGetFichajePromedio,int modoDateRangeSearch){
+
+       ArrayList<PromedioAsistenceEmpleado>arrayList= new ArrayList<>();
+
+      //  Log.i("hakunama","DL SIZE DE ARRAU LIST start es  "+arrayList.size());
+
+
+        ///
+
+        for(Empleado empleadoObject: listUsersToGetFichajePromedio){ //biscamos
+
+            //Log.i("comenzardata","el key es  "+key);
+
+
+            //aqui podemos obtener
+         //   HashMap<String, Fichar> hashMapAllRegistrosThisUser= SharePref.loadMapPreferencesFichaje(empleadoObject.getIdEmpleado());
+           // Log.i("misdta","el size de map fichaje de este user es "+hashMapAllRegistrosThisUser.size());
+
+
+            if(modoDateRangeSearch== Utils.MES_ESPECIFICO){
+
+                Log.i("comenzardata","seleciono mes especifico ");
+
+                // mesSelecionado
+                ArrayList<Fichar>lisFichajeCurrentUser= mapOfMapAllFichajeUserByRange.get(empleadoObject.getIdEmpleado());
+
+
+                if(lisFichajeCurrentUser.size()>0){
+                    PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,
+                            empleadoObject.getNombreYapellidoEmpleado(),empleadoObject.getIdEmpleado());
+                    arrayList.add(promedioObjec);
+                }
+
+            }
+
+            else if(modoDateRangeSearch==Utils.DIA_ESPECIFICO){
+
+                Log.i("comenzardata","selecionado un dia espcifico y el map size es "+mapOfMapAllFichajeUserByRange.size());
+
+/*
+                for (HashMap.Entry<String, ArrayList<Fichar>> entry : mapOfMapAllFichajeUserByRange.entrySet()) {
+                    String key = entry.getKey();
+                    ArrayList<Fichar> value = entry.getValue();
+
+                    Log.i("comenzardata","el key es  "+key);
+
+
+                    // ...
+                }
+
+*/
+
+
+                if(mapOfMapAllFichajeUserByRange.containsKey(empleadoObject.getIdEmpleado())){
+
+                    Log.i("comenzardata","si contiene este key y es "+empleadoObject.getCodigoPaFichar());
+                    ArrayList<Fichar>lisFichajeCurrentUser=mapOfMapAllFichajeUserByRange.get(empleadoObject.getIdEmpleado());
+                    Log.i("hakunama","el size de la lista es  "+lisFichajeCurrentUser.size());
+
+
+                    if(lisFichajeCurrentUser.size()>0){
+
+                        PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,empleadoObject.getNombreYapellidoEmpleado()
+                                ,empleadoObject.getIdEmpleado());
+                        arrayList.add(promedioObjec);
+                    }
+
+
+                    Log.i("hakunama","el size de la ahora es "+arrayList.size());
+
+                }
+
+
+
+            }
+
+
+        }
+
+        Log.i("hakunama","DL SIZE DE ARRAU LIST vv  ES "+arrayList.size());
+
+        setDataRecyclerView(arrayList);
+
+
+
+
+    }
+
+   // private void getmaracionesallUsersEspecificRange
     private void generateAsistenciaArrayListByFilter(ArrayList<Empleado>listUsersToGetFichajePromedio,int modoDateRangeSearch){
 
         ArrayList<PromedioAsistenceEmpleado>arrayList= new ArrayList<>();
@@ -376,7 +590,11 @@ public class ActivityReportes extends AppCompatActivity {
         Log.i("hakunama","DL SIZE DE ARRAU LIST start es  "+arrayList.size());
 
 
+         ///
+
         for(Empleado empleadoObject: listUsersToGetFichajePromedio){ //biscamos
+
+            //aqui podemos obtener
 
             HashMap<String, Fichar> hashMapAllRegistrosThisUser= SharePref.loadMapPreferencesFichaje(empleadoObject.getIdEmpleado());
 
@@ -395,8 +613,6 @@ public class ActivityReportes extends AppCompatActivity {
                                 empleadoObject.getNombreYapellidoEmpleado(),empleadoObject.getIdEmpleado());
                         arrayList.add(promedioObjec);
                     }
-
-
 
               }
 
@@ -430,6 +646,143 @@ public class ActivityReportes extends AppCompatActivity {
 
         setDataRecyclerView(arrayList);
 
+
+    }
+
+
+    //lisfichajes de un mes especifico....
+    private void dowloadMarcacionesByDateRange(long desdeFecha, long hastFecha, int modoDateRangeSearch){
+
+        Query query = RealtimDatabase.rootDatabaseReference.child("marcaciones").child("allmarcaciones").
+                orderByChild("entradaMilliseconds").startAt(desdeFecha).endAt(hastFecha);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                mapOfMapAllFichajeUserByRange= new HashMap<>();
+
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Fichar fichar=ds.getValue(Fichar.class);
+                    //agregamos solo los que no esten en esta lista..
+                    if(fichar!=null){  //creamos un objet
+
+                        String keyActual=fichar.getFicharUserId();
+
+                        Log.i("comenzardata","el key actual para addd es "+keyActual);
+
+                        if(mapOfMapAllFichajeUserByRange.containsKey(keyActual)){ //existe este mapa
+
+                         ArrayList <Fichar>list = mapOfMapAllFichajeUserByRange.get(keyActual);
+
+                            list.add(fichar);
+                            mapOfMapAllFichajeUserByRange.put(keyActual,list);
+
+                        }
+
+                        else
+
+                        {
+                            ArrayList <Fichar>list= new ArrayList<>();
+
+                            list.add(fichar);
+
+                            mapOfMapAllFichajeUserByRange.put(keyActual,list);
+
+                        }
+
+
+
+                    }
+
+                }
+
+
+                Log.i("comenzardata","el size de mapaofnap es "+mapOfMapAllFichajeUserByRange.size());
+
+                generateAsistenciaArrayListByFilterXOnline(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
+
+
+              ///  setAdapaterDataAndShow(listReport);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Log.i("sliexsa","el error es "+error.getMessage());
+
+            }
+        });
+
+
+
+    }
+
+
+    private void dowloadMaraciones_DIA_ESPECIFICO(Long diaEspecifico) {
+
+        DatabaseReference usersdRef = RealtimDatabase.rootDatabaseReference.child("marcaciones").child("allmarcaciones");
+
+        Query query = usersdRef.orderByChild("entradaMilliseconds").equalTo(diaEspecifico);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Fichar informe = null;
+
+                    mapOfMapAllFichajeUserByRange= new HashMap<>();
+
+                    for(DataSnapshot ds : snapshot.getChildren()) {
+                        Fichar fichar=ds.getValue(Fichar.class);
+                        //agregamos solo los que no esten en esta lista..
+                        if(fichar!=null){  //creamos un objet
+
+                            String keyActual=fichar.getKeyficharDate();
+
+                            if(mapOfMapAllFichajeUserByRange.containsKey(keyActual)){ //existe este mapa
+
+                                ArrayList <Fichar>list = mapOfMapAllFichajeUserByRange.get(keyActual);
+
+                                list.add(fichar);
+                                mapOfMapAllFichajeUserByRange.put(keyActual,list);
+
+                            }
+
+                            else
+
+                            {
+                                ArrayList <Fichar>list= new ArrayList<>();
+
+                                list.add(fichar);
+
+                                mapOfMapAllFichajeUserByRange.put(keyActual,list);
+
+                            }
+
+
+
+                        }
+
+                    }
+
+                    Log.i("debeber","el size de mapaofnap es "+mapOfMapAllFichajeUserByRange.size());
+
+                    generateAsistenciaArrayListByFilterXOnline(miLisAllEmpleadosRegistrados,modoDateRangeSearch);
+
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.i("misdata", "el error es  " + error.getMessage());
+
+            }
+        });
 
     }
 
@@ -505,7 +858,6 @@ public class ActivityReportes extends AppCompatActivity {
 
                               String dia;
                               String mes;
-
                          fechaSelecionadaCalendar =i2+"/"+(i1+1)+"/"+i;  //dia mes .year
                         txtDateSelected.setText(fechaSelecionadaCalendar);
 
@@ -523,12 +875,32 @@ public class ActivityReportes extends AppCompatActivity {
 
 
                         fechaSelecionadaCalendar=dia+"/"+mes+"/"+i;
-
-                             // Log.i("ladatae","el ffechalsecionada es"+fechaSelecionadaCalendar);
-
                         modoDateRangeSearch=Utils.DIA_ESPECIFICO;
 
-                        generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.DIA_ESPECIFICO);
+
+                        Calendar calendar= Calendar.getInstance();
+                        calendar.set(i,i1,i2);
+
+                        // calendar.set(Calendar.DAY_OF_MONTH,7);
+                        calendar.add(Calendar.DATE, -1);
+                        desdeDateMillisecond=calendar.getTimeInMillis();
+                        calendar.add(Calendar.DATE, +2); //estaba en  +1
+                        hastaDateMillisecond=calendar.getTimeInMillis();
+
+
+
+//                        SimpleDateFormat format=new SimpleDateFormat("dd-MM-yyyy");
+                        SimpleDateFormat forma=new SimpleDateFormat("dd/MM/yyyy");
+
+                        Log.i("comenzardata"," seleciono dia del calendario fargemnt y el dia pasado es  "+forma.format(desdeDateMillisecond)+" el dia que le sigue es  es "+forma.format(hastaDateMillisecond));
+
+                       //*****  valor del medio es el selecioando y ese debe ser el dia que selcionamos
+
+                        dowloadAllEmpleadosAndGetPromedio(desdeDateMillisecond,hastaDateMillisecond,Utils.DIA_ESPECIFICO);
+
+                            /**si no encontramos data, oucltamos o mostramos un araray list vacio oewro no null y kle decimos que no hay data ,,cehekear */
+
+                     //   generateAsistenciaArrayListByFilter(miLisAllEmpleadosRegistrados,Utils.DIA_ESPECIFICO);
 
                        // ediFecha.setText(dateSelec);
 
