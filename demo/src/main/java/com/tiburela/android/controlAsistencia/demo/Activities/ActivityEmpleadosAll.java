@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
+import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.adapters.AdapterEmpleado;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 
@@ -127,7 +128,14 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
                             Empleado empleado = dss.getValue(Empleado.class);
 
                             if (empleado != null) {
-                                listAllEmpleados.add(empleado);
+
+                                if(empleado.getMailEmppleador().equals(Utils.maiLEmpleadorGlOBAL)){
+
+                                    listAllEmpleados.add(empleado);
+
+
+                                }
+
 
                             }
 

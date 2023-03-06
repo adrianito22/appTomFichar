@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
+import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.customClass.OtpEditText;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
@@ -126,7 +127,7 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
         if (ficharObjec == null) { //si fichar objet es nulo cremoa sun nirvo
 
-            ficharObjec = new Fichar(keyCurrentUser, new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+            ficharObjec = new Fichar(keyCurrentUser, new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()),Utils.maiLEmpleadorGlOBAL);
 
         }
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
@@ -357,7 +358,7 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
         else {
 
-            fichar = new Fichar(idCurrentUser, new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+            fichar = new Fichar(idCurrentUser, new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()), Utils.maiLEmpleadorGlOBAL);
 
 
 
@@ -406,7 +407,7 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
         if(ficharObjec==null){ //si fichar objet es nulo cremoa sun nirvo
 
-            ficharObjec= new Fichar(keyCurrentUser,new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+            ficharObjec= new Fichar(keyCurrentUser,new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()),Utils.maiLEmpleadorGlOBAL);
 
         }
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());

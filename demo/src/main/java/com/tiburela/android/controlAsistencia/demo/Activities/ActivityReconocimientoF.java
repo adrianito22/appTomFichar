@@ -43,6 +43,7 @@ import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
 import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
+import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
 import com.tzutalin.dlib.VisionDetRet;
 
@@ -418,7 +419,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
         else {
 
-            fichar = new Fichar(idEncontrado, new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+            fichar = new Fichar(idEncontrado, new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()), Utils.maiLEmpleadorGlOBAL);
 
 
             if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_ENTRADA){
@@ -462,7 +463,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
         if(ficharObjec==null){ //si fichar objet es nulo cremoa sun nirvo
 
-            ficharObjec= new Fichar(keyCurrentUser,new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()));
+            ficharObjec= new Fichar(keyCurrentUser,new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date().getTime()),Utils.maiLEmpleadorGlOBAL);
 
         }
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());

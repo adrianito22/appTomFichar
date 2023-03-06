@@ -2,6 +2,7 @@ package com.tiburela.android.controlAsistencia.demo.Utils;
 
 import android.util.Log;
 
+import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 import com.tiburela.android.controlAsistencia.demo.models.HorarIosTrabajos;
 
 import java.util.ArrayList;
@@ -11,11 +12,16 @@ import java.util.Locale;
 import java.util.Random;
 
 public class Utils {
+    public  static String maiLEmpleadorGlOBAL="";
 
     /**CONTRASENA QUE NECESITAMOS PARA ENTRAR A ADMIN**/
     public final static String PASSWORD_ADMIN="1111";
     public static boolean isEditHorario=false;
     public static HorarIosTrabajos horarioTrabajoGlobalSelected;
+
+    public static int indiceMesAxctual=0;
+
+    public static Empleado miEmpleadoGlobal;
 
     public static final  boolean modoOnlineActivate=true;
 

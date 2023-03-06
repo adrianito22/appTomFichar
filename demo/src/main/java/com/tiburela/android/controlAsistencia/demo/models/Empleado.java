@@ -7,6 +7,15 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Empleado {
+    public String getMailEmppleador() {
+        return mailEmppleador;
+    }
+
+    public void setMailEmppleador(String mailEmppleador) {
+        this.mailEmppleador = mailEmppleador;
+    }
+
+    private String mailEmppleador;
 
     public  Empleado(){
 
@@ -83,7 +92,7 @@ public class Empleado {
 
 
 
-    public Empleado( String nombreYapellidoEmpleado, String idEmpleado,String codigoPaFichar) {
+    public Empleado( String nombreYapellidoEmpleado, String idEmpleado,String codigoPaFichar,String mailEmppleador) {
 
         fechaRegistro = new Date().getTime();
         fechaRegistroString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(fechaRegistro);
@@ -92,6 +101,7 @@ public class Empleado {
         this.codigoPaFichar=codigoPaFichar;
         keyWhereLocalizeObjec="";
         urlPickEmpleado="";
+        this.mailEmppleador=mailEmppleador;
 
     }
 
@@ -108,6 +118,7 @@ public class Empleado {
         result.put("codigoPaFichar", codigoPaFichar);
         result.put("keyWhereLocalizeObjec",keyWhereLocalizeObjec);
         result.put("urlPickEmpleado",urlPickEmpleado);
+        result.put("mailEmppleador", mailEmppleador);
 
 
 

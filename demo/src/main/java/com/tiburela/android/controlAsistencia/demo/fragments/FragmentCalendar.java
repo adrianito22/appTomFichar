@@ -1,14 +1,25 @@
 package com.tiburela.android.controlAsistencia.demo.fragments;
 
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
+
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
+import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.customClass.EventDecorator;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -16,8 +27,11 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,8 +43,13 @@ import java.util.HashSet;
  */
 public class FragmentCalendar extends Fragment {
 
+    ArrayList<Fichar>milistFichejeCurrentUser= new ArrayList<>();
+    long desdeDateMillisecond=0;
+    long hastaDateMillisecond=0;
+
     View view;
 
+    LocalDate initiLocalDate = LocalDate.now();
 
     MaterialCalendarView calendarVIew;
     private String idCurrentSelected="";
@@ -90,38 +109,29 @@ public class FragmentCalendar extends Fragment {
         calendarVIew=    view.findViewById(R.id.calendarView);
 
          Calendar  calendar = Calendar.getInstance();
-         calendar.setTimeInMillis(System.currentTimeMillis());
-
-
-        Log.i("mishdgf","el mes es  "+calendar.get(Calendar.MONTH)+" Y  el year es "+calendar.get(Calendar.YEAR));
-
-
-        getFichajesEspecificMesAndDecorateDiasATRABAJADOS(idCurrentSelected,calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.YEAR));
+        // calendar.setTimeInMillis(System.currentTimeMillis());
 
 
 
-        /*
-        ArrayList<DateData> dates=new ArrayList<>();
+        initiLocalDate = LocalDate.of(calendar.get(Calendar.YEAR), Utils.indiceMesAxctual+1, 1);
 
-        dates.add(new DateData(2022,04,26));
-        dates.add(new DateData(2022,04,27));
+        Date date=   convertToDateViaInstant(initiLocalDate);
+        calendar.setTime(date);
+        desdeDateMillisecond=calendar.getTimeInMillis();
 
-        for(int i=0;i<dates.size();i++) {
-            //mark multiple dates with this code.
-            calendarVIew.markDate(dates.get(i).getYear(),dates.get(i).getMonth(),dates.get(i).getDay());
-        }
-*/
+        LocalDate end = initiLocalDate.with(lastDayOfMonth());
+        date=   convertToDateViaInstant(end);
+        calendar.setTime(date);
+        hastaDateMillisecond=calendar.getTimeInMillis();
+        eventoCalendarview();
+        dowloadMarcacionesByDateRange(desdeDateMillisecond,hastaDateMillisecond, Utils.miEmpleadoGlobal.getIdEmpleado());
+
+
 
 
          return view;
-       // return inflater.inflate(R.layout.fragment_calendar, container, false);
     }
 
-    private void decorateSomeDatesDiasTrabajadosAndGetMoreData(){
-
-
-
-    }
 
     private void getFichajesEspecificMesAndDecorateDiasATRABAJADOS(String idUserEmpleado, int mesSelecionadoNum, int yearSelecionado  ){
 
@@ -202,6 +212,156 @@ public class FragmentCalendar extends Fragment {
 
     }
 
+    private void getFichajesEspecificMesAndDecorateDiasATRABAJADOSOnline( ){
+
+
+
+        GregorianCalendar c = new GregorianCalendar();
+
+        int diasTrabajados=0;
+        long millisecondsTimeTrabajados=0;
+        long millisecondsTimeTrabajoDia=0;
+
+
+        for(Fichar ficharObjec: milistFichejeCurrentUser){
+            c.setTimeInMillis(ficharObjec.getEntradaMilliseconds());
+           // int month = c.get(Calendar.MONTH)+1;
+           // int year = c.get(Calendar.YEAR);
+
+            diasTrabajados++;
+            millisecondsTimeTrabajoDia= ficharObjec.getHoraSalidaMilliseconds()- ficharObjec.getEntradaMilliseconds();
+            millisecondsTimeTrabajados=millisecondsTimeTrabajados+millisecondsTimeTrabajoDia;
+
+
+
+        }
+
+
+
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm");
+
+        Log.i("ssssd","los dias trabajados del mes son  "+diasTrabajados);
+        Log.i("ssssd","las horas trabajadas del mes son "+dateFormat.format(millisecondsTimeTrabajados));
+
+        HashSet<CalendarDay> setDays = new HashSet<>();
+        Calendar calendar = Calendar.getInstance();
+
+        int mYear ;
+        int mMonth;
+        int mDay ;
+
+        /**recorremos la lista de lisfichar que tenemos y creamos objtos calendar day*/
+        for(Fichar ficharObjec: milistFichejeCurrentUser){
+
+            calendar.setTimeInMillis(ficharObjec.getEntradaMilliseconds());
+            mYear = calendar.get(Calendar.YEAR);
+            mMonth = calendar.get(Calendar.MONTH)+1;
+            mDay   = calendar.get(Calendar.DAY_OF_MONTH);
+            CalendarDay calendarDay=CalendarDay.from(mYear,mMonth,mDay);
+            setDays.add(calendarDay);
+
+        }
+
+        // CalendarDay calDay2 = CalendarDay.from(2023,2,16);
+
+        // setDays.add(calDay2);
+
+        // setDays.add(new CalendarDay(2,2,2));
+        int myColor = R.color.colorAccent;
+        calendarVIew.addDecorator(new EventDecorator(myColor, setDays,getActivity()));
+
+
+    }
+
+
+
+    private void dowloadMarcacionesByDateRange(long desdeFecha, long hastFecha,String idCurrentMarcaciones){
+
+
+        Query query = RealtimDatabase.rootDatabaseReference.child("marcaciones").child("allmarcaciones").
+                orderByChild("entradaMilliseconds").startAt(desdeFecha).endAt(hastFecha);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                milistFichejeCurrentUser= new ArrayList<>();
+
+
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Fichar fichar=ds.getValue(Fichar.class);
+                    //agregamos solo los que no esten en esta lista..
+                    if(fichar!=null){//creamos un objet
+                        if(fichar.getFicharUserId().equals(idCurrentMarcaciones)) {
+
+                            milistFichejeCurrentUser.add(fichar);
+
+                        }
+
+                    }
+
+                }
+
+
+                getFichajesEspecificMesAndDecorateDiasATRABAJADOSOnline();
+
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Log.i("sliexsa","el error es "+error.getMessage());
+
+            }
+        });
+
+
+
+    }
+    public Date convertToDateViaInstant(LocalDate dateToConvert) {
+        return java.util.Date.from(dateToConvert.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+    }
+
+
+    private void eventoCalendarview(){
+        calendarVIew.setOnMonthChangedListener(new OnMonthChangedListener() {
+            @Override
+            public void onMonthChanged(MaterialCalendarView widget, CalendarDay datex) {
+
+
+
+                Calendar  calendar = Calendar.getInstance();
+                // calendar.setTimeInMillis(System.currentTimeMillis());
+
+
+
+                initiLocalDate = LocalDate.of(calendar.get(Calendar.YEAR), datex.getMonth(), 1);
+
+                Date date=   convertToDateViaInstant(initiLocalDate);
+                calendar.setTime(date);
+                desdeDateMillisecond=calendar.getTimeInMillis();
+
+                LocalDate end = initiLocalDate.with(lastDayOfMonth());
+                date=   convertToDateViaInstant(end);
+                calendar.setTime(date);
+                hastaDateMillisecond=calendar.getTimeInMillis();
+                eventoCalendarview();
+                dowloadMarcacionesByDateRange(desdeDateMillisecond,hastaDateMillisecond, Utils.miEmpleadoGlobal.getIdEmpleado());
+
+                 /**hacer una maracion hoy para ver como va esto*/
+
+                 Log.i("solert","el mes selcioando ahora es "+datex.getMonth());
+
+
+            }
+        });
+
+    }
 
 
 }

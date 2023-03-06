@@ -16,6 +16,15 @@ public class Fichar {
 
     public static HashMap<String , Fichar>hashMapAllFicharRegistros= new HashMap<>();
 
+    public String getMailEmppleador() {
+        return mailEmppleador;
+    }
+
+    public void setMailEmppleador(String mailEmppleador) {
+        this.mailEmppleador = mailEmppleador;
+    }
+
+    private String mailEmppleador;
 
 
 public Fichar(){
@@ -55,7 +64,7 @@ public Fichar(){
     private String keyWhereLocalizeObjec;
 
 
-    public Fichar(String ficharUserId,String keyficharDate) {
+    public Fichar(String ficharUserId,String keyficharDate,String mailEmppleador) {
         entradaMilliseconds= 0;
         horaInicioComidaMilliseconds= 0;
         horaFinComidaMilliseconds= 0;
@@ -64,6 +73,7 @@ public Fichar(){
         this.ficharUserId=ficharUserId;
         this.keyficharDate=keyficharDate;
         keyWhereLocalizeObjec="";
+        this.mailEmppleador=mailEmppleador;
 
     }
 
@@ -129,6 +139,7 @@ public Fichar(){
 
         result.put("keyficharDate", keyficharDate);
         result.put("keyWhereLocalizeObjec", keyWhereLocalizeObjec);
+        result.put("mailEmppleador", mailEmppleador);
 
         return result;
 

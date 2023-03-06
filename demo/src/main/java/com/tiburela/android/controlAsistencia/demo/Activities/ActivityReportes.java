@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -232,7 +233,11 @@ public class ActivityReportes extends AppCompatActivity {
                             Empleado empleado = dss.getValue(Empleado.class);
 
                             if (empleado != null) {
-                                miLisAllEmpleadosRegistrados.add(empleado);
+                                if(empleado.getMailEmppleador().equals(Utils.maiLEmpleadorGlOBAL)){
+                                    miLisAllEmpleadosRegistrados.add(empleado);
+
+                                }
+
 
                             }
 
@@ -330,16 +335,39 @@ public class ActivityReportes extends AppCompatActivity {
 
                 Utils.nameCurrentEmpleado=list.get(position).getEmpleadoName();
 
-                Intent intencion= new Intent(ActivityReportes.this, ActivityDetailsAsistence.class);
-                intencion.putExtra("KEY_USER_SELECTED",list.get(position).getIdUserEmpleado());
+
+                /**buscamos este empleado y solo despues de encontralo vamos a a activity**/
+                for(Empleado empleado:miLisAllEmpleadosRegistrados){
+
+                    if(empleado.getIdEmpleado().equals(list.get(position).getIdUserEmpleado())) {
+
+                        Utils.miEmpleadoGlobal=empleado;
+                    }
+
+                }
 
 
-                startActivity(intencion);
+                if(Utils.miEmpleadoGlobal!=null){
+                    //iLisAllEmpleadosRegistrados
+
+                    Intent intencion= new Intent(ActivityReportes.this, ActivityDetailsAsistence.class);
+                    intencion.putExtra("KEY_USER_SELECTED",list.get(position).getIdUserEmpleado());
 
 
-             //   sheetBootomInforOptions(position);
-                //  sheetBootomInforOptions(v.getTag(R.id.tagUniqueId1).toString(),v.getTag(R.id.tagUniqueId2).toString(),v.getTag(R.id.codigoProductor).toString());
-                Log.i("elcickler","el click es llamado al secionar item fichaje");
+                    startActivity(intencion);
+
+
+                    //   sheetBootomInforOptions(position);
+                    //  sheetBootomInforOptions(v.getTag(R.id.tagUniqueId1).toString(),v.getTag(R.id.tagUniqueId2).toString(),v.getTag(R.id.codigoProductor).toString());
+                    Log.i("elcickler","el click es llamado al secionar item fichaje");
+
+                }else{
+
+
+                    Toast.makeText(ActivityReportes.this, "Ocurrio un error :(", Toast.LENGTH_SHORT).show();
+                }
+
+
 
 
 
@@ -422,6 +450,11 @@ public class ActivityReportes extends AppCompatActivity {
                         Log.i("misafama","ondatset mes es "+selectedMonth+" y year es "+selectedYear);
 
                         mesSelecionado=selectedMonth+1;
+
+                        Utils.indiceMesAxctual=selectedMonth;
+                        Log.i("sopresa","el indice slecioando es "+Utils.indiceMesAxctual);
+
+
                         yearSelecionado=selectedYear;
                         txtDateSelected.setText(Utils.arrayMesSelecionado[selectedMonth]);
                         modoDateRangeSearch=Utils.MES_ESPECIFICO;
@@ -515,38 +548,22 @@ public class ActivityReportes extends AppCompatActivity {
 
             if(modoDateRangeSearch== Utils.MES_ESPECIFICO){
 
-                Log.i("comenzardata","seleciono mes especifico ");
-
-                // mesSelecionado
-                ArrayList<Fichar>lisFichajeCurrentUser= mapOfMapAllFichajeUserByRange.get(empleadoObject.getIdEmpleado());
+                if(mapOfMapAllFichajeUserByRange.containsKey(empleadoObject.getIdEmpleado())){
+                    ArrayList<Fichar>lisFichajeCurrentUser= mapOfMapAllFichajeUserByRange.get(empleadoObject.getIdEmpleado());
 
 
-                if(lisFichajeCurrentUser.size()>0){
-                    PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,
-                            empleadoObject.getNombreYapellidoEmpleado(),empleadoObject.getIdEmpleado());
-                    arrayList.add(promedioObjec);
+                    if(lisFichajeCurrentUser.size()>0){
+                        PromedioAsistenceEmpleado promedioObjec=  generatePromedioObjectThisUserByArrayList(lisFichajeCurrentUser,
+                                empleadoObject.getNombreYapellidoEmpleado(),empleadoObject.getIdEmpleado());
+                        arrayList.add(promedioObjec);
+                    }
+
                 }
+
 
             }
 
             else if(modoDateRangeSearch==Utils.DIA_ESPECIFICO){
-
-                Log.i("comenzardata","selecionado un dia espcifico y el map size es "+mapOfMapAllFichajeUserByRange.size());
-
-/*
-                for (HashMap.Entry<String, ArrayList<Fichar>> entry : mapOfMapAllFichajeUserByRange.entrySet()) {
-                    String key = entry.getKey();
-                    ArrayList<Fichar> value = entry.getValue();
-
-                    Log.i("comenzardata","el key es  "+key);
-
-
-                    // ...
-                }
-
-*/
-
-
                 if(mapOfMapAllFichajeUserByRange.containsKey(empleadoObject.getIdEmpleado())){
 
                     Log.i("comenzardata","si contiene este key y es "+empleadoObject.getCodigoPaFichar());
@@ -666,29 +683,33 @@ public class ActivityReportes extends AppCompatActivity {
                     //agregamos solo los que no esten en esta lista..
                     if(fichar!=null){  //creamos un objet
 
-                        String keyActual=fichar.getFicharUserId();
+                        if(fichar.getMailEmppleador().equals(Utils.maiLEmpleadorGlOBAL)){
+                            String keyActual=fichar.getFicharUserId();
 
-                        Log.i("comenzardata","el key actual para addd es "+keyActual);
+                            Log.i("comenzardata","el key actual para addd es "+keyActual);
 
-                        if(mapOfMapAllFichajeUserByRange.containsKey(keyActual)){ //existe este mapa
+                            if(mapOfMapAllFichajeUserByRange.containsKey(keyActual)){ //existe este mapa
 
-                         ArrayList <Fichar>list = mapOfMapAllFichajeUserByRange.get(keyActual);
+                                ArrayList <Fichar>list = mapOfMapAllFichajeUserByRange.get(keyActual);
 
-                            list.add(fichar);
-                            mapOfMapAllFichajeUserByRange.put(keyActual,list);
+                                list.add(fichar);
+                                mapOfMapAllFichajeUserByRange.put(keyActual,list);
+
+                            }
+
+                            else
+
+                            {
+                                ArrayList <Fichar>list= new ArrayList<>();
+
+                                list.add(fichar);
+
+                                mapOfMapAllFichajeUserByRange.put(keyActual,list);
+
+                            }
 
                         }
 
-                        else
-
-                        {
-                            ArrayList <Fichar>list= new ArrayList<>();
-
-                            list.add(fichar);
-
-                            mapOfMapAllFichajeUserByRange.put(keyActual,list);
-
-                        }
 
 
 
@@ -863,6 +884,9 @@ public class ActivityReportes extends AppCompatActivity {
 
                         dia=String.valueOf(i2);
                         mes=String.valueOf(i1+1);
+
+
+                        Utils.indiceMesAxctual=i1;
 
 
                         if(i2<10){

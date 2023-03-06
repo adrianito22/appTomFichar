@@ -1,6 +1,10 @@
 package com.tiburela.android.controlAsistencia.demo.fragments;
 
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
+
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,15 +17,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.adapters.AdapterMarcacione;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
 
-import java.time.Year;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
@@ -36,12 +49,15 @@ public class FragmentList extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    long desdeDateMillisecond=0;
+    long hastaDateMillisecond=0;
 
-     private String idCurrentSelected="";
+    String idCurrentSelected;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+    Calendar calendar= new GregorianCalendar();
+    LocalDate initiLocalDate = LocalDate.now();
 
 
     Spinner spinnerMeses;
@@ -49,6 +65,59 @@ public class FragmentList extends Fragment {
 
     public FragmentList() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+      //  spinnerMeses.setSelection(Utils.indiceMesAxctual);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.item_spinner, Utils.arrayMesSelecionado);
+
+        spinnerMeses.setAdapter(adapter);
+        spinnerMeses.setSelection(Utils.indiceMesAxctual);
+        Log.i("sopresa","el indice slecioando onstart es  "+Utils.indiceMesAxctual);
+
+        spinnerMeses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+
+                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+
+            //    Utils. indiceMesAxctual =i+1;
+
+                  // int indice=i+;
+
+
+                initiLocalDate =LocalDate.of(calendar.get(Calendar.YEAR), i+1, 1);
+
+                Date date=   convertToDateViaInstant(initiLocalDate);
+                calendar.setTime(date);
+                desdeDateMillisecond=calendar.getTimeInMillis();
+
+                LocalDate end = initiLocalDate.with(lastDayOfMonth());
+                date=   convertToDateViaInstant(end);
+                calendar.setTime(date);
+                hastaDateMillisecond=calendar.getTimeInMillis();
+
+
+
+                Log.i("spinnerss","in first show list va desde "+dateFormat.format(desdeDateMillisecond)+" hasta "+dateFormat.format(hastaDateMillisecond));
+                dowloadMarcacionesByDateRange(desdeDateMillisecond,hastaDateMillisecond, Utils.miEmpleadoGlobal.getIdEmpleado());
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
     }
 
     /**
@@ -73,8 +142,6 @@ public class FragmentList extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -87,54 +154,75 @@ public class FragmentList extends Fragment {
 
         view= inflater.inflate(R.layout.fragment_list,container,false);
 
-         idCurrentSelected = getArguments().getString("KEY_USER_SELECTED");
-
+        idCurrentSelected = getArguments().getString("KEY_USER_SELECTED");
         spinnerMeses=view.findViewById(R.id.spinnerMeses);
 
 
+
+        // Utils.indiceMesAxctual =calendar.get(Calendar.MONTH);
+
+
         //String[] datos = new String[] {"C#", "Java", "Python", "R", "Go"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.item_spinner, Utils.arrayMesSelecionado);
 
-          spinnerMeses.setAdapter(adapter);
-        spinnerMeses.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                 int year;
-
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
-                     year = Year.now().getValue();
-                }
-
-                else{
-
-                     year = Calendar.getInstance().get(Calendar.YEAR);
-                }
-
-
-                Log.i("spinnfg","el mes selected es "+(i+1)+" el id es "+idCurrentSelected+" el year es "+year);
-
-                ArrayList<Fichar>currenListFichar=generaListMaracacionesEspecificMesAndUserID(idCurrentSelected,i+1,year);
-
-                setDataRecyclerView(currenListFichar);
-
-
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
 
     return view;
 
     }
 
+    private void dowloadMarcacionesByDateRange(long desdeFecha, long hastFecha,String userID){
+
+        Query query = RealtimDatabase.rootDatabaseReference.child("marcaciones").child("allmarcaciones").
+                orderByChild("entradaMilliseconds").startAt(desdeFecha).endAt(hastFecha);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                ArrayList<Fichar> list= new ArrayList<>();
+
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Fichar fichar=ds.getValue(Fichar.class);
+                    //agregamos solo los que no esten en esta lista..
+                    if(fichar!=null){  //creamos un objet
+                        Log.i("spinnerss","el ficha user id es "+fichar.getFicharUserId()+" comparado con "+userID);
+
+
+                        if(fichar.getFicharUserId().equals(userID)){
+                            list.add(fichar);
+
+
+                        }
+
+
+                    }
+
+                }
+
+
+                Log.i("spinnerss","el size de lista es  "+list.size());
+
+
+                setDataRecyclerView(list);
+
+
+
+                ///  setAdapaterDataAndShow(listReport);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+                Log.i("sliexsa","el error es "+error.getMessage());
+
+            }
+        });
+
+
+
+    }
 
 
 
@@ -224,5 +312,9 @@ public class FragmentList extends Fragment {
 
 
 
-
+    public Date convertToDateViaInstant(LocalDate dateToConvert) {
+        return java.util.Date.from(dateToConvert.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+    }
 }

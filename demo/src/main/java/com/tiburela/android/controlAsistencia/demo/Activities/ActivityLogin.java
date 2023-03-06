@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 
 public class ActivityLogin extends AppCompatActivity {
     private  FirebaseUser userGoogle;
@@ -114,6 +115,7 @@ public class ActivityLogin extends AppCompatActivity {
 
                           userGoogle = mAuth.getCurrentUser();
 
+                          Utils.maiLEmpleadorGlOBAL=userGoogle.getEmail();
 
                             startActivity(new Intent(ActivityLogin.this,MainActivity.class ));
 
@@ -155,6 +157,8 @@ public class ActivityLogin extends AppCompatActivity {
          userGoogle = mAuth.getCurrentUser();
 
         if(userGoogle!=null){
+
+           Utils. maiLEmpleadorGlOBAL=userGoogle.getEmail();
 
             startActivity(new Intent(ActivityLogin.this,MainActivity.class ));
 

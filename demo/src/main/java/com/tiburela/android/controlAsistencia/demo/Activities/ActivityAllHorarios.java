@@ -156,7 +156,13 @@ Button btnCrearHorario;
                             HorarIosTrabajos horario = dss.getValue(HorarIosTrabajos.class);
 
                             if (horario != null) {
-                                listAllhorarios.add(horario);
+
+                                if(horario.getMailEmppleador().equals(Utils.maiLEmpleadorGlOBAL)){
+
+                                    listAllhorarios.add(horario);
+
+
+                                }
 
                             }
                         }

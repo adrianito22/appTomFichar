@@ -15,6 +15,16 @@ public class HorarIosTrabajos {
   private String horaraSalidadaString;
   private HashMap<String, Integer>hasmpaDiasTrabajo;
 
+  public String getMailEmppleador() {
+    return mailEmppleador;
+  }
+
+  public void setMailEmppleador(String mailEmppleador) {
+    this.mailEmppleador = mailEmppleador;
+  }
+
+  private String mailEmppleador;
+
   public String getIdHorarioHereKEYpreferences() {
     return idHorarioHereKEYpreferences;
   }
@@ -90,13 +100,14 @@ public class HorarIosTrabajos {
     this.horarioNombre=horarioNombre;
   }
 
-  public HorarIosTrabajos(String horaraEntradaString, String horaraSalidadaString,String horarioNombre) {
+  public HorarIosTrabajos(String horaraEntradaString, String horaraSalidadaString,String horarioNombre,String mailEmppleador) {
     this.horaraEntradaString = horaraEntradaString;
     this.horaraSalidadaString = horaraSalidadaString;
     this.horarioNombre=horarioNombre;
     idHorarioHereKEYpreferences= UUID.randomUUID().toString();
      keyWhereLocalizeObjec="";
     keylocalizeMapHorario="";
+    this.mailEmppleador=mailEmppleador;
 
 
   }
@@ -117,6 +128,7 @@ public class HorarIosTrabajos {
     result.put("idHorarioHereKEYpreferences", idHorarioHereKEYpreferences);
     result.put("keyWhereLocalizeObjec", keyWhereLocalizeObjec);
     result.put("keylocalizeMapHorario", keylocalizeMapHorario);
+    result.put("mailEmppleador", mailEmppleador);
 
 
     return result;

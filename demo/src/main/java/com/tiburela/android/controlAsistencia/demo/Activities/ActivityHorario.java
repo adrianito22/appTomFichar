@@ -238,7 +238,7 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
 
         HorarIosTrabajos horarioObjec= new HorarIosTrabajos(txtImputEntrada.getText().toString(),txtImputSalida.getText().toString(),
-                ediNombreHorario.getText().toString());
+                ediNombreHorario.getText().toString(),Utils.maiLEmpleadorGlOBAL);
 
         HashMap<String, HorarIosTrabajos>mapHorariosTrabajos=SharePref.getListHorarios(SharePref.KEY_ALL_HORARIOS);
 
@@ -299,7 +299,7 @@ public class ActivityHorario extends AppCompatActivity implements View.OnClickLi
 
 
         HorarIosTrabajos horarioObjec= new HorarIosTrabajos(txtImputEntrada.getText().toString(),txtImputSalida.getText().toString(),
-                ediNombreHorario.getText().toString());
+                ediNombreHorario.getText().toString(),Utils.maiLEmpleadorGlOBAL);
 
 
 

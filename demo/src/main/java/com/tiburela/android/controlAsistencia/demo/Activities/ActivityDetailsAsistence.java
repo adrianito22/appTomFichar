@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.fragments.FragmentCalendar;
@@ -23,7 +26,7 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
 
     LinearLayout layoutCalendar;
     LinearLayout layoutLista;
-
+    ImageView imgPickEmpleado;
     String keyUserSelected="";
 
     @Override
@@ -42,8 +45,22 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
 
         layoutCalendar=findViewById(R.id.layoutCalendar);
         layoutLista=findViewById(R.id.layoutLista);
+        imgPickEmpleado=findViewById(R.id.imgPickEmpleado);
 
 
+
+        Glide.with(ActivityDetailsAsistence.this)
+                .load(Utils.miEmpleadoGlobal.getUrlPickEmpleado())
+
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)  //ESTABA EN ALL         //ALL or NONE as your requirementDiskCacheStrategy.DATA
+                //.thumbnail(Glide.with(OfertsAdminActivity.context).load(R.drawable.enviado_icon))
+                //.error(R.drawable.)
+                //aqi cargamos una version lower
+                .apply(RequestOptions.circleCropTransform())
+
+                .circleCrop()
+                .into(imgPickEmpleado);
 
 
 
@@ -59,7 +76,7 @@ public class ActivityDetailsAsistence extends AppCompatActivity {
 
 
          txtNameHere=findViewById(R.id.txtNameHere);
-        txtNameHere.setText(Utils.nameCurrentEmpleado);
+        txtNameHere.setText(Utils.miEmpleadoGlobal.getNombreYapellidoEmpleado());
 
 
         FragmentList fragment= new FragmentList();

@@ -380,7 +380,7 @@ public class AddPerson extends AppCompatActivity {
 
         String idunique=array[array.length-1];
 
-        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()));
+        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()),Utils.maiLEmpleadorGlOBAL);
 
         StorageData.uploadObjecAndImagen( UUID.randomUUID().toString(),empleadoObject,AddPerson.this,destination);
 
@@ -409,7 +409,7 @@ public class AddPerson extends AppCompatActivity {
 
         //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
         //  Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
-        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()));
+        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()),Utils.maiLEmpleadorGlOBAL);
 
         Fichar.hasMapAllEmpleados.put(idunique,empleadoObject);
 
