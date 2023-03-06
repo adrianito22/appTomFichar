@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,6 +55,9 @@ public class FragmentCalendar extends Fragment {
     MaterialCalendarView calendarVIew;
     private String idCurrentSelected="";
 
+    private TextView textDiasTrabajados;
+    private TextView txtHorasTrabajadas;
+     private TextView txtPromedioEntrada;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -106,7 +110,13 @@ public class FragmentCalendar extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        calendarVIew=    view.findViewById(R.id.calendarView);
+           calendarVIew= view.findViewById(R.id.calendarView);
+
+          textDiasTrabajados=view.findViewById(R.id.textDiasTrabajados);
+          txtHorasTrabajadas=view.findViewById(R.id.txtHorasTrabajadas);
+          txtPromedioEntrada=view.findViewById(R.id.txtPromedioEntrada);
+
+
 
          Calendar  calendar = Calendar.getInstance();
         // calendar.setTimeInMillis(System.currentTimeMillis());
@@ -221,7 +231,7 @@ public class FragmentCalendar extends Fragment {
         int diasTrabajados=0;
         long millisecondsTimeTrabajados=0;
         long millisecondsTimeTrabajoDia=0;
-
+         long promedioEntrada=0;
 
         for(Fichar ficharObjec: milistFichejeCurrentUser){
             c.setTimeInMillis(ficharObjec.getEntradaMilliseconds());
@@ -231,7 +241,7 @@ public class FragmentCalendar extends Fragment {
             diasTrabajados++;
             millisecondsTimeTrabajoDia= ficharObjec.getHoraSalidaMilliseconds()- ficharObjec.getEntradaMilliseconds();
             millisecondsTimeTrabajados=millisecondsTimeTrabajados+millisecondsTimeTrabajoDia;
-
+            promedioEntrada=promedioEntrada+ficharObjec.getEntradaMilliseconds();
 
 
         }
@@ -242,6 +252,9 @@ public class FragmentCalendar extends Fragment {
 
         Log.i("ssssd","los dias trabajados del mes son  "+diasTrabajados);
         Log.i("ssssd","las horas trabajadas del mes son "+dateFormat.format(millisecondsTimeTrabajados));
+
+
+
 
         HashSet<CalendarDay> setDays = new HashSet<>();
         Calendar calendar = Calendar.getInstance();
@@ -269,6 +282,34 @@ public class FragmentCalendar extends Fragment {
         // setDays.add(new CalendarDay(2,2,2));
         int myColor = R.color.colorAccent;
         calendarVIew.addDecorator(new EventDecorator(myColor, setDays,getActivity()));
+
+
+
+        if(diasTrabajados>0){
+         //   Log.i("ssssd","las promedioEntrada del mes son "+dateFormat.format(promedioEntrada/diasTrabajados));
+            textDiasTrabajados.setText(String.valueOf(diasTrabajados));
+            txtHorasTrabajadas.setText(dateFormat.format(millisecondsTimeTrabajados));
+
+        }else{
+            textDiasTrabajados.setText("0");
+            txtHorasTrabajadas.setText("0");
+        }
+
+
+        if(promedioEntrada>0 && diasTrabajados>0){
+            Log.i("ssssd","las promedioEntrada del mes son "+dateFormat.format(promedioEntrada/diasTrabajados));
+           // textDiasTrabajados.setText(String.valueOf(diasTrabajados));
+            txtPromedioEntrada.setText(dateFormat.format(promedioEntrada/diasTrabajados));
+
+
+        }else{
+            txtPromedioEntrada.setText("0");
+
+        }
+
+
+        //vamos con horas trabajadas...
+
 
 
     }

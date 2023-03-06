@@ -222,6 +222,8 @@ public class ActivityReportes extends AppCompatActivity {
 
     private void dowloadAllEmpleadosAndGetPromedio( long desde,long hasta,int modoRangeDate ){
 
+        RealtimDatabase.initDatabasesRootOnly();
+
         ValueEventListener seenListener  = RealtimDatabase.rootDatabaseReference.child("empleados").child("allEmpleados")
                 .addValueEventListener(new ValueEventListener() {
                     @Override

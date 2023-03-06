@@ -308,6 +308,7 @@ public class ActivityCodigoFichar extends AppCompatActivity {
 
 
     private void fichaOnlineAndUpdate(Fichar fichar, boolean existeFIchaje) {
+        Log.i("solamerra","llmaos  fichaOnlineAndUpdate "+existeFIchaje);
 
         String time = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
 
@@ -315,12 +316,14 @@ public class ActivityCodigoFichar extends AppCompatActivity {
         if (existeFIchaje ) {//editamos el fichaje
 
             if(Fichar.tipoFichanSelecionadoCurrent==Fichar.FICHAJE_ENTRADA){
+                Log.i("solamerra","es FICHAJE_ENTRADA ");
 
                 if(fichar.getEntradaMilliseconds()==0){
+                    Log.i("solamerra","el fichaje es igual a cero");
 
                     fichar.setEntradaMilliseconds(new Date().getTime());
 
-                    showFichaje(time, "Entrada", R.drawable.hora_entrada);
+                     showFichaje(time, "Entrada", R.drawable.hora_entrada);
 
                      RealtimDatabase.updateMarcacion(ActivityCodigoFichar.this,fichar, fichar.getKeyWhereLocalizeObjec() );
 
