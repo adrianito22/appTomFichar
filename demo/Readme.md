@@ -4,4 +4,6 @@
 
 ## version -7 grdale para que no salga error...
 
-revisar mana lo de fichar y si c=se crean las propiedas de fcahr cada ve zque creaos un nuevo fichaje
+## proximos passos.
+agregar permisos de administrar archivos y otros para poder descaragr las imagenes en main activity
+probar app fichando, y probando varias partes de forma rapida,, asi veremos que no exista un bug ...
