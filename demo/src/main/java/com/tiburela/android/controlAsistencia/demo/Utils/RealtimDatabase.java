@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.tiburela.android.controlAsistencia.demo.models.Configuracion;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
 import com.tiburela.android.controlAsistencia.demo.models.HorarIosTrabajos;
@@ -116,6 +117,70 @@ public class RealtimDatabase {
 
 
                     Toast.makeText(context, "Se subio Correctamente", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(context, "Se subio", Toast.LENGTH_SHORT).show();
+
+                    //callback aqui...
+
+                } else {
+
+                    Log.i("simplerr", "se eejcuto el else la excpecion es  "+task.getException());
+
+
+                    Toast.makeText(context, "Ocurrio un Error, revisa tu conexion Internet", Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        });
+
+
+    }
+
+    public static void addConfiguracionAndPasword(Context context, Configuracion configObjec) {
+
+        DatabaseReference mibasedata = rootDatabaseReference.child("configs").child("configuracion");
+        String keyThisLoactionForm = mibasedata.push().getKey();
+        configObjec.setKeyLocalice(keyThisLoactionForm);
+        mibasedata.child(keyThisLoactionForm).setValue(configObjec).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+
+                    Toast.makeText(context, "Se subio Correctamente", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(context, "Se subio", Toast.LENGTH_SHORT).show();
+
+                    //callback aqui...
+
+                } else {
+
+                    Log.i("simplerr", "se eejcuto el else la excpecion es  "+task.getException());
+
+
+                    Toast.makeText(context, "Ocurrio un Error, revisa tu conexion Internet", Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        });
+
+
+    }
+
+    public static void updateConfiguracionAndPasword(Context context, Configuracion configObjec) {
+
+        DatabaseReference mibasedata = rootDatabaseReference.child("configs").child("configuracion").child(configObjec.getKeyLocalice());
+        mibasedata.setValue(configObjec).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    Utils.configuracionGlobalObject.setPassWord(configObjec.getPassWord());
+
+                    Toast.makeText(context, "Se actualizo Correctamente", Toast.LENGTH_LONG).show();
                     // Toast.makeText(context, "Se subio", Toast.LENGTH_SHORT).show();
 
                     //callback aqui...

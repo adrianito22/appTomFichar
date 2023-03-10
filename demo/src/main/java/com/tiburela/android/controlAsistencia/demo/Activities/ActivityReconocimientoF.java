@@ -13,11 +13,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -44,9 +51,18 @@ import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
 import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
+import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
+import com.tzutalin.dlib.Constants;
 import com.tzutalin.dlib.VisionDetRet;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,6 +77,7 @@ import java.util.regex.Pattern;
 public class ActivityReconocimientoF extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
          ImageView imageView6;
+    File destination = null;
 
 
     private static final String TAG = "ActivityReconocimientoF";
@@ -141,7 +158,6 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
     }
 
 
-
     private CameraView.Callback mCallback
             = new CameraView.Callback() {
 
@@ -157,7 +173,11 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
-            Log.d(TAG, "onPictureTaken " + data.length);
+          //  Log.d(TAG, "onPictureTaken " + data.length);
+
+            Log.i("solapina","el value es startcc  : ");
+
+
 
             Bitmap bp = drawResizedBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
             new detectAsync().execute(bp);
@@ -248,6 +268,7 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 100) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -704,6 +725,14 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
         protected ArrayList<String> doInBackground(Bitmap... bp) {
 
+
+            /**vamos a pasarle un bitmap para crear */
+
+
+            //comparamos
+
+          //  List <VisionDetRet>resultd=
+
             if (bp[0] != null) {
 
 
@@ -728,17 +757,27 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
 
 
                 ArrayList<String> names = new ArrayList<>();
+
+                Log.i("solapina","el results size es : "+results.size());
+
+
                 for (VisionDetRet n : results) {  //aqui buscamos
 
-                    String getLabelStr = n.getLabel();
+                    String getLabelStr = n.getLabel(); ///creo que es una conincidencia..
                     Log.i("solapina","el getLabelStr es : "+getLabelStr);
-                    idEncontrado=getLabelStr;
+                  //  idEncontrado=getLabelStr;
                     //aqui buscamos este empleado id....
 
                     getLabelStr = getLabelStr.replaceAll("[0-9]", "");
                     names.add(getLabelStr);
 
-                     if(!idEncontrado.equals("")){ //asi obtenemos solo la primera coincidencia
+
+                    ///si el label
+
+
+                     if(!getLabelStr.equals("")){ //asi obtenemos solo la primera coincidencia
+                         idEncontrado=getLabelStr;
+
                          break;
                      }
                 }
@@ -896,6 +935,10 @@ public class ActivityReconocimientoF extends AppCompatActivity implements
             //click_image_id.setImageBitmap(photo);
         }
     }
+
+
+
+
 
 
 }

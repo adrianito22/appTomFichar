@@ -3,21 +3,37 @@ package com.tiburela.android.controlAsistencia.demo.Activities;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.CameraView;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
@@ -30,17 +46,26 @@ import com.tiburela.android.controlAsistencia.demo.models.Empleado;
 import com.tiburela.android.controlAsistencia.demo.models.Fichar;
 import com.tzutalin.dlib.Constants;
 
+import org.jetbrains.annotations.Nullable;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+
+    File destination = null;
+    int contador=0;
 
     CardView cardViewEntrada;
     CardView cardViewInformes;
@@ -101,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
         RealtimDatabase.initDatabasesRootOnly();
         StorageData.initStorageReference();
 
+        Log.i("solapina","oncreate   : ");
+
 
         layoutAllEmployers=findViewById(R.id.layoutAllEmployers);
         cardViewEntrada=findViewById(R.id.cardViewEntrada);
@@ -160,34 +187,154 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        try {
-            HashMap<String, Empleado> mhasMap = SharePref.loadMapPreferencesEmpleados(SharePref.KEY_ALL_EMPLEADOS_Map);
+         //descragamos la lista de empleados....
 
-         //  new initRecAsync().execute();
-
-            if(isFirstUsage || Utils.existeNewUserAdd){
-
-                if(mhasMap.size()>0){
-
-                    new initRecAsync().execute();
+        dowloadAllEmpleados();
 
 
-                }
-
-                Utils.existeNewUserAdd=false;
-
-            }
+    }
 
 
+    private void dowloadAllEmpleados(  ){
+
+        ValueEventListener seenListener  = RealtimDatabase.rootDatabaseReference.child("empleados").child("allEmpleados")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Utils.listEmpleadosAll= new ArrayList<>();
+
+                        for (DataSnapshot dss : dataSnapshot.getChildren()) {
+                            Empleado empleado = dss.getValue(Empleado.class);
+
+                            if (empleado != null) {
+                                if(empleado.getMailEmppleador().equals(Utils.maiLEmpleadorGlOBAL)){
+                                    Utils.listEmpleadosAll.add(empleado);
+
+                                }
+                            }
+                        }
+
+                         if( Utils.listEmpleadosAll.size()>0){
+                             dowloadImagenAndBitmap(Utils.listEmpleadosAll);
+
+                         }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.i("libiadod", "el error es " + databaseError.getMessage());
+
+                    }
+                });
+
+    }
+
+    private void dowloadImagenAndBitmap(ArrayList<Empleado> listEmpleados){
+         contador=0;
+
+        int BITMAP_QUALITY = 100;
+
+
+        /**gaurdamos las imageens esn espcific directorio*/
+        for(Empleado empleado: listEmpleados){
+
+            Glide.with(MainActivity.this)
+                    .asBitmap()
+                    .load(empleado.getUrlPickEmpleado())
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                            Log.i("solapina","on resoruce ready");
+
+                            contador++;
+
+
+                            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                            resource.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
+                            FileOutputStream fo;
+
+                            Long tsLong = System.currentTimeMillis() / 1000;
+                            String ts = tsLong.toString();
+
+
+                           //
+
+                            File file = new File(empleado.getPathImageEmpleado());
+                            File file2 = new File(Constants.getDLibImageDirectoryPath() +"/"+ empleado.getNombreYapellidoEmpleado()+ts+".jpg");
+
+                            if(file.exists()){
+
+                                Log.i("solapina","el file existe ");
+
+
+                            }
+
+                            else
 
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
+                            {
+
+                                Log.i("solapina","el file no existe ");
+                                try {
+
+                                    destination =file2;
+                                    destination.createNewFile();
+                                    fo = new FileOutputStream(destination);
+                                    fo.write(bytes.toByteArray());
+                                    fo.close();
+                                } catch (FileNotFoundException e) {
+
+                                    e.printStackTrace();
+                                    Log.i("solapina","el exepcion 1 es "+e.getMessage());
+
+                                } catch (IOException e) {
+
+                                    Log.i("solapina","el exepcion 2 es "+e.getMessage());
+                                    e.printStackTrace();
+
+                                }
+
+                            }
+
+
+
+
+
+                            Log.i("solapina","es igual a list contador es "+contador+" y size list es "+listEmpleados.size());
+
+                            if(contador==listEmpleados.size() &&  Utils.addPersonaNuevaOrISfirst){
+
+                                Log.i("solapina","es igual a list contador es "+contador+" y size list es "+listEmpleados.size());
+                                Utils.addPersonaNuevaOrISfirst =false;
+
+                                new initRecAsync().execute();
+
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                        }
+                    });
+
+
+
+
+
+
         }
 
 
-        isFirstUsage=false;
+
+
+
     }
 
     public void doWork() {
@@ -298,8 +445,6 @@ void listennersEventos(){
         @Override
         public void onClick(View view) {
 
-
-
             Intent intent = new Intent(MainActivity.this, ActivityPassMain.class);
             intent.putExtra("key",Utils.GO_AddPerson);
             startActivity(intent);
@@ -347,7 +492,13 @@ void listennersEventos(){
             boolean success = true;
             if (!folder.exists()) {
                 success = folder.mkdirs();
+
+                Log.i("solapina","primer if  "+success);
+
             }
+
+            Log.i("solapina","2  if  "+success);
+
             if (success) {
                 File image_folder = new File(Constants.getDLibImageDirectoryPath());
                 image_folder.mkdirs();
@@ -456,6 +607,60 @@ void listennersEventos(){
         bottomSheetDialog.show();
 
     }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.option:
+
+                startActivity(new Intent(MainActivity.this,ActivityBiometrick.class));
+                // archive(item);
+                Log.i("gdher","se oulso option1");
+                return true;
+
+            case R.id.option2:
+
+                FirebaseAuth.getInstance().signOut();
+
+
+                GoogleSignIn.getClient(
+                        MainActivity.this,
+                        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+                ).signOut();
+
+                //cerramos sesion.. y vamos a la activity  login
+
+                finish();
+
+                // delete(item);
+                Log.i("gdher","se oulso option2");
+
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public void showMenu(View v) {
+
+        Log.i("gdher","se oulso show here");
+
+
+        PopupMenu popup = new PopupMenu(this, v);
+        // This activity implements OnMenuItemClickListener
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.menu2);
+        popup.show();
+    }
+
+
+private void cerrarSesion(){
+
+
+}
+
+
 
 
 }

@@ -17,6 +17,13 @@ public class Empleado {
 
     private String mailEmppleador;
 
+    public String getPathImageEmpleado() {
+        return pathImageEmpleado;
+    }
+
+    private String pathImageEmpleado;
+
+
     public  Empleado(){
 
 
@@ -92,7 +99,7 @@ public class Empleado {
 
 
 
-    public Empleado( String nombreYapellidoEmpleado, String idEmpleado,String codigoPaFichar,String mailEmppleador) {
+    public Empleado( String nombreYapellidoEmpleado, String idEmpleado,String codigoPaFichar,String mailEmppleador,String pathImageEmpleado) {
 
         fechaRegistro = new Date().getTime();
         fechaRegistroString = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(fechaRegistro);
@@ -102,6 +109,7 @@ public class Empleado {
         keyWhereLocalizeObjec="";
         urlPickEmpleado="";
         this.mailEmppleador=mailEmppleador;
+        this.pathImageEmpleado=pathImageEmpleado;
 
     }
 
@@ -119,6 +127,8 @@ public class Empleado {
         result.put("keyWhereLocalizeObjec",keyWhereLocalizeObjec);
         result.put("urlPickEmpleado",urlPickEmpleado);
         result.put("mailEmppleador", mailEmppleador);
+
+        result.put("pathImageEmpleado", pathImageEmpleado);
 
 
 

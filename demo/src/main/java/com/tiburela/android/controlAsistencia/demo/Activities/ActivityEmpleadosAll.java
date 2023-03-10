@@ -1,9 +1,15 @@
 package com.tiburela.android.controlAsistencia.demo.Activities;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,10 +30,17 @@ import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
 import com.tiburela.android.controlAsistencia.demo.adapters.AdapterEmpleado;
 import com.tiburela.android.controlAsistencia.demo.models.Empleado;
+import com.tzutalin.dlib.Constants;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ActivityEmpleadosAll extends AppCompatActivity {
+    File destination = null;
 
     RecyclerView recylerVInformsAll;
      ArrayList<Empleado>listAllEmpleados= new ArrayList<>();
@@ -144,6 +157,9 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
 
                         setDataRecyclerView(listAllEmpleados);
 
+                        dowloadImagenAndBitmap(listAllEmpleados);
+
+
 
                     }
 
@@ -156,6 +172,64 @@ public class ActivityEmpleadosAll extends AppCompatActivity {
 
     }
 
+    private void dowloadImagenAndBitmap(ArrayList<Empleado> listEmpleados){
+
+        int BITMAP_QUALITY = 100;
+
+
+        /**gaurdamos las imageens esn espcific directorio*/
+        for(Empleado empleado: listEmpleados){
+            Glide.with(ActivityEmpleadosAll.this)
+                    .asBitmap()
+                    .load(empleado.getUrlPickEmpleado())
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                            resource.compress(Bitmap.CompressFormat.JPEG, BITMAP_QUALITY, bytes);
+                            FileOutputStream fo;
+                            try {
+                                Long tsLong = System.currentTimeMillis() / 1000;
+                                String ts = tsLong.toString();
+
+
+                                destination = new File(Constants.getDLibImageDirectoryPath() +"/"+ empleado.getNombreYapellidoEmpleado()+ts+".jpg");
+                                destination.createNewFile();
+                                fo = new FileOutputStream(destination);
+                                fo.write(bytes.toByteArray());
+                                fo.close();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+
+                                Log.i("eltagddd","el exepcion 1 es "+e.getMessage());
+
+                            } catch (IOException e) {
+                                Log.i("eltagddd","el exepcion 2 es "+e.getMessage());
+
+                                e.printStackTrace();
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                        }
+                    });
+
+        }
+
+
+
+
+
+
+
+
+
+
+    }
 
 
     private void sheetBootomInforOptions(int positionSelected){

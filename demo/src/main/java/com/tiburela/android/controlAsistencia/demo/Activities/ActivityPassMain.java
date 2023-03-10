@@ -34,12 +34,13 @@ public class ActivityPassMain extends AppCompatActivity {
 
         passcodeView = findViewById(R.id.passcodeview);
         passcodeView.setCorrectInputTip("Correcto");
+        passcodeView.setWrongInputTip("Contraseña Incorrecta!");
 
         // to set length of password as here
         // we have set the length as 5 digits
         passcodeView.setPasscodeLength(4)
                 // to set pincode or passcode
-                .setLocalPasscode(Utils.PASSWORD_ADMIN)
+                .setLocalPasscode(Utils.configuracionGlobalObject.getPassWord())
 
                 // to set listener to it to check whether
                 // passwords has matched or failed
@@ -47,9 +48,8 @@ public class ActivityPassMain extends AppCompatActivity {
                     @Override
                     public void onFail() {
                         Log.i("sucnmerr","el pass es incorrecto ");
-
                         // to show message when Password is incorrect
-                        Toast.makeText(ActivityPassMain.this, "Contraseña Incorrecta!", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(ActivityPassMain.this, "Contraseña Incorrecta!", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

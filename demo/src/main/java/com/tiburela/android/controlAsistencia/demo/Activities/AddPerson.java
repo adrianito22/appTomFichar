@@ -36,7 +36,6 @@ import android.widget.Toast;
 import com.developers.imagezipper.ImageZipper;
 import com.tiburela.android.controlAsistencia.demo.R;
 import com.tiburela.android.controlAsistencia.demo.Utils.FaceRecognizer;
-import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.SharePref;
 import com.tiburela.android.controlAsistencia.demo.Utils.StorageData;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
@@ -60,7 +59,7 @@ import in.myinnos.awesomeimagepicker.models.Image;
 
 
 public class AddPerson extends AppCompatActivity {
-
+    String pathImagen="";
     EditText et_name;
     TextView et_image;
     Button btn_select_image;
@@ -297,9 +296,19 @@ public class AddPerson extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Detectando Rostro...");
-            dialog.setCancelable(false);
-            dialog.show();
+
+            try {
+                dialog.setMessage("Detectando Rostro...");
+                dialog.setCancelable(false);
+                dialog.show();
+
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+
+
             super.onPreExecute();
         }
 
@@ -327,15 +336,22 @@ public class AddPerson extends AppCompatActivity {
                     Long tsLong = System.currentTimeMillis() / 1000;
                     String ts = tsLong.toString();
 
+                    pathImagen=Constants.getDLibImageDirectoryPath() +"/"+ et_name.getText().toString()+ts+".jpg";
 
-                    destination = new File(Constants.getDLibImageDirectoryPath() +"/"+ et_name.getText().toString()+ts+".jpg");
+                    destination = new File(pathImagen);
                     destination.createNewFile();
                     fo = new FileOutputStream(destination);
                     fo.write(bytes.toByteArray());
                     fo.close();
+                    Utils.addPersonaNuevaOrISfirst =true;
+
                 } catch (FileNotFoundException e) {
+                    Log.i("solapina","el exepcion 1 es "+e.getMessage());
+
                     e.printStackTrace();
                 } catch (IOException e) {
+                    Log.i("solapina","el exepcion 2 es "+e.getMessage());
+
                     e.printStackTrace();
                 }
                 imgPath = destination.getAbsolutePath();
@@ -380,7 +396,7 @@ public class AddPerson extends AppCompatActivity {
 
         String idunique=array[array.length-1];
 
-        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()),Utils.maiLEmpleadorGlOBAL);
+        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()),Utils.maiLEmpleadorGlOBAL,pathImagen);
 
         StorageData.uploadObjecAndImagen( UUID.randomUUID().toString(),empleadoObject,AddPerson.this,destination);
 
@@ -409,7 +425,7 @@ public class AddPerson extends AppCompatActivity {
 
         //cremaos un objeto empleado //Adriano1674403660.jpg //ASI MAS O MNEOS ESTA
         //  Empleado empleadoObject= new Empleado(et_name.getText().toString(),et_name.getText().toString()+ts+".jpg");
-        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()),Utils.maiLEmpleadorGlOBAL);
+        Empleado empleadoObject= new Empleado(et_name.getText().toString(),idunique,String.valueOf(Utils.generateNumRadom4igits()),Utils.maiLEmpleadorGlOBAL,pathImagen);
 
         Fichar.hasMapAllEmpleados.put(idunique,empleadoObject);
 

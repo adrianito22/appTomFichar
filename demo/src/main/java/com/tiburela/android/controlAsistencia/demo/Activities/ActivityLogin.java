@@ -1,5 +1,7 @@
 package com.tiburela.android.controlAsistencia.demo.Activities;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
@@ -24,8 +26,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.tiburela.android.controlAsistencia.demo.R;
+import com.tiburela.android.controlAsistencia.demo.Utils.RealtimDatabase;
 import com.tiburela.android.controlAsistencia.demo.Utils.Utils;
+import com.tiburela.android.controlAsistencia.demo.models.Configuracion;
+import com.tiburela.android.controlAsistencia.demo.models.Fichar;
 
 public class ActivityLogin extends AppCompatActivity {
     private  FirebaseUser userGoogle;
@@ -39,6 +49,7 @@ public class ActivityLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+            RealtimDatabase.initDatabasesRootOnly();
 
 
         ImageView ivImage= findViewById(R.id.imagevAnim);
@@ -117,6 +128,8 @@ public class ActivityLogin extends AppCompatActivity {
 
                           Utils.maiLEmpleadorGlOBAL=userGoogle.getEmail();
 
+                            checkIfExistNodeAndCreate(userGoogle.getEmail());
+
                             startActivity(new Intent(ActivityLogin.this,MainActivity.class ));
 
 
@@ -157,8 +170,14 @@ public class ActivityLogin extends AppCompatActivity {
          userGoogle = mAuth.getCurrentUser();
 
         if(userGoogle!=null){
+            Utils.maiLEmpleadorGlOBAL=userGoogle.getEmail();
 
-           Utils. maiLEmpleadorGlOBAL=userGoogle.getEmail();
+
+           // Configuracion configuracionObject= new Configuracion("1111",userGoogle.getEmail());
+           // RealtimDatabase.addConfiguracionAndPasword(ActivityLogin.this,configuracionObject);
+
+           checkIfExistNodeAndCreate(userGoogle.getEmail());
+
 
             startActivity(new Intent(ActivityLogin.this,MainActivity.class ));
 
@@ -179,6 +198,62 @@ public class ActivityLogin extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
         Log.i("logingoogle","se puslo singin metodo2");
 
+
+
+    }
+
+
+    private void checkIfExistNodeAndCreate(String mailBuscar){
+        DatabaseReference userNameRef = RealtimDatabase.rootDatabaseReference.child("configs").child("configuracion");
+
+        Query query = userNameRef.orderByChild(
+                "mailUser").equalTo(mailBuscar);
+
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                      if(!snapshot.exists()){
+                          Configuracion configuracionObject= new Configuracion("1111",mailBuscar);
+                          Utils.configuracionGlobalObject=configuracionObject;
+
+                          RealtimDatabase.addConfiguracionAndPasword(ActivityLogin.this,configuracionObject);
+                      }else{
+
+                          for (DataSnapshot ds : snapshot.getChildren()) {
+
+                              Configuracion   configuracionObjec = ds.getValue(Configuracion.class);
+                              Log.i("holerd", "aqui se encontro un cuadro muestreo......");
+
+                              if (configuracionObjec != null) {
+
+                                   Utils.configuracionGlobalObject=configuracionObjec;
+                                  Log.i("derte","el snapshot existe y el mail es  "+configuracionObjec.getMailUser());
+
+                                  break;
+                              }
+
+
+                          }
+
+
+
+
+                      }
+
+                      Log.i("derte","el snapshot existe ? "+snapshot.exists());
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
     }

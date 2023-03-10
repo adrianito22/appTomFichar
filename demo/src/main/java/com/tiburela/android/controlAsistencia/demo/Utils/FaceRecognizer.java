@@ -16,6 +16,9 @@ public class FaceRecognizer {
         return mFaceRec;
     }
 
+
+
+
     public void releaseInstance(){
         mFaceRec.release();
     }
